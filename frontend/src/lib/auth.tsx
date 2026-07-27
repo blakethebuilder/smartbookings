@@ -85,7 +85,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const authResult = await pb.collection('staff').authWithPassword(email, password)
 
       // authWithPassword returns { token, record } — record has all fields except password
-      const staffRecord = authResult.record as unknown as Staff
+      const rawRecord = authResult.record as any
+      // Normalize old role names for backward compatibility with existing DBs
+      if (rawRecord.role === 'grandmaster') rawRecord.role = 'admin'
+      if (rawRecord.role === 'gamemaster') rawRecord.role = 'staff'
+      const staffRecord = rawRecord as unknown as Staff
       setStaff(staffRecord)
       localStorage.setItem('sb_staff', JSON.stringify(staffRecord))
 
