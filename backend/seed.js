@@ -49,6 +49,33 @@ async function createSuperuser() {
 async function createCollections() {
   const collections = [
     {
+      name: 'clients',
+      type: 'base',
+      fields: [
+        { name: 'name', type: 'text', required: true },
+        { name: 'subdomain', type: 'text', required: true, unique: true },
+        { name: 'business_type', type: 'select', required: true, values: ['medical', 'salon', 'restaurant', 'escape_room', 'custom'] },
+        { name: 'resource_label', type: 'text' },
+        { name: 'resource_label_plural', type: 'text' },
+        { name: 'staff_role_admin', type: 'text' },
+        { name: 'staff_role_worker', type: 'text' },
+        { name: 'booking_verb', type: 'text' },
+        { name: 'pricing_model', type: 'select', values: ['per_person', 'per_slot', 'flat'] },
+        { name: 'primary_color', type: 'text' },
+        { name: 'logo_url', type: 'text' },
+        { name: 'customer_fields', type: 'text' },
+        { name: 'duration_unit', type: 'text' },
+        { name: 'show_difficulty', type: 'bool' },
+        { name: 'show_player_count', type: 'bool' },
+        { name: 'is_active', type: 'bool', required: true },
+      ],
+      listRule: '',
+      viewRule: '',
+      createRule: '@request.auth.id != ""',
+      updateRule: '@request.auth.id != ""',
+      deleteRule: '@request.auth.id != ""',
+    },
+    {
       name: 'rooms',
       type: 'base',
       fields: [
@@ -66,6 +93,7 @@ async function createCollections() {
         { name: 'color', type: 'text' },
         { name: 'is_active', type: 'bool', required: true },
         { name: 'sort_order', type: 'number' },
+        { name: 'client_id', type: 'relation', collectionId: '__clients__', maxSelect: 1 },
       ],
       listRule: '',
       viewRule: '',
@@ -82,6 +110,7 @@ async function createCollections() {
         { name: 'start_time', type: 'text', required: true },
         { name: 'end_time', type: 'text', required: true },
         { name: 'status', type: 'select', required: true, values: ['available', 'reserved', 'full', 'blocked'] },
+        { name: 'client_id', type: 'relation', collectionId: '__clients__', maxSelect: 1 },
       ],
       listRule: '',
       viewRule: '',
@@ -114,6 +143,7 @@ async function createCollections() {
         { name: 'waiver_signed', type: 'bool' },
         { name: 'waiver_url', type: 'text' },
         { name: 'reminder_sent', type: 'bool' },
+        { name: 'client_id', type: 'relation', collectionId: '__clients__', maxSelect: 1 },
       ],
       listRule: '@request.auth.id != ""',
       viewRule: '',
@@ -187,6 +217,8 @@ async function createCollections() {
         { name: 'avatar_color', type: 'text' },
         { name: 'is_active', type: 'bool', required: true },
         { name: 'password', type: 'text' },
+        { name: 'client_id', type: 'relation', collectionId: '__clients__', maxSelect: 1 },
+        { name: 'is_superadmin', type: 'bool' },
       ],
       listRule: '',
       viewRule: '',
@@ -261,6 +293,21 @@ async function createCollections() {
   }
 
   return ids
+}
+
+async function seedClients() {
+  const clients = [
+    { name: 'The Gr8 Escape', subdomain: 'gr8bookings', business_type: 'escape_room', resource_label: 'Room', resource_label_plural: 'Rooms', staff_role_admin: 'Grandmaster', staff_role_worker: 'Game Master', booking_verb: 'Book Now', pricing_model: 'per_person', primary_color: '#E53935', logo_url: '', customer_fields: 'name,email,phone', duration_unit: 'minutes', show_difficulty: true, show_player_count: true, is_active: true },
+  ]
+
+  for (const c of clients) {
+    try {
+      await api('POST', '/api/collections/clients/records', c)
+      console.log(`✓ Client: ${c.name} (${c.subdomain})`)
+    } catch (e) {
+      console.log(`  Client: ${c.name} (exists)`)
+    }
+  }
 }
 
 async function seedRooms() {
@@ -406,6 +453,7 @@ async function main() {
     await createSuperuser()
     await auth()
     await createCollections()
+    await seedClients()
     await seedRooms()
     await seedStaff()
     await seedSettings()
