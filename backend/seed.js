@@ -368,6 +368,24 @@ async function seedStaff() {
   }
 }
 
+async function migrateStaffRoles() {
+  // Fix any old staff records still using 'grandmaster'/'gamemaster' role values
+  try {
+    const staff = await api('GET', '/api/collections/staff/records?perPage=500')
+    for (const s of (staff?.items || [])) {
+      let newRole = null
+      if (s.role === 'grandmaster') newRole = 'admin'
+      else if (s.role === 'gamemaster') newRole = 'staff'
+      if (newRole) {
+        await api('PATCH', `/api/collections/staff/records/${s.id}`, { role: newRole })
+        console.log(`  Migrated: ${s.email} role ${s.role} → ${newRole}`)
+      }
+    }
+  } catch (e) {
+    console.log(`  (staff role migration skipped: ${e.message})`)
+  }
+}
+
 async function seedSettings() {
   const settings = [
     { key: 'business_name', value: 'SmartBookings', description: 'Business name' },
@@ -476,6 +494,7 @@ async function main() {
     await seedClients()
     await seedRooms()
     await seedStaff()
+    await migrateStaffRoles()
     await seedSettings()
     await generateTimeSlots()
     console.log('\n✅ Seed complete!\n')
