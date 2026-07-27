@@ -364,7 +364,7 @@ export default function GrandmasterDashboard() {
 
       {/* Bookings per Game Master */}
       <div className="card-dark mb-8">
-        <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
           <Award size={18} className="text-gr8-orange" />
           {branding.staff_role_worker} Performance
         </h2>
@@ -414,7 +414,7 @@ export default function GrandmasterDashboard() {
 
       {/* Room Occupancy */}
       <div className="card-dark mb-8">
-        <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
           <BedDouble size={18} className="text-gr8-red" />
           {branding.resource_label} Occupancy
         </h2>
@@ -459,7 +459,7 @@ export default function GrandmasterDashboard() {
 
       {/* Recent Bookings */}
       <div className="card-dark mb-8">
-        <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
           <Clock size={18} className="text-gray-500" />
           Recent Bookings
         </h2>
@@ -520,7 +520,7 @@ export default function GrandmasterDashboard() {
 
       {/* Today's Schedule */}
       <div className="card-dark">
-        <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
           <Calendar size={18} className="text-gr8-red" />
           Today's Schedule
           <span className="text-sm font-normal text-gray-500 ml-2">{format(now, 'EEEE, d MMMM yyyy')}</span>

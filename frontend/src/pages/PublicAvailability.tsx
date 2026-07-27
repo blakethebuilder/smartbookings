@@ -57,18 +57,18 @@ export default function PublicAvailability() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <Loader2 className="animate-spin text-gr8-red" size={32} />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="animate-spin text-gr8-orange" size={32} />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b border-white/10 py-4 px-6">
+      <header className="bg-white border-b border-gray-200 shadow-sm py-4 px-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="https://gr8.smartintegrate.co.za" className="text-xl font-black text-white tracking-tight">
+          <a href="https://gr8.smartintegrate.co.za" className="text-xl font-black text-gray-900 tracking-tight">
             {branding.business_name}
           </a>
           <a href="/book" className="btn-gr8 text-sm px-5 py-2">{branding.booking_verb}</a>
@@ -78,10 +78,10 @@ export default function PublicAvailability() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         {/* Title */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-4xl font-black text-white mb-2">
-            Check <span className="text-gr8-red">Availability</span>
+          <h1 className="text-2xl sm:text-4xl font-black text-gray-900 mb-2">
+            Check <span className="text-gr8-orange">Availability</span>
           </h1>
-          <p className="text-gray-400">See what's free before you book. Open 7 days — Mon–Thu 9:30–18:30, Fri–Sat 9:30–20:00, Sun 9:30–18:30.</p>
+          <p className="text-gray-600">See what's free before you book. Open 7 days — Mon–Thu 9:30–18:30, Fri–Sat 9:30–20:00, Sun 9:30–18:30.</p>
         </div>
 
         {/* Week navigation */}
@@ -89,16 +89,16 @@ export default function PublicAvailability() {
           <button
             onClick={() => setWeekOffset(prev => Math.max(0, prev - 1))}
             disabled={weekOffset === 0}
-            className="p-2 rounded-lg bg-white/5 text-gray-400 hover:text-white disabled:opacity-30 transition-colors"
+            className="p-2 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gr8-orange hover:border-gr8-orange disabled:opacity-30 transition-colors"
           >
             <ChevronLeft size={20} />
           </button>
-          <span className="text-white font-bold">
+          <span className="text-gray-900 font-bold">
             {format(weekStart, 'MMM d')} – {format(addDays(weekStart, 6), 'MMM d, yyyy')}
           </span>
           <button
             onClick={() => setWeekOffset(prev => prev + 1)}
-            className="p-2 rounded-lg bg-white/5 text-gray-400 hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gr8-orange hover:border-gr8-orange transition-colors"
           >
             <ChevronRight size={20} />
           </button>
@@ -118,17 +118,17 @@ export default function PublicAvailability() {
                 disabled={!isBusinessDay}
                 className={`flex flex-col items-center min-w-[80px] p-3 rounded-xl transition-all ${
                   isSelected
-                    ? 'bg-gr8-red text-white'
+                    ? 'bg-gr8-orange text-white'
                     : isBusinessDay
-                      ? 'bg-white/5 text-gray-300 hover:bg-white/10'
-                      : 'bg-white/2 text-gray-700 cursor-not-allowed'
+                      ? 'bg-white border border-gray-200 text-gray-700 hover:border-gr8-orange'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
               >
                 <span className="text-xs uppercase">{format(day, 'EEE')}</span>
                 <span className="text-xl font-bold">{format(day, 'd')}</span>
                 <span className="text-xs">{format(day, 'MMM')}</span>
                 {isBusinessDay && (
-                  <span className={`text-[10px] mt-1 ${slotsForDay.length > 0 ? 'text-green-400' : 'text-gray-600'}`}>
+                  <span className={`text-[10px] mt-1 ${slotsForDay.length > 0 ? 'text-green-600' : 'text-gray-400'}`}>
                     {slotsForDay.length} slots
                   </span>
                 )}
@@ -143,8 +143,8 @@ export default function PublicAvailability() {
             <div key={room.id} className="card-dark">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: room.color }} />
-                <h3 className="text-lg font-bold text-white">{room.name}</h3>
-                <span className="text-xs text-gray-500">R{room.price_per_player}{branding.pricing_model === 'per_person' ? '/pp' : ''} • {room.duration_minutes}min</span>
+                <h3 className="text-lg font-bold text-gray-900">{room.name}</h3>
+                <span className="text-xs text-gray-600">R{room.price_per_player}{branding.pricing_model === 'per_person' ? '/pp' : ''} • {room.duration_minutes}min</span>
               </div>
 
               {roomSlots.length === 0 ? (
@@ -155,10 +155,10 @@ export default function PublicAvailability() {
                     <a
                       key={slot.id}
                       href={`/book?room=${room.slug}&date=${slot.date.split(' ')[0]}&time=${slot.start_time}`}
-                      className="bg-white/5 border border-gray-700/50 rounded-lg p-3 text-center hover:border-gr8-red/50 hover:bg-gr8-red/10 transition-all group"
+                      className="bg-white border border-gray-200 rounded-lg p-3 text-center hover:border-gr8-orange transition-all group"
                     >
-                      <p className="text-white font-bold group-hover:text-gr8-red transition-colors">{slot.start_time}</p>
-                      <p className="text-[10px] text-gray-500">{slot.end_time}</p>
+                      <p className="text-gray-900 font-bold group-hover:text-gr8-orange transition-colors">{slot.start_time}</p>
+                      <p className="text-[10px] text-gray-600">{slot.end_time}</p>
                     </a>
                   ))}
                 </div>

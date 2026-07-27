@@ -143,12 +143,12 @@ export default function Bookings() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white">Bookings</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-gray-900">Bookings</h1>
           <p className="text-gray-500 mt-1">{bookings.length} total bookings</p>
         </div>
         <button
           onClick={exportCSV}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 text-sm font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 text-sm font-medium transition-colors"
         >
           <Download size={16} />
           Download CSV
@@ -163,8 +163,8 @@ export default function Bookings() {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filter === f
-                ? 'bg-gr8-red text-white'
-                : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                ? 'bg-gr8-orange text-white'
+                : 'bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200'
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -182,7 +182,7 @@ export default function Bookings() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-700/50">
+                <tr className="border-b border-gray-200">
                   <th className="text-left py-3 px-2 sm:px-4 text-gray-500 font-medium">Ref</th>
                   <th className="text-left py-3 px-2 sm:px-4 text-gray-500 font-medium">Customer</th>
                   <th className="text-left py-3 px-4 text-gray-500 font-medium hidden sm:table-cell">{branding.resource_label}</th>
@@ -203,29 +203,29 @@ export default function Bookings() {
                   const host = hosts[b.id]
 
                   return (
-                    <tr key={b.id} className="border-b border-gray-800/50 hover:bg-white/5">
-                      <td className="py-3 px-2 sm:px-4 font-mono text-xs text-gr8-gold">{b.reference}</td>
+                    <tr key={b.id} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="py-3 px-2 sm:px-4 font-mono text-xs text-gr8-orange">{b.reference}</td>
                       <td className="py-3 px-2 sm:px-4">
-                        <p className="text-white font-medium text-sm">{b.customer_name}</p>
+                        <p className="text-gray-900 font-medium text-sm">{b.customer_name}</p>
                         <p className="text-xs text-gray-500 truncate max-w-[120px] sm:max-w-none">{b.customer_email}</p>
                       </td>
                       <td className="py-3 px-4 hidden sm:table-cell">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: room?.color }} />
-                          <span className="text-gray-300 text-xs">{room?.name}</span>
+                          <span className="text-gray-700 text-xs">{room?.name}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-2 sm:px-4 text-gray-400 text-xs">
+                      <td className="py-3 px-2 sm:px-4 text-gray-600 text-xs">
                         {ts ? `${format(new Date(ts.date), 'MMM d')} ${ts.start_time}` : '—'}
                       </td>
-                      {branding.show_player_count && <td className="py-3 px-4 text-gray-400 text-center hidden sm:table-cell">{b.player_count}</td>}
-                      <td className="py-3 px-2 sm:px-4 text-gray-400 text-sm">R{b.total_amount}</td>
+                      {branding.show_player_count && <td className="py-3 px-4 text-gray-600 text-center hidden sm:table-cell">{b.player_count}</td>}
+                      <td className="py-3 px-2 sm:px-4 text-gray-600 text-sm">R{b.total_amount}</td>
                       <td className="py-3 px-2 sm:px-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                          b.status === 'confirmed' ? 'bg-green-500/20 text-green-400' :
-                          b.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
-                          b.status === 'cancelled' ? 'bg-red-500/20 text-red-400' :
-                          'bg-gray-500/20 text-gray-400'
+                          b.status === 'confirmed' ? 'bg-green-500/20 text-green-700' :
+                          b.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' :
+                          b.status === 'cancelled' ? 'bg-red-500/20 text-red-700' :
+                          'bg-gray-500/20 text-gray-600'
                         }`}>
                           {b.status}
                         </span>
@@ -237,12 +237,12 @@ export default function Bookings() {
                               style={{ backgroundColor: host.staffColor }}>
                               {host.staffName[0]}
                             </div>
-                            <span className="text-xs text-gray-300">{host.staffName}</span>
+                            <span className="text-xs text-gray-700">{host.staffName}</span>
                           </div>
                         ) : room && ts ? (
                           <button
                             onClick={() => setAssignModal({ booking: b, room, timeSlot: ts })}
-                            className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 text-gray-500 hover:text-gr8-red hover:bg-gr8-red/10 text-xs transition-colors"
+                            className="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-500 hover:text-gr8-orange hover:bg-gr8-orange/10 text-xs transition-colors"
                           >
                             <UserPlus size={12} /> Assign
                           </button>
@@ -257,9 +257,9 @@ export default function Bookings() {
                           title="Click to toggle paid/unpaid"
                         >
                           <span className={`px-2 py-0.5 rounded font-bold ${
-                            b.payment_status === 'paid' ? 'bg-green-500/20 text-green-400' :
-                            b.payment_status === 'refunded' ? 'bg-yellow-500/20 text-yellow-400' :
-                            'bg-gray-500/20 text-gray-400'
+                            b.payment_status === 'paid' ? 'bg-green-500/20 text-green-700' :
+                            b.payment_status === 'refunded' ? 'bg-yellow-500/20 text-yellow-700' :
+                            'bg-gray-500/20 text-gray-600'
                           }`}>
                             {b.payment_status === 'paid' ? 'Paid' :
                              b.payment_status === 'refunded' ? 'Refunded' :
@@ -272,11 +272,11 @@ export default function Bookings() {
                       </td>
                       <td className="py-3 px-4">
                         {b.waiver_signed ? (
-                          <span className="text-green-400 text-xs font-bold">✓ Signed</span>
+                          <span className="text-green-600 text-xs font-bold">✓ Signed</span>
                         ) : (
                           <button
                             onClick={() => copyWaiverLink(b.reference)}
-                            className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 text-gray-500 hover:text-gr8-red hover:bg-gr8-red/10 text-xs transition-colors"
+                            className="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-500 hover:text-gr8-orange hover:bg-gr8-orange/10 text-xs transition-colors"
                           >
                             {copiedId === b.reference ? (
                               <><Check size={12} /> Copied</>
@@ -290,7 +290,7 @@ export default function Bookings() {
                         {(b.status === 'pending' || b.status === 'confirmed') ? (
                           <button
                             onClick={() => cancelBooking(b)}
-                            className="px-2 py-1 rounded bg-red-500/20 text-red-400 text-xs font-bold hover:bg-red-500/30 transition-colors"
+                            className="px-2 py-1 rounded bg-red-500/20 text-red-600 text-xs font-bold hover:bg-red-500/30 transition-colors"
                           >
                             Cancel
                           </button>

@@ -122,7 +122,7 @@ export default function GMDashboard() {
 
       {/* Upcoming Games */}
       <div>
-        <h2 className="text-lg font-bold text-white mb-4">Upcoming Games</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Upcoming Games</h2>
         {upcomingGames.length === 0 ? (
           <div className="card-dark text-center py-8">
             <p className="text-gray-500">No upcoming games assigned to you.</p>

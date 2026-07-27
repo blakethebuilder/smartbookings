@@ -260,7 +260,7 @@ export default function Clients() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white">Clients</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-gray-900">Clients</h1>
           <p className="text-gray-500 mt-1">{clients.length} client{clients.length !== 1 ? 's' : ''} configured</p>
         </div>
         <button onClick={openAdd} className="btn-gr8 flex items-center gap-2">
@@ -285,7 +285,7 @@ export default function Clients() {
                   <Building2 size={18} />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-lg font-bold text-white truncate">{client.name}</h3>
+                  <h3 className="text-lg font-bold text-gray-900 truncate">{client.name}</h3>
                   <p className="text-xs text-gray-500 flex items-center gap-1">
                     <Globe size={10} />
                     {client.subdomain}
@@ -293,10 +293,10 @@ export default function Clients() {
                 </div>
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
-                <button onClick={() => openEdit(client)} className="p-1.5 rounded hover:bg-white/10 text-gray-500 hover:text-white" title="Edit">
+                <button onClick={() => openEdit(client)} className="p-1.5 rounded hover:bg-gray-50 text-gray-500 hover:text-gray-900" title="Edit">
                   <Edit size={14} />
                 </button>
-                <button onClick={() => handleDelete(client)} className="p-1.5 rounded hover:bg-red-500/20 text-gray-500 hover:text-red-400" title="Delete">
+                <button onClick={() => handleDelete(client)} className="p-1.5 rounded hover:bg-red-500/20 text-gray-500 hover:text-red-600" title="Delete">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -304,34 +304,34 @@ export default function Clients() {
 
             <div className="flex items-center gap-2 mb-4">
               <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                client.business_type === 'escape_room' ? 'bg-purple-500/20 text-purple-400' :
-                client.business_type === 'medical' ? 'bg-blue-500/20 text-blue-400' :
-                client.business_type === 'salon' ? 'bg-pink-500/20 text-pink-400' :
-                client.business_type === 'restaurant' ? 'bg-amber-500/20 text-amber-400' :
-                'bg-gray-500/20 text-gray-400'
+                client.business_type === 'escape_room' ? 'bg-purple-500/20 text-purple-700' :
+                client.business_type === 'medical' ? 'bg-blue-500/20 text-blue-700' :
+                client.business_type === 'salon' ? 'bg-pink-500/20 text-pink-700' :
+                client.business_type === 'restaurant' ? 'bg-amber-500/20 text-amber-700' :
+                'bg-gray-500/20 text-gray-600'
               }`}>
                 {BUSINESS_TYPE_LABELS[client.business_type] || client.business_type}
               </span>
               <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                client.is_active ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-500'
+                client.is_active ? 'bg-green-500/20 text-green-700' : 'bg-gray-500/20 text-gray-500'
               }`}>
                 {client.is_active ? 'Active' : 'Inactive'}
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-center mb-3">
-              <div className="bg-white/5 rounded p-2">
+              <div className="bg-gray-50 rounded p-2">
                 <p className="text-gr8-red font-bold text-sm">{client.resource_label_plural || '—'}</p>
                 <p className="text-[10px] text-gray-500 uppercase">Resources</p>
               </div>
-              <div className="bg-white/5 rounded p-2">
-                <p className="text-gr8-gold font-bold text-sm">{client.staff_role_admin || '—'}</p>
+              <div className="bg-gray-50 rounded p-2">
+                <p className="text-gr8-orange font-bold text-sm">{client.staff_role_admin || '—'}</p>
                 <p className="text-[10px] text-gray-500 uppercase">Admin Role</p>
               </div>
             </div>
 
             {switchingId === client.id && (
-              <div className="flex items-center justify-center gap-2 pt-3 border-t border-gray-800">
+              <div className="flex items-center justify-center gap-2 pt-3 border-t border-gray-200">
                 <Loader2 size={14} className="animate-spin text-gr8-red" />
                 <span className="text-xs text-gray-500">Switching...</span>
               </div>
@@ -351,26 +351,26 @@ export default function Clients() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="card-dark w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-white">{editingClient ? 'Edit Client' : 'Add Client'}</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-white"><X size={18} /></button>
+              <h2 className="text-lg font-bold text-gray-900">{editingClient ? 'Edit Client' : 'Add Client'}</h2>
+              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700"><X size={18} /></button>
             </div>
 
             <div className="space-y-4">
               {/* Basic Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Business Name *</label>
-                  <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red" />
+                  <label className="text-sm text-gray-600 mb-1 block">Business Name *</label>
+                  <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Subdomain *</label>
-                  <input type="text" value={form.subdomain} onChange={e => setForm(f => ({ ...f, subdomain: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red font-mono" />
+                  <label className="text-sm text-gray-600 mb-1 block">Subdomain *</label>
+                  <input type="text" value={form.subdomain} onChange={e => setForm(f => ({ ...f, subdomain: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange font-mono" />
                 </div>
               </div>
 
               {/* Business Type */}
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">Business Type</label>
+                <label className="text-sm text-gray-600 mb-1 block">Business Type</label>
                 <div className="flex flex-wrap gap-2">
                   {(Object.keys(BUSINESS_TYPE_LABELS) as BusinessType[]).map(bt => (
                     <button
@@ -379,7 +379,7 @@ export default function Clients() {
                       className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                         form.business_type === bt
                           ? 'text-white'
-                          : 'text-gray-400 hover:text-white hover:bg-white/5'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                       }`}
                       style={form.business_type === bt ? { backgroundColor: branding.primary_color + '1A', color: branding.primary_color } : undefined}
                     >
@@ -391,79 +391,79 @@ export default function Clients() {
               </div>
 
               {/* Branding Fields */}
-              <div className="border-t border-gray-800 pt-4">
-                <h3 className="text-sm font-bold text-white mb-3">Branding</h3>
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="text-sm font-bold text-gray-900 mb-3">Branding</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Resource Label (Singular)</label>
-                    <input type="text" value={form.resource_label} onChange={e => setForm(f => ({ ...f, resource_label: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red" />
+                    <label className="text-sm text-gray-600 mb-1 block">Resource Label (Singular)</label>
+                    <input type="text" value={form.resource_label} onChange={e => setForm(f => ({ ...f, resource_label: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Resource Label (Plural)</label>
-                    <input type="text" value={form.resource_label_plural} onChange={e => setForm(f => ({ ...f, resource_label_plural: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red" />
+                    <label className="text-sm text-gray-600 mb-1 block">Resource Label (Plural)</label>
+                    <input type="text" value={form.resource_label_plural} onChange={e => setForm(f => ({ ...f, resource_label_plural: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Admin Role Title</label>
-                    <input type="text" value={form.staff_role_admin} onChange={e => setForm(f => ({ ...f, staff_role_admin: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red" />
+                    <label className="text-sm text-gray-600 mb-1 block">Admin Role Title</label>
+                    <input type="text" value={form.staff_role_admin} onChange={e => setForm(f => ({ ...f, staff_role_admin: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Worker Role Title</label>
-                    <input type="text" value={form.staff_role_worker} onChange={e => setForm(f => ({ ...f, staff_role_worker: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red" />
+                    <label className="text-sm text-gray-600 mb-1 block">Worker Role Title</label>
+                    <input type="text" value={form.staff_role_worker} onChange={e => setForm(f => ({ ...f, staff_role_worker: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Booking Verb / CTA</label>
-                    <input type="text" value={form.booking_verb} onChange={e => setForm(f => ({ ...f, booking_verb: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red" />
+                    <label className="text-sm text-gray-600 mb-1 block">Booking Verb / CTA</label>
+                    <input type="text" value={form.booking_verb} onChange={e => setForm(f => ({ ...f, booking_verb: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Pricing Model</label>
-                    <select value={form.pricing_model} onChange={e => setForm(f => ({ ...f, pricing_model: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red">
+                    <label className="text-sm text-gray-600 mb-1 block">Pricing Model</label>
+                    <select value={form.pricing_model} onChange={e => setForm(f => ({ ...f, pricing_model: e.target.value }))} className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange">
                       <option value="per_person">Per Person</option>
                       <option value="per_slot">Per Slot</option>
                       <option value="flat">Flat Rate</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Duration Unit</label>
-                    <select value={form.duration_unit} onChange={e => setForm(f => ({ ...f, duration_unit: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red">
+                    <label className="text-sm text-gray-600 mb-1 block">Duration Unit</label>
+                    <select value={form.duration_unit} onChange={e => setForm(f => ({ ...f, duration_unit: e.target.value }))} className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange">
                       <option value="minutes">Minutes</option>
                       <option value="slots">Slots</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-400 mb-1 block">Logo URL</label>
-                    <input type="text" value={form.logo_url} onChange={e => setForm(f => ({ ...f, logo_url: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red" placeholder="https://..." />
+                    <label className="text-sm text-gray-600 mb-1 block">Logo URL</label>
+                    <input type="text" value={form.logo_url} onChange={e => setForm(f => ({ ...f, logo_url: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" placeholder="https://..." />
                   </div>
                 </div>
               </div>
 
               {/* Customer Fields */}
-              <div className="border-t border-gray-800 pt-4">
-                <h3 className="text-sm font-bold text-white mb-3">Customer Form Fields</h3>
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="text-sm font-bold text-gray-900 mb-3">Customer Form Fields</h3>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Comma-separated field names</label>
-                  <input type="text" value={form.customer_fields} onChange={e => setForm(f => ({ ...f, customer_fields: e.target.value }))} className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gr8-red" />
+                  <label className="text-sm text-gray-600 mb-1 block">Comma-separated field names</label>
+                  <input type="text" value={form.customer_fields} onChange={e => setForm(f => ({ ...f, customer_fields: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
                   <p className="text-[10px] text-gray-600 mt-1">Examples: name,email,phone or name,email,phone,id_number,medical_aid</p>
                 </div>
               </div>
 
               {/* Toggles */}
-              <div className="border-t border-gray-800 pt-4">
-                <h3 className="text-sm font-bold text-white mb-3">Display Options</h3>
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="text-sm font-bold text-gray-900 mb-3">Display Options</h3>
                 <div className="flex flex-wrap items-center gap-6">
                   <div className="flex items-center gap-3">
-                    <label className="text-sm text-gray-400">Show Difficulty</label>
+                    <label className="text-sm text-gray-600">Show Difficulty</label>
                     <button onClick={() => setForm(f => ({ ...f, show_difficulty: !f.show_difficulty }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.show_difficulty ? 'bg-green-500' : 'bg-gray-600'}`}>
                       <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.show_difficulty ? 'left-7' : 'left-1'}`} />
                     </button>
                   </div>
                   <div className="flex items-center gap-3">
-                    <label className="text-sm text-gray-400">Show Player Count</label>
+                    <label className="text-sm text-gray-600">Show Player Count</label>
                     <button onClick={() => setForm(f => ({ ...f, show_player_count: !f.show_player_count }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.show_player_count ? 'bg-green-500' : 'bg-gray-600'}`}>
                       <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.show_player_count ? 'left-7' : 'left-1'}`} />
                     </button>
                   </div>
                   <div className="flex items-center gap-3">
-                    <label className="text-sm text-gray-400">Active</label>
+                    <label className="text-sm text-gray-600">Active</label>
                     <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.is_active ? 'bg-green-500' : 'bg-gray-600'}`}>
                       <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.is_active ? 'left-7' : 'left-1'}`} />
                     </button>
@@ -472,18 +472,18 @@ export default function Clients() {
               </div>
 
               {/* Primary Color */}
-              <div className="border-t border-gray-800 pt-4">
-                <h3 className="text-sm font-bold text-white mb-3">Primary Color</h3>
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="text-sm font-bold text-gray-900 mb-3">Primary Color</h3>
                 <div className="flex gap-2 flex-wrap">
                   {BRAND_COLORS.map(c => (
-                    <button key={c} onClick={() => setForm(f => ({ ...f, primary_color: c }))} className={`w-8 h-8 rounded-full transition-transform ${form.primary_color === c ? 'ring-2 ring-white ring-offset-2 ring-offset-gr8-card scale-110' : 'hover:scale-110'}`} style={{ backgroundColor: c }} />
+                    <button key={c} onClick={() => setForm(f => ({ ...f, primary_color: c }))} className={`w-8 h-8 rounded-full transition-transform ${form.primary_color === c ? 'ring-2 ring-white ring-offset-2 ring-offset-white scale-110' : 'hover:scale-110'}`} style={{ backgroundColor: c }} />
                   ))}
                 </div>
               </div>
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:text-white text-sm">Cancel</button>
+              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 rounded-lg bg-gray-50 text-gray-500 hover:text-gray-900 text-sm">Cancel</button>
               <button onClick={handleSave} disabled={saving || !form.name || !form.subdomain} className="flex-1 btn-gr8 py-2 text-sm flex items-center justify-center gap-2 disabled:opacity-50">
                 {saving ? <Loader2 size={14} className="animate-spin" /> : null}
                 {saving ? 'Saving...' : editingClient ? 'Update Client' : 'Add Client'}

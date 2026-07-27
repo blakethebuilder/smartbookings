@@ -93,19 +93,19 @@ export default function Waiver() {
       canvas.width = width
       canvas.height = height
 
-      // Dark background
-      ctx.fillStyle = '#1e1e1e'
+      // Light background
+      ctx.fillStyle = '#F3F4F6'
       ctx.fillRect(0, 0, width, height)
 
       // Guide line
-      ctx.strokeStyle = '#555'
+      ctx.strokeStyle = '#9CA3AF'
       ctx.lineWidth = 1
       ctx.beginPath()
       ctx.moveTo(20, height - 30)
       ctx.lineTo(width - 20, height - 30)
       ctx.stroke()
 
-      ctx.fillStyle = '#666'
+      ctx.fillStyle = '#9CA3AF'
       ctx.font = '11px sans-serif'
       ctx.fillText('Sign here', 20, height - 10)
 
@@ -126,7 +126,7 @@ export default function Waiver() {
     const x = ('touches' in e ? e.touches[0].clientX : e.clientX) - rect.left
     const y = ('touches' in e ? e.touches[0].clientY : e.clientY) - rect.top
 
-    ctx.strokeStyle = '#fff'
+    ctx.strokeStyle = '#111827'
     ctx.lineWidth = 2
     ctx.lineCap = 'round'
     ctx.beginPath()
@@ -157,15 +157,15 @@ export default function Waiver() {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    ctx.fillStyle = '#1e1e1e'
+    ctx.fillStyle = '#F3F4F6'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.strokeStyle = '#555'
+    ctx.strokeStyle = '#9CA3AF'
     ctx.lineWidth = 1
     ctx.beginPath()
     ctx.moveTo(20, canvas.height - 30)
     ctx.lineTo(canvas.width - 20, canvas.height - 30)
     ctx.stroke()
-    ctx.fillStyle = '#666'
+    ctx.fillStyle = '#9CA3AF'
     ctx.font = '11px sans-serif'
     ctx.fillText('Sign here', 20, canvas.height - 10)
     setHasSignature(false)
@@ -225,19 +225,19 @@ export default function Waiver() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <Loader2 className="animate-spin text-gr8-red" size={32} />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="animate-spin text-gr8-orange" size={32} />
       </div>
     )
   }
 
   if (!booking) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center max-w-md px-6">
           <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">Booking not found</h1>
-          <p className="text-gray-500">This waiver link is invalid or has expired.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Booking not found</h1>
+          <p className="text-gray-600">This waiver link is invalid or has expired.</p>
         </div>
       </div>
     )
@@ -245,15 +245,15 @@ export default function Waiver() {
 
   if (existingWaiver || submitted) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center max-w-md px-6">
           <CheckCircle size={64} className="text-green-400 mx-auto mb-4" />
-          <h1 className="text-3xl font-black text-white mb-2">Waiver Signed!</h1>
-          <p className="text-gray-400 mb-6">
-            You're all set for <span className="text-white font-bold">{room?.name}</span> on{' '}
+          <h1 className="text-3xl font-black text-gray-900 mb-2">Waiver Signed!</h1>
+          <p className="text-gray-600 mb-6">
+            You're all set for <span className="text-gray-900 font-bold">{room?.name}</span> on{' '}
             {timeSlot && format(new Date(timeSlot.date), 'EEEE, MMMM d')}.
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600">
             Please arrive 15 minutes early. No phones or recording devices allowed in the rooms.
           </p>
         </div>
@@ -262,40 +262,40 @@ export default function Waiver() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b border-white/10 py-4 px-6">
+      <header className="bg-white border-b border-gray-200 shadow-sm py-4 px-6">
         <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <Shield size={24} className="text-gr8-red" />
+          <Shield size={24} className="text-gr8-orange" />
           <div>
-            <h1 className="text-lg font-bold text-white">Player Indemnity Waiver</h1>
-            <p className="text-xs text-gray-500">{branding.business_name} — Fourways, Johannesburg</p>
+            <h1 className="text-lg font-bold text-gray-900">Player Indemnity Waiver</h1>
+            <p className="text-xs text-gray-600">{branding.business_name} — Fourways, Johannesburg</p>
           </div>
         </div>
       </header>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Booking info */}
-        <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-4 mb-8 flex items-center gap-4">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-4 mb-8 flex items-center gap-4">
           {room && <div className="w-4 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: room.color }} />}
           <div>
-            <p className="text-white font-bold">{room?.name}</p>
-            <p className="text-sm text-gray-400">
+            <p className="text-gray-900 font-bold">{room?.name}</p>
+            <p className="text-sm text-gray-600">
               {timeSlot && format(new Date(timeSlot.date), 'EEEE, MMMM d')} • {timeSlot?.start_time} — {timeSlot?.end_time}
             </p>
           </div>
           <div className="ml-auto text-right">
-            <p className="text-xs text-gray-500">Booking</p>
-            <p className="text-sm font-mono text-gr8-gold">{booking.reference}</p>
+            <p className="text-xs text-gray-600">Booking</p>
+            <p className="text-sm font-mono text-gr8-orange">{booking.reference}</p>
           </div>
         </div>
 
         {/* Waiver content */}
-        <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-6 mb-6">
-          <h2 className="text-xl font-bold text-white mb-4">Assumption of Risk & Indemnity</h2>
-          <div className="space-y-4 text-sm text-gray-300 leading-relaxed">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Assumption of Risk & Indemnity</h2>
+          <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
             <p>
-              I, the undersigned participant, acknowledge that escape room activities involve physical and mental challenges, and I voluntarily assume all risks associated with participation in escape room games at <strong className="text-white">{branding.business_name}</strong>.
+              I, the undersigned participant, acknowledge that escape room activities involve physical and mental challenges, and I voluntarily assume all risks associated with participation in escape room games at <strong className="text-gray-900">{branding.business_name}</strong>.
             </p>
             <p>
               I understand that escape rooms may involve confined spaces, low lighting, physical exertion, and mentally stimulating puzzles. I confirm that I am physically and mentally capable of participating.
@@ -313,37 +313,37 @@ export default function Waiver() {
         </div>
 
         {/* Form */}
-        <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-6 mb-6">
-          <h2 className="text-xl font-bold text-white mb-4">Your Details</h2>
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Your Details</h2>
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">Full Name *</label>
+                <label className="text-sm text-gray-600 mb-1 block">Full Name *</label>
                 <input
                   type="text"
                   value={form.playerName}
                   onChange={e => setForm(prev => ({ ...prev, playerName: e.target.value }))}
-                  className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gr8-red"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">Email *</label>
+                <label className="text-sm text-gray-600 mb-1 block">Email *</label>
                 <input
                   type="email"
                   value={form.playerEmail}
                   onChange={e => setForm(prev => ({ ...prev, playerEmail: e.target.value }))}
-                  className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gr8-red"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
                 />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">ID / Passport Number</label>
+                <label className="text-sm text-gray-600 mb-1 block">ID / Passport Number</label>
                 <input
                   type="text"
                   value={form.playerIdNumber}
                   onChange={e => setForm(prev => ({ ...prev, playerIdNumber: e.target.value }))}
-                  className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gr8-red"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
                 />
               </div>
               <div className="flex items-center gap-3 pt-6">
@@ -352,30 +352,30 @@ export default function Waiver() {
                   id="isMinor"
                   checked={form.isMinor}
                   onChange={e => setForm(prev => ({ ...prev, isMinor: e.target.checked }))}
-                  className="w-4 h-4 rounded border-gray-600 bg-white/5 text-gr8-red focus:ring-gr8-red"
+                  className="w-4 h-4 rounded border-gray-300 bg-gray-50 text-gr8-orange focus:ring-gr8-orange"
                 />
-                <label htmlFor="isMinor" className="text-sm text-gray-400">I am under 16 years old</label>
+                <label htmlFor="isMinor" className="text-sm text-gray-600">I am under 16 years old</label>
               </div>
             </div>
 
             {form.isMinor && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-yellow-500/5 border border-yellow-500/20 rounded-lg p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Guardian Full Name *</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Guardian Full Name *</label>
                   <input
                     type="text"
                     value={form.guardianName}
                     onChange={e => setForm(prev => ({ ...prev, guardianName: e.target.value }))}
-                    className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gr8-red"
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-400 mb-1 block">Guardian ID Number</label>
+                  <label className="text-sm text-gray-600 mb-1 block">Guardian ID Number</label>
                   <input
                     type="text"
                     value={form.guardianIdNumber}
                     onChange={e => setForm(prev => ({ ...prev, guardianIdNumber: e.target.value }))}
-                    className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gr8-red"
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
                   />
                 </div>
               </div>
@@ -384,18 +384,18 @@ export default function Waiver() {
         </div>
 
         {/* Consents */}
-        <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-6 mb-6">
-          <h2 className="text-xl font-bold text-white mb-4">Consents</h2>
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Consents</h2>
           <div className="space-y-3">
             <label className="flex items-start gap-3 cursor-pointer group">
               <input
                 type="checkbox"
                 checked={form.consentMedical}
                 onChange={e => setForm(prev => ({ ...prev, consentMedical: e.target.checked }))}
-                className="w-4 h-4 mt-0.5 rounded border-gray-600 bg-white/5 text-gr8-red focus:ring-gr8-red"
+                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-gr8-orange focus:ring-gr8-orange"
               />
-              <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
-                <strong className="text-white">Medical:</strong> I confirm that I have no medical conditions that would prevent me from safely participating. I will inform the {branding.staff_role_worker} of any relevant conditions before the game. *
+              <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                <strong className="text-gray-900">Medical:</strong> I confirm that I have no medical conditions that would prevent me from safely participating. I will inform the {branding.staff_role_worker} of any relevant conditions before the game. *
               </span>
             </label>
             <label className="flex items-start gap-3 cursor-pointer group">
@@ -403,10 +403,10 @@ export default function Waiver() {
                 type="checkbox"
                 checked={form.consentRules}
                 onChange={e => setForm(prev => ({ ...prev, consentRules: e.target.checked }))}
-                className="w-4 h-4 mt-0.5 rounded border-gray-600 bg-white/5 text-gr8-red focus:ring-gr8-red"
+                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-gr8-orange focus:ring-gr8-orange"
               />
-              <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
-                <strong className="text-white">Rules:</strong> I agree to follow all rules and instructions from the {branding.staff_role_worker}, including no phones, no excessive force, and no food/drinks in the rooms. *
+              <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                <strong className="text-gray-900">Rules:</strong> I agree to follow all rules and instructions from the {branding.staff_role_worker}, including no phones, no excessive force, and no food/drinks in the rooms. *
               </span>
             </label>
             <label className="flex items-start gap-3 cursor-pointer group">
@@ -414,20 +414,20 @@ export default function Waiver() {
                 type="checkbox"
                 checked={form.consentPhoto}
                 onChange={e => setForm(prev => ({ ...prev, consentPhoto: e.target.checked }))}
-                className="w-4 h-4 mt-0.5 rounded border-gray-600 bg-white/5 text-gr8-red focus:ring-gr8-red"
+                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-gr8-orange focus:ring-gr8-orange"
               />
-              <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
-                <strong className="text-white">Photos/Videos:</strong> I grant permission for photos or videos taken during my experience to be used for promotional purposes. (Optional)
+              <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                <strong className="text-gray-900">Photos/Videos:</strong> I grant permission for photos or videos taken during my experience to be used for promotional purposes. (Optional)
               </span>
             </label>
           </div>
         </div>
 
         {/* Signature */}
-        <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-6 mb-6">
-          <h2 className="text-xl font-bold text-white mb-2">Signature</h2>
-          <p className="text-sm text-gray-400 mb-4">Sign below with your finger or mouse</p>
-          <div className="border border-gray-700 rounded-lg overflow-hidden mb-3">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Signature</h2>
+          <p className="text-sm text-gray-600 mb-4">Sign below with your finger or mouse</p>
+          <div className="border border-gray-300 rounded-lg overflow-hidden mb-3">
             <canvas
               ref={canvasRef}
               className="w-full cursor-crosshair touch-none"
@@ -443,14 +443,14 @@ export default function Waiver() {
           </div>
           <button
             onClick={clearSignature}
-            className="text-sm text-gray-500 hover:text-white transition-colors"
+            className="text-sm text-gray-500 hover:text-gr8-orange transition-colors"
           >
             Clear signature
           </button>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6 text-sm text-red-400">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-sm text-red-600">
             {error}
           </div>
         )}
@@ -468,7 +468,7 @@ export default function Waiver() {
           )}
         </button>
 
-        <p className="text-center text-xs text-gray-600 mt-4">
+        <p className="text-center text-xs text-gray-500 mt-4">
           By signing this waiver, you confirm that you have read, understood, and agree to the terms above.
         </p>
       </div>

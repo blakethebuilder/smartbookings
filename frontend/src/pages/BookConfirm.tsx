@@ -63,8 +63,8 @@ export default function BookConfirm() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">Booking not found</h1>
-          <p className="text-gray-500 mb-6">Reference "{reference}" doesn't match any booking.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Booking not found</h1>
+          <p className="text-gray-600 mb-6">Reference "{reference}" doesn't match any booking.</p>
           <a href="https://gr8.smartintegrate.co.za" className="btn-gr8 px-6 py-3 inline-block">Go to Website</a>
         </div>
       </div>
@@ -191,19 +191,19 @@ export default function BookConfirm() {
         )}
 
         {/* Share Waiver Link */}
-        <div className="bg-[#1e1e1e] border border-gr8-red/30 rounded-xl p-6 mb-8 text-left">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 mb-8 text-left">
           <div className="flex items-center gap-3 mb-3">
             <Shield size={20} className="text-gr8-orange" />
-            <h3 className="text-lg font-bold text-white">Player Waiver</h3>
+            <h3 className="text-lg font-bold text-gray-900">Player Waiver</h3>
           </div>
-          <p className="text-sm text-gray-400 mb-4">
+          <p className="text-sm text-gray-600 mb-4">
             All players must sign an indemnity waiver before the game. Share this link with your group:
           </p>
-          <div className="flex items-center gap-2 bg-white/5 border border-gray-700 rounded-lg p-3">
+          <div className="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-lg p-3">
             <input
               readOnly
               value={`${window.location.origin}/waiver/${booking.reference}`}
-              className="flex-1 bg-transparent text-sm text-gray-300 font-mono outline-none"
+              className="flex-1 bg-transparent text-sm text-gray-900 font-mono outline-none"
             />
             <button
               onClick={() => {
@@ -211,7 +211,7 @@ export default function BookConfirm() {
                 setCopied(true)
                 setTimeout(() => setCopied(false), 2000)
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gr8-red/20 text-gr8-orange text-sm font-medium hover:bg-gr8-red/30 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-orange-50 text-gr8-orange text-sm font-medium hover:bg-orange-100 transition-colors"
             >
               {copied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
             </button>
@@ -222,32 +222,32 @@ export default function BookConfirm() {
         </div>
 
         {/* Calendar download */}
-        <button onClick={downloadICS} className="w-full bg-white/5 border border-gray-700/50 rounded-xl p-4 mb-6 text-left hover:bg-white/10 transition-colors flex items-center gap-3">
+        <button onClick={downloadICS} className="w-full bg-white border border-gray-200 shadow-sm rounded-xl p-4 mb-6 text-left hover:bg-gray-50 transition-colors flex items-center gap-3">
           <Download size={20} className="text-gr8-orange" />
           <div>
-            <p className="text-white font-medium text-sm">Add to Calendar</p>
-            <p className="text-xs text-gray-500">Download .ics file for Google Calendar, Apple Calendar, Outlook</p>
+            <p className="text-gray-900 font-medium text-sm">Add to Calendar</p>
+            <p className="text-xs text-gray-600">Download .ics file for Google Calendar, Apple Calendar, Outlook</p>
           </div>
         </button>
 
-        <div className="bg-white/5 border border-gray-700/50 rounded-xl p-4 mb-8 text-sm text-gray-400 text-left">
-          <p className="mb-2">A confirmation email will be sent to <strong className="text-white">{booking.customer_email}</strong></p>
-          <p>Please arrive <strong className="text-white">15 minutes early</strong>. No phones or recording devices allowed in the rooms.</p>
+        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-8 text-sm text-gray-600 text-left">
+          <p className="mb-2">A confirmation email will be sent to <strong className="text-gray-900">{booking.customer_email}</strong></p>
+          <p>Please arrive <strong className="text-gray-900">15 minutes early</strong>. No phones or recording devices allowed in the rooms.</p>
         </div>
 
         {/* Cancel Booking */}
         {(booking.status === 'pending' || booking.status === 'confirmed') && (
-          <div className="border border-red-500/30 bg-red-500/5 rounded-xl p-6 mb-8 text-left">
+          <div className="border border-red-200 bg-red-50 rounded-xl p-6 mb-8 text-left">
             <div className="flex items-center gap-3 mb-3">
-              <XCircle size={20} className="text-red-400" />
-              <h3 className="text-lg font-bold text-white">Cancel Booking</h3>
+              <XCircle size={20} className="text-red-500" />
+              <h3 className="text-lg font-bold text-gray-900">Cancel Booking</h3>
             </div>
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-sm text-gray-600 mb-4">
               Free cancellation up to {cancelHoursBefore} hours before your game. A R{cancelAdminFee} admin fee applies on deposits.
             </p>
             <button
               onClick={() => setShowCancelDialog(true)}
-              className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 text-sm font-bold hover:bg-red-500/30 transition-colors"
+              className="px-4 py-2 rounded-lg bg-red-100 text-red-600 text-sm font-bold hover:bg-red-200 transition-colors"
             >
               Cancel Booking
             </button>
@@ -256,12 +256,12 @@ export default function BookConfirm() {
 
         {/* Cancelled message */}
         {booking.status === 'cancelled' && (
-          <div className="border border-orange-500/30 bg-orange-500/5 rounded-xl p-6 mb-8 text-left">
+          <div className="border border-orange-200 bg-orange-50 rounded-xl p-6 mb-8 text-left">
             <div className="flex items-center gap-3 mb-3">
-              <XCircle size={20} className="text-orange-400" />
-              <h3 className="text-lg font-bold text-white">Booking Cancelled</h3>
+              <XCircle size={20} className="text-orange-500" />
+              <h3 className="text-lg font-bold text-gray-900">Booking Cancelled</h3>
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-600">
               Your booking has been cancelled. Refunds, if applicable, will be processed within 5-7 business days.
             </p>
           </div>
@@ -270,9 +270,9 @@ export default function BookConfirm() {
         {/* Cancel Confirmation Dialog */}
         {showCancelDialog && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-            <div className="bg-[#1e1e1e] border border-gray-700 rounded-xl p-6 max-w-md w-full">
-              <h3 className="text-lg font-bold text-white mb-2">Cancel Booking?</h3>
-              <p className="text-sm text-gray-400 mb-4">
+            <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-6 max-w-md w-full">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Cancel Booking?</h3>
+              <p className="text-sm text-gray-600 mb-4">
                 Are you sure you want to cancel your booking{room ? ` for ${room.name}` : ''}?
                 {booking.payment_type === 'deposit' && booking.deposit_amount > 0 && (
                   <> If you paid a deposit, R{Math.max(0, Number(booking.deposit_amount) - Number(cancelAdminFee))} will be refunded within 5-7 business days.</>
@@ -281,7 +281,7 @@ export default function BookConfirm() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowCancelDialog(false)}
-                  className="flex-1 px-4 py-2 rounded-lg border border-gray-700 text-gray-400 text-sm font-medium hover:text-white hover:border-gray-500 transition-colors"
+                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:text-gray-900 hover:border-gray-300 transition-colors"
                   disabled={cancelling}
                 >
                   Keep Booking
@@ -289,7 +289,7 @@ export default function BookConfirm() {
                 <button
                   onClick={handleCancel}
                   disabled={cancelling}
-                  className="flex-1 px-4 py-2 rounded-lg bg-red-500/20 text-red-400 text-sm font-bold hover:bg-red-500/30 transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-2 rounded-lg bg-red-100 text-red-600 text-sm font-bold hover:bg-red-200 transition-colors disabled:opacity-50"
                 >
                   {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
                 </button>
@@ -302,7 +302,7 @@ export default function BookConfirm() {
           <a href="https://gr8.smartintegrate.co.za" className="btn-gr8 px-8 py-3 flex items-center justify-center gap-2">
             <Home size={18} /> Back to Site
           </a>
-          <Link to="/book" className="px-8 py-3 rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 transition-colors flex items-center justify-center gap-2">
+          <Link to="/book" className="px-8 py-3 rounded-lg border border-gray-200 text-gray-600 hover:text-gr8-orange hover:border-gr8-orange transition-colors flex items-center justify-center gap-2">
             Book Another {branding.resource_label}
           </Link>
         </div>

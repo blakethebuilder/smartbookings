@@ -166,7 +166,7 @@ export default function Settings() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white">Settings</h1>
+          <h1 className="text-2xl sm:text-3xl font-black text-gray-900">Settings</h1>
           <p className="text-gray-500 mt-1">Configure your booking system</p>
         </div>
         <button
@@ -174,7 +174,7 @@ export default function Settings() {
           disabled={saving}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-all ${
             saved
-              ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+              ? 'bg-green-500/20 text-green-600 border border-green-500/30'
               : 'btn-gr8'
           }`}
         >
@@ -197,13 +197,13 @@ export default function Settings() {
                 {group === 'WhatsApp' && <span className="text-lg">📱</span>}
                 {group === 'Evolution API' && <span className="text-lg">🔗</span>}
                 {group === 'General' && <span className="text-lg">⚙️</span>}
-                <h2 className="text-lg font-bold text-white">{group}</h2>
+                <h2 className="text-lg font-bold text-gray-900">{group}</h2>
               </div>
               {isCollapsed ? (
-                <div className="bg-white/5 border border-dashed border-gray-700 rounded-lg p-5">
+                <div className="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-gray-400 text-sm">
+                      <p className="text-gray-600 text-sm">
                         {group === 'Evolution API'
                           ? 'Not configured — set up to enable WhatsApp notifications'
                           : 'Not configured — set up WhatsApp messaging features'}
@@ -227,7 +227,7 @@ export default function Settings() {
 
                     return (
                       <div key={s.id} className="flex flex-col gap-1">
-                        <label className="text-sm text-gray-400 font-medium">
+                        <label className="text-sm text-gray-600 font-medium">
                           {meta?.label || s.description || s.key}
                         </label>
                         {s.key === 'business_type' ? (
@@ -238,7 +238,7 @@ export default function Settings() {
                               await pb.collection('settings').update(s.id, { value: e.target.value })
                               window.location.reload()
                             }}
-                            className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gr8-red transition-colors"
+                            className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
                           >
                             <option value="escape_room">Escape Room</option>
                             <option value="medical">Medical</option>
@@ -252,14 +252,14 @@ export default function Settings() {
                               type={isPassword ? 'password' : 'text'}
                               value={s.value}
                               onChange={e => updateSetting(s.id, e.target.value)}
-                              className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2.5 pr-10 text-white text-sm focus:outline-none focus:border-gr8-red transition-colors"
+                              className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
                               placeholder={meta?.hint || s.key}
                             />
                             {isSecret && (
                               <button
                                 type="button"
                                 onClick={() => setShowSecrets(prev => ({ ...prev, [s.key]: !prev[s.key] }))}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 transition-colors"
                               >
                                 {showSecrets[s.key] ? <EyeOff size={16} /> : <Eye size={16} />}
                               </button>
@@ -280,19 +280,19 @@ export default function Settings() {
       </div>
 
       {/* Reset Demo Data */}
-      <div className="card-dark border-red-500/30 mt-8">
+      <div className="border border-red-200 bg-red-50 rounded-lg p-6 mt-8">
         <div className="flex items-center gap-3 mb-4">
-          <Trash2 size={18} className="text-red-400" />
-          <h2 className="text-lg font-bold text-white">Reset Demo Data</h2>
+          <Trash2 size={18} className="text-red-600" />
+          <h2 className="text-lg font-bold text-gray-900">Reset Demo Data</h2>
         </div>
-        <p className="text-sm text-gray-400 mb-4">
+        <p className="text-sm text-gray-600 mb-4">
           Wipes all bookings, waivers, game hosts, GM blocks, and time slots.
           Keeps rooms, staff, and settings. Fresh time slots will be regenerated for the next 60 days.
         </p>
         <button
           onClick={handleReset}
           disabled={resetting}
-          className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 font-bold text-sm flex items-center gap-2 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 rounded-lg bg-red-500/20 text-red-600 border border-red-500/30 hover:bg-red-500/30 font-bold text-sm flex items-center gap-2 disabled:opacity-50 transition-colors"
         >
           {resetting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
           {resetting ? 'Resetting...' : 'Reset All Demo Data'}

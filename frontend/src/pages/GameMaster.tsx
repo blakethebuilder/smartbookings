@@ -395,28 +395,26 @@ export default function GameMaster() {
 }
 
 <style>{`
-  /* FullCalendar dark theme */
+  /* FullCalendar light theme */
   .calendar-wrapper .fc {
-    --fc-bg-event: rgba(255,255,255,0.03);
-    --fc-border-color: #333;
-    --fc-button-bg-color: #1e1e1e;
-    --fc-button-border-color: #333;
-    --fc-button-hover-bg-color: #333;
-    --fc-button-hover-border-color: #555;
-    --fc-button-active-bg-color: #E53935;
-    --fc-button-active-border-color: #E53935;
-    --fc-today-bg-color: rgba(229,57,53,0.05);
-    --fc-page-bg-color: transparent;
-    --fc-neutral-bg-color: #1a1a1a;
-    --fc-list-event-hover-bg-color: #222;
+    --fc-border-color: #e5e7eb;
+    --fc-button-bg-color: #fff;
+    --fc-button-border-color: #d1d5db;
+    --fc-button-text-color: #374151;
+    --fc-button-hover-bg-color: #f3f4f6;
+    --fc-button-active-bg-color: #FF4500;
+    --fc-button-active-text-color: #fff;
+    --fc-today-bg-color: rgba(255,69,0,0.04);
+    --fc-page-bg-color: #fff;
+    --fc-neutral-bg-color: #f9fafb;
   }
   .calendar-wrapper .fc .fc-toolbar-title {
-    color: white;
+    color: #111827;
     font-size: 1.1rem;
     font-weight: 700;
   }
   .calendar-wrapper .fc .fc-button {
-    color: #ccc;
+    color: #374151;
     font-size: 0.8rem;
     font-weight: 600;
     padding: 6px 12px;
@@ -426,33 +424,33 @@ export default function GameMaster() {
     color: white !important;
   }
   .calendar-wrapper .fc .fc-timegrid-slot-label {
-    color: #888;
+    color: #6B7280;
     font-size: 0.75rem;
   }
   .calendar-wrapper .fc .fc-col-header-cell {
-    background: #1a1a1a;
-    color: #ccc;
+    background: #f9fafb;
+    color: #374151;
     font-weight: 600;
     font-size: 0.8rem;
     padding: 8px 0;
   }
   .calendar-wrapper .fc .fc-col-header-cell-cushion {
-    color: #ccc;
+    color: #374151;
   }
   .calendar-wrapper .fc .fc-timegrid-slot {
     height: 2rem;
   }
   .calendar-wrapper .fc .fc-timegrid-slot-minor {
-    border-color: #222;
+    border-color: #e5e7eb;
   }
   .calendar-wrapper .fc .fc-timegrid-divider {
-    border-color: #333;
+    border-color: #e5e7eb;
   }
   .calendar-wrapper .fc .fc-timegrid-now-indicator-line {
-    border-color: #E53935;
+    border-color: #FF4500;
   }
   .calendar-wrapper .fc .fc-timegrid-now-indicator-arrow {
-    border-color: #E53935;
+    border-color: #FF4500;
   }
   .calendar-wrapper .fc .fc-event {
     border-radius: 4px;
@@ -465,13 +463,13 @@ export default function GameMaster() {
     background: transparent;
   }
   .calendar-wrapper .fc .fc-scrollgrid {
-    border-color: #333;
+    border-color: #e5e7eb;
   }
   .calendar-wrapper .fc th {
-    border-color: #333;
+    border-color: #e5e7eb;
   }
   .calendar-wrapper .fc td {
-    border-color: #222;
+    border-color: #e5e7eb;
   }
   .calendar-wrapper .fc .fc-timegrid-body {
     min-height: 400px;
