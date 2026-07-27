@@ -334,10 +334,13 @@ export default function Book() {
                   onClick={() => selectRoom(room)}
                   className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden text-left hover:border-sb-orange hover:shadow-md transition-all group"
                 >
-                  <div
-                    className="h-3 relative"
-                    style={{ backgroundColor: room.color }}
-                  />
+                  {room.image ? (
+                    <div className="h-40 bg-cover bg-center" style={{ backgroundImage: `url(${pb.files.getUrl(room, room.image)})` }} />
+                  ) : (
+                    <div className="h-24 flex items-center justify-center" style={{ backgroundColor: room.color + '18' }}>
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: room.color }} />
+                    </div>
+                  )}
                   <div className="p-5">
                     <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-sb-orange transition-colors">
                       {room.name}
