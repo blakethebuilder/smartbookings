@@ -100,67 +100,67 @@ export default function QuickBook({ rooms, slot, onClose, onComplete }: Props) {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="bg-white/5 rounded-lg p-3 mb-4 text-sm">
-          <p className="text-gray-400">
+        <div className="bg-gray-50 rounded-lg p-3 mb-4 text-sm">
+          <p className="text-gray-500">
             {format(slot.start, 'EEEE, MMM d')} • {format(slot.start, 'HH:mm')} — {format(slot.end, 'HH:mm')}
           </p>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Room</label>
+            <label className="text-sm text-gray-500 mb-1 block">Room</label>
             <select
               value={selectedRoom}
               onChange={e => setSelectedRoom(e.target.value)}
-              className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-sb-red"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-red"
             >
               {rooms.map(r => (
-                <option key={r.id} value={r.id} className="bg-sb-card">{r.name} — R{r.unit_price}/pp</option>
+                <option key={r.id} value={r.id} className="bg-white">{r.name} — R{r.unit_price}/pp</option>
               ))}
             </select>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Name *</label>
+              <label className="text-sm text-gray-500 mb-1 block">Name *</label>
               <Input type="text" value={customerName} onChange={e => setCustomerName(e.target.value)}
-                className="bg-white/5 border-gray-700 text-white" />
+                className="bg-gray-50 border-gray-200 text-gray-900" />
             </div>
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Email *</label>
+              <label className="text-sm text-gray-500 mb-1 block">Email *</label>
               <Input type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)}
-                className="bg-white/5 border-gray-700 text-white" />
+                className="bg-gray-50 border-gray-200 text-gray-900" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Phone</label>
+              <label className="text-sm text-gray-500 mb-1 block">Phone</label>
               <Input type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)}
-                className="bg-white/5 border-gray-700 text-white" />
+                className="bg-gray-50 border-gray-200 text-gray-900" />
             </div>
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Players</label>
+              <label className="text-sm text-gray-500 mb-1 block">Players</label>
               <div className="flex items-center gap-2">
                 <button onClick={() => setPlayerCount(Math.max(1, playerCount - 1))}
-                  className="w-10 h-10 rounded bg-white/5 border border-gray-700 text-white font-bold text-sm">−</button>
-                <span className="text-white font-bold w-6 text-center">{playerCount}</span>
+                  className="w-10 h-10 rounded bg-gray-50 border border-gray-200 text-gray-900 font-bold text-sm">−</button>
+                <span className="text-gray-900 font-bold w-6 text-center">{playerCount}</span>
                 <button onClick={() => setPlayerCount(Math.min(room?.max_capacity || 8, playerCount + 1))}
-                  className="w-10 h-10 rounded bg-white/5 border border-gray-700 text-white font-bold text-sm">+</button>
+                  className="w-10 h-10 rounded bg-gray-50 border border-gray-200 text-gray-900 font-bold text-sm">+</button>
               </div>
             </div>
           </div>
 
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Notes</label>
+            <label className="text-sm text-gray-500 mb-1 block">Notes</label>
             <Input type="text" value={notes} onChange={e => setNotes(e.target.value)} placeholder="e.g. Birthday party, walk-in"
-              className="bg-white/5 border-gray-700 text-white placeholder:text-gray-600" />
+              className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-600" />
           </div>
 
           {/* Price summary */}
-          <div className="bg-white/5 rounded-lg p-3 flex justify-between items-center">
-            <span className="text-gray-400 text-sm">{playerCount} × R{room?.unit_price || 0}</span>
-            <span className="text-sb-gold font-bold">R{totalAmount}</span>
+          <div className="bg-gray-50 rounded-lg p-3 flex justify-between items-center">
+            <span className="text-gray-500 text-sm">{playerCount} × R{room?.unit_price || 0}</span>
+            <span className="text-sb-orange font-bold">R{totalAmount}</span>
           </div>
         </div>
 

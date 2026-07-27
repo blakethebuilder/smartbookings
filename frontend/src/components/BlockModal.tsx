@@ -57,27 +57,27 @@ export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) 
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Ban size={20} className="text-gray-400" />
+            <Ban size={20} className="text-gray-500" />
             Block Time Slot
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="bg-white/5 rounded-lg p-3 text-sm">
-            <p className="text-gray-400">
+          <div className="bg-gray-50 rounded-lg p-3 text-sm">
+            <p className="text-gray-500">
               {format(slot.start, 'EEEE, MMM d')} • {format(slot.start, 'HH:mm')} — {format(slot.end, 'HH:mm')}
             </p>
           </div>
 
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Room</label>
+            <label className="text-sm text-gray-500 mb-1 block">Room</label>
             <select
               value={selectedRoom}
               onChange={e => setSelectedRoom(e.target.value)}
-              className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-sb-red"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-red"
             >
               {rooms.map(room => (
-                <option key={room.id} value={room.id} className="bg-sb-card">
+                <option key={room.id} value={room.id} className="bg-white">
                   {room.name}
                 </option>
               ))}
@@ -85,13 +85,13 @@ export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) 
           </div>
 
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Reason (optional)</label>
+            <label className="text-sm text-gray-500 mb-1 block">Reason (optional)</label>
             <Input
               type="text"
               value={reason}
               onChange={e => setReason(e.target.value)}
               placeholder="e.g. Maintenance, Team event, Private function"
-              className="bg-white/5 border-gray-700 text-white placeholder:text-gray-600"
+              className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-600"
             />
           </div>
         </div>
