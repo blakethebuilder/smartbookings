@@ -263,9 +263,20 @@ async function createCollections() {
         ids[col.name] = result.id
         console.log(`✓ Collection: ${col.name} (${result.id})`)
       } else {
-        // Already exists, get its ID and update rules
+        // Already exists, get its ID and update rules + add missing fields
         const existing = await api('GET', `/api/collections/${col.name}`)
         ids[col.name] = existing.id
+
+        // Add any missing fields to the existing collection
+        const existingFieldNames = new Set(existing.fields?.map(f => f.name) || [])
+        const missingFields = fields.filter(f => !existingFieldNames.has(f.name) && f.name)
+
+        if (missingFields.length > 0) {
+          const allFields = [...(existing.fields || []), ...missingFields]
+          await api('PATCH', `/api/collections/${existing.id}`, { fields: allFields })
+          console.log(`  Collection: ${col.name} (added ${missingFields.length} fields: ${missingFields.map(f => f.name).join(', ')})`)
+        }
+
         // Update rules if they're null
         if (existing.listRule === null || existing.viewRule === null) {
           await api('PATCH', `/api/collections/${existing.id}`, {
@@ -276,7 +287,7 @@ async function createCollections() {
             deleteRule: col.deleteRule,
           })
           console.log(`  Collection: ${col.name} (rules updated)`)
-        } else {
+        } else if (missingFields.length === 0) {
           console.log(`  Collection: ${col.name} (existing ${existing.id})`)
         }
       }
@@ -317,11 +328,14 @@ async function seedRooms() {
 }
 
 async function seedStaff() {
+  // Ensure superadmin staff record matches the PB superuser (from env)
+  const adminEmail = process.env.PB_ADMIN_EMAIL || 'admin@smartbookings.local'
+  const adminPassword = process.env.PB_ADMIN_PASSWORD || 'admin123456'
+
   const staff = [
-    { name: 'Daylin', email: 'daylin@smartbookings.local', role: 'admin', avatar_color: '#E53935', is_active: true, password: '2536' },
-    { name: 'Thabo', email: 'thabo@smartbookings.local', role: 'staff', avatar_color: '#FFB900', is_active: true, password: '5678' },
-    { name: 'Zanele', email: 'zanele@smartbookings.local', role: 'staff', avatar_color: '#4CAF50', is_active: true, password: '9012' },
-    { name: 'Ryan', email: 'ryan@smartbookings.local', role: 'staff', avatar_color: '#9C27B0', is_active: true, password: '3456' },
+    { name: 'Super Admin', email: adminEmail, role: 'admin', avatar_color: '#F45B31', is_active: true, password: adminPassword, is_superadmin: true },
+    { name: 'Demo Admin', email: 'admin@smartbookings.local', role: 'admin', avatar_color: '#E53935', is_active: true, password: 'admin123', is_superadmin: true },
+    { name: 'Staff Demo', email: 'staff@smartbookings.local', role: 'staff', avatar_color: '#FFB900', is_active: true, password: 'staff123' },
   ]
 
   for (const s of staff) {
@@ -329,7 +343,21 @@ async function seedStaff() {
       await api('POST', '/api/collections/staff/records', s)
       console.log(`✓ Staff: ${s.name} (${s.role})`)
     } catch (e) {
-      console.log(`  Staff: ${s.name} (exists)`)
+      // Already exists — update password + is_superadmin to ensure they're correct
+      try {
+        const existing = await api('GET', `/api/collections/staff/records?filter=(email="${s.email}")`)
+        if (existing.items?.length > 0) {
+          await api('PATCH', `/api/collections/staff/records/${existing.items[0].id}`, {
+            password: s.password,
+            is_superadmin: s.is_superadmin,
+            role: s.role,
+            is_active: true,
+          })
+          console.log(`  Staff: ${s.name} (updated)`)
+        }
+      } catch {
+        console.log(`  Staff: ${s.name} (exists)`)
+      }
     }
   }
 }
