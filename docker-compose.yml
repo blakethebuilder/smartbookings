@@ -12,8 +12,8 @@ services:
     volumes:
       - pb_data:/pb/pb_data
     environment:
-      - PB_ADMIN_EMAIL=${PB_ADMIN_EMAIL:-grandmaster@gr8escape.co.za}
-      - PB_ADMIN_PASSWORD=${PB_ADMIN_PASSWORD:-gr8@2026!}
+      - PB_ADMIN_EMAIL=${PB_ADMIN_EMAIL:-admin@smartbookings.local}
+      - PB_ADMIN_PASSWORD=${PB_ADMIN_PASSWORD:-admin123456}
       - EVO_API_URL=${EVO_API_URL}
       - EVO_API_KEY=${EVO_API_KEY}
       - EVO_INSTANCE=${EVO_INSTANCE:-smarthq2}

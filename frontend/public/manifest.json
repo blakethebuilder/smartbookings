@@ -1,7 +1,7 @@
 {
-  "name": "The Gr8 Escape — Booking System",
-  "short_name": "Gr8 Escape",
-  "description": "Escape Room Booking & Game Master Operations",
+  "name": "SmartBookings",
+  "short_name": "SmartBookings",
+  "description": "Business booking & scheduling platform",
   "start_url": "/login",
   "display": "standalone",
   "background_color": "#0a0a0a",

@@ -28,17 +28,7 @@ const steps = [
   { key: 'payment', label: 'Payment', icon: CreditCard },
 ]
 
-const roomEmoji = (slug: string): string => {
-  const map: Record<string, string> = {
-    asylum: '\u{1F3E5}',
-    trapped: '\u{1F525}',
-    hunted: '\u{1F3AF}',
-    nightmare: '\u{1F631}',
-    basement: '\u{1F512}',
-    witch: '\u{1F9D9}',
-  }
-  return map[slug] ?? '\u{1F6AA}'
-}
+const roomEmoji = (): string => '\u{1F4C5}'
 
 export default function Book() {
   const { branding } = useBranding()

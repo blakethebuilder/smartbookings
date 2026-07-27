@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import pb from './pocketbase'
 import { useAuth } from './auth'
 
-export type BusinessType = 'escape_room' | 'medical' | 'salon' | 'restaurant' | 'custom'
+export type BusinessType = 'medical' | 'salon' | 'restaurant' | 'custom'
 export type PricingModel = 'per_person' | 'per_slot' | 'flat'
 
 export interface BrandingConfig {
@@ -23,18 +23,6 @@ export interface BrandingConfig {
 }
 
 const DEFAULTS: Record<BusinessType, Partial<BrandingConfig>> = {
-  escape_room: {
-    resource_label: 'Room',
-    resource_label_plural: 'Rooms',
-    staff_role_admin: 'Grandmaster',
-    staff_role_worker: 'Game Master',
-    booking_verb: 'Book Now',
-    pricing_model: 'per_person',
-    duration_unit: 'minutes',
-    show_difficulty: true,
-    show_player_count: true,
-    customer_fields: ['name', 'email', 'phone'],
-  },
   medical: {
     resource_label: 'Doctor',
     resource_label_plural: 'Doctors',
@@ -164,7 +152,7 @@ interface BrandingContextType {
   loading: boolean
 }
 
-const defaultBranding: BrandingConfig = DEFAULTS.escape_room as BrandingConfig
+const defaultBranding: BrandingConfig = DEFAULTS.custom as BrandingConfig
 
 const BrandingContext = createContext<BrandingContextType>({
   branding: defaultBranding,

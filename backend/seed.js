@@ -7,7 +7,7 @@
  */
 
 const PB_URL = process.env.PB_URL || process.argv[2] || 'http://localhost:8090'
-const ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'grandmaster@gr8escape.co.za'
+const ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'grandmaster@smartbookings.local'
 const ADMIN_PASSWORD = process.env.PB_ADMIN_PASSWORD || 'gr8@2026!'
 
 let token = null
@@ -54,7 +54,7 @@ async function createCollections() {
       fields: [
         { name: 'name', type: 'text', required: true },
         { name: 'subdomain', type: 'text', required: true, unique: true },
-        { name: 'business_type', type: 'select', required: true, values: ['medical', 'salon', 'restaurant', 'escape_room', 'custom'] },
+        { name: 'business_type', type: 'select', required: true, values: ['medical', 'salon', 'restaurant', 'custom'] },
         { name: 'resource_label', type: 'text' },
         { name: 'resource_label_plural', type: 'text' },
         { name: 'staff_role_admin', type: 'text' },
@@ -297,8 +297,8 @@ async function createCollections() {
 
 async function seedClients() {
   const clients = [
-    { name: 'The Gr8 Escape', subdomain: 'gr8bookings', business_type: 'escape_room', resource_label: 'Room', resource_label_plural: 'Rooms', staff_role_admin: 'Grandmaster', staff_role_worker: 'Game Master', booking_verb: 'Book Now', pricing_model: 'per_person', primary_color: '#E53935', logo_url: '', customer_fields: 'name,email,phone', duration_unit: 'minutes', show_difficulty: true, show_player_count: true, is_active: true },
     { name: 'Fourways Medical Centre', subdomain: 'fourwaysmed', business_type: 'medical', resource_label: 'Doctor', resource_label_plural: 'Doctors', staff_role_admin: 'Admin', staff_role_worker: 'Doctor', booking_verb: 'Book Appointment', pricing_model: 'per_slot', primary_color: '#2563EB', logo_url: '', customer_fields: 'name,email,phone,id_number,medical_aid', duration_unit: 'minutes', show_difficulty: false, show_player_count: false, is_active: true },
+    { name: 'Demo Business', subdomain: 'demo', business_type: 'custom', resource_label: 'Resource', resource_label_plural: 'Resources', staff_role_admin: 'Admin', staff_role_worker: 'Staff', booking_verb: 'Book Now', pricing_model: 'per_slot', primary_color: '#FF4500', logo_url: '', customer_fields: 'name,email,phone', duration_unit: 'minutes', show_difficulty: false, show_player_count: false, is_active: true },
   ]
 
   for (const c of clients) {
@@ -312,31 +312,16 @@ async function seedClients() {
 }
 
 async function seedRooms() {
-  const rooms = [
-    { name: 'Asylum Escape', slug: 'asylum-escape', description: "Dr. Mulasy Tretour's office holds evidence of his vicious crimes", difficulty: 7, duration_minutes: 60, reset_buffer_minutes: 15, min_players: 2, max_players: 7, price_per_player: 320, currency: 'ZAR', color: '#E53935', is_active: true, sort_order: 1 },
-    { name: 'Trapped', slug: 'trapped', description: 'A fire is tearing through the mansion', difficulty: 8, duration_minutes: 60, reset_buffer_minutes: 15, min_players: 2, max_players: 7, price_per_player: 320, currency: 'ZAR', color: '#FFB900', is_active: true, sort_order: 2 },
-    { name: 'The Hunted', slug: 'the-hunted', description: "Can you escape the creature that's taken the town?", difficulty: 8.5, duration_minutes: 60, reset_buffer_minutes: 15, min_players: 2, max_players: 7, price_per_player: 320, currency: 'ZAR', color: '#4CAF50', is_active: true, sort_order: 3 },
-    { name: 'Nightmare', slug: 'nightmare', description: "Break the Sandman's curse or join his collection", difficulty: 9, duration_minutes: 60, reset_buffer_minutes: 15, min_players: 2, max_players: 7, price_per_player: 320, currency: 'ZAR', color: '#9C27B0', is_active: true, sort_order: 4 },
-    { name: 'The Basement', slug: 'the-basement', description: '60 minutes to escape his chamber for good', difficulty: 10, duration_minutes: 60, reset_buffer_minutes: 15, min_players: 2, max_players: 7, price_per_player: 320, currency: 'ZAR', color: '#FF9800', is_active: true, sort_order: 5 },
-    { name: "The Witch's Curse", slug: 'the-witchs-curse', description: 'Solve magical puzzles in 45 minutes — outdoor container experience', duration_minutes: 45, reset_buffer_minutes: 10, min_players: 2, max_players: 4, price_per_player: 320, currency: 'ZAR', color: '#E040FB', is_active: true, sort_order: 6 },
-  ]
-
-  for (const room of rooms) {
-    try {
-      await api('POST', '/api/collections/rooms/records', room)
-      console.log(`✓ Room: ${room.name}`)
-    } catch (e) {
-      console.log(`  Room: ${room.name} (exists)`)
-    }
-  }
+  // Rooms are per-client — seeded via the UI by superadmins
+  console.log('  (rooms are client-specific — add via dashboard)')
 }
 
 async function seedStaff() {
   const staff = [
-    { name: 'Daylin', email: 'daylin@gr8escape.co.za', role: 'grandmaster', avatar_color: '#E53935', is_active: true, password: '2536' },
-    { name: 'Thabo', email: 'thabo@gr8escape.co.za', role: 'gamemaster', avatar_color: '#FFB900', is_active: true, password: '5678' },
-    { name: 'Zanele', email: 'zanele@gr8escape.co.za', role: 'gamemaster', avatar_color: '#4CAF50', is_active: true, password: '9012' },
-    { name: 'Ryan', email: 'ryan@gr8escape.co.za', role: 'gamemaster', avatar_color: '#9C27B0', is_active: true, password: '3456' },
+    { name: 'Daylin', email: 'daylin@smartbookings.local', role: 'grandmaster', avatar_color: '#E53935', is_active: true, password: '2536' },
+    { name: 'Thabo', email: 'thabo@smartbookings.local', role: 'gamemaster', avatar_color: '#FFB900', is_active: true, password: '5678' },
+    { name: 'Zanele', email: 'zanele@smartbookings.local', role: 'gamemaster', avatar_color: '#4CAF50', is_active: true, password: '9012' },
+    { name: 'Ryan', email: 'ryan@smartbookings.local', role: 'gamemaster', avatar_color: '#9C27B0', is_active: true, password: '3456' },
   ]
 
   for (const s of staff) {
@@ -351,15 +336,15 @@ async function seedStaff() {
 
 async function seedSettings() {
   const settings = [
-    { key: 'business_name', value: 'The Gr8 Escape', description: 'Business name' },
-    { key: 'business_type', value: 'escape_room', description: 'escape_room | medical | salon | restaurant | custom' },
-    { key: 'resource_label', value: 'Room', description: 'Singular: Room, Doctor, Stylist, Table' },
-    { key: 'resource_label_plural', value: 'Rooms', description: 'Plural label for resources' },
-    { key: 'staff_role_admin', value: 'Grandmaster', description: 'Admin role label' },
-    { key: 'staff_role_worker', value: 'Game Master', description: 'Worker/staff role label' },
+    { key: 'business_name', value: 'SmartBookings', description: 'Business name' },
+    { key: 'business_type', value: 'custom', description: 'medical | salon | restaurant | custom' },
+    { key: 'resource_label', value: 'Resource', description: 'Singular: Doctor, Stylist, Table' },
+    { key: 'resource_label_plural', value: 'Resources', description: 'Plural label for resources' },
+    { key: 'staff_role_admin', value: 'Admin', description: 'Admin role label' },
+    { key: 'staff_role_worker', value: 'Staff', description: 'Worker/staff role label' },
     { key: 'booking_verb', value: 'Book Now', description: 'CTA text for booking button' },
-    { key: 'pricing_model', value: 'per_person', description: 'per_person | per_slot | flat' },
-    { key: 'primary_color', value: '#E53935', description: 'Primary brand color (hex)' },
+    { key: 'pricing_model', value: 'per_slot', description: 'per_person | per_slot | flat' },
+    { key: 'primary_color', value: '#FF4500', description: 'Primary brand color (hex)' },
     { key: 'logo_url', value: '', description: 'URL to logo image' },
     { key: 'customer_fields', value: 'name,email,phone', description: 'Comma-separated customer form fields' },
     { key: 'duration_unit', value: 'minutes', description: 'minutes | slots' },
