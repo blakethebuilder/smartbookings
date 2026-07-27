@@ -109,7 +109,7 @@ export default function BookConfirm() {
       `DTSTART:${startDateTime.replace(/[-:]/g, '').replace('T', 'T')}`,
       `DTEND:${endDateTime.replace(/[-:]/g, '').replace('T', 'T')}`,
       `SUMMARY:${branding.resource_label} - ${room.name}`,
-      `DESCRIPTION:${branding.business_name} - ${room.name}\\nBooking: ${booking.reference}\\nPlayers: ${booking.party_size}\\nPlease arrive on time for your booking.`,
+      `DESCRIPTION:${branding.business_name} - ${room.name}\\nBooking: ${booking.reference}\\nGuests: ${booking.party_size}\\nPlease arrive on time for your booking.`,
       `LOCATION:${branding.business_name}`,
       `STATUS:CONFIRMED`,
       `END:VEVENT`,
@@ -175,7 +175,7 @@ export default function BookConfirm() {
             </div>
             <div className="flex items-center gap-3 text-gray-600">
               <Users size={16} className="text-gray-500" />
-              <span className="text-gray-900">{booking.party_size} players</span>
+              <span className="text-gray-900">{booking.party_size} guests</span>
             </div>
             <div className="flex items-center gap-3 text-gray-600">
               <span className="text-gray-500">👤</span>
@@ -199,10 +199,10 @@ export default function BookConfirm() {
         <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 mb-8 text-left">
           <div className="flex items-center gap-3 mb-3">
             <Shield size={20} className="text-sb-orange" />
-            <h3 className="text-lg font-bold text-gray-900">Player Waiver</h3>
+            <h3 className="text-lg font-bold text-gray-900">Waiver</h3>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-            All players must sign an indemnity waiver before the game. Share this link with your group:
+            All guests must sign an indemnity waiver before your booking. Share this link with your group:
           </p>
           <div className="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-lg p-3">
             <Input
@@ -222,7 +222,7 @@ export default function BookConfirm() {
             </button>
           </div>
           <p className="text-xs text-gray-600 mt-2">
-            Each player should open this link and sign before arriving. Waivers are also available at reception.
+            Each guest should open this link and sign before arriving. Waivers are also available at reception.
           </p>
         </div>
 
@@ -248,7 +248,7 @@ export default function BookConfirm() {
               <h3 className="text-lg font-bold text-gray-900">Cancel Booking</h3>
             </div>
             <p className="text-sm text-gray-600 mb-4">
-              Free cancellation up to {cancelHoursBefore} hours before your game. A R{cancelAdminFee} admin fee applies on deposits.
+              Free cancellation up to {cancelHoursBefore} hours before your booking. A R{cancelAdminFee} admin fee applies on deposits.
             </p>
             <button
               onClick={() => setShowCancelDialog(true)}
@@ -301,9 +301,9 @@ export default function BookConfirm() {
               <Home size={18} /> Back to Site
             </a>
           </Button>
-          <Link to="/book" className="px-8 py-3 rounded-lg border border-gray-200 text-gray-600 hover:text-sb-orange hover:border-sb-orange transition-colors flex items-center justify-center gap-2">
-            Book Another {branding.resource_label}
-          </Link>
+          <Button variant="outline" asChild>
+            <Link to="/book">Book Another {branding.resource_label}</Link>
+          </Button>
         </div>
       </div>
     </div>

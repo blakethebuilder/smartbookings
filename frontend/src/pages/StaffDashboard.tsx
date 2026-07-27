@@ -98,13 +98,13 @@ export default function StaffDashboard() {
         <Card>
           <CardContent className="pt-6 text-center">
             <p className="text-2xl sm:text-3xl font-black text-sb-orange">{upcomingGames.length}</p>
-            <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Upcoming</p>
+            <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Upcoming Bookings</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6 text-center">
             <p className="text-2xl sm:text-3xl font-black text-gray-900">{games.reduce((sum, g) => sum + g.hintsUsed, 0)}</p>
-            <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Hints Given</p>
+            <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Notes Added</p>
           </CardContent>
         </Card>
       </div>
@@ -181,7 +181,7 @@ export default function StaffDashboard() {
                 <div className={`grid ${branding.show_player_count ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
                   {branding.show_player_count && (
                     <div className="bg-gray-50 rounded-lg p-3">
-                      <p className="text-xs text-gray-500">Players</p>
+                      <p className="text-xs text-gray-500">Party</p>
                       <p className="text-gray-900 font-bold text-lg">{selectedGame.booking.party_size}</p>
                     </div>
                   )}
@@ -197,7 +197,7 @@ export default function StaffDashboard() {
                   </p>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-xs text-gray-500">Hints Used</p>
+                  <p className="text-xs text-gray-500">Notes Added</p>
                   <p className="text-gray-900 font-bold text-lg">{selectedGame.hintsUsed}</p>
                 </div>
               </div>
@@ -255,7 +255,7 @@ function GameCard({ game, onSelect, onStart, onCheckIn, onEnd, onHint }: {
   }
 
   return (
-    <Card className="flex items-center gap-4 cursor-pointer hover:border-gray-600 transition-colors" onClick={onSelect}>
+    <Card className="flex items-center gap-4 cursor-pointer hover:border-gray-300 transition-colors" onClick={onSelect}>
       <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: game.room.color }} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
@@ -264,12 +264,12 @@ function GameCard({ game, onSelect, onStart, onCheckIn, onEnd, onHint }: {
             {game.status.replace('_', ' ').toUpperCase()}
           </Badge>
         </div>
-        <p className="text-sm text-gray-600">{game.booking.customer_name}{branding.show_player_count ? ` • ${game.booking.party_size} players` : ''}</p>
+        <p className="text-sm text-gray-600">{game.booking.customer_name}{branding.show_player_count ? ` • ${game.booking.party_size} guests` : ''}</p>
         <p className="text-xs text-gray-500">{game.timeSlot.start_time} — {game.timeSlot.end_time}</p>
       </div>
       <div className="flex items-center gap-2">
         {game.hintsUsed > 0 && (
-          <span className="text-xs text-gray-500">{game.hintsUsed} hints</span>
+          <span className="text-xs text-gray-500">{game.hintsUsed} notes</span>
         )}
         <ChevronRight size={16} className="text-gray-400" />
       </div>

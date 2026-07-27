@@ -85,9 +85,7 @@ export default function PublicAvailability() {
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">
             Check <span className="text-sb-orange">Availability</span>
           </h1>
-          <p className="text-gray-600">See what's free before you book.{' '}
-            {/* TODO: load business hours from settings */}
-            Check availability below</p>
+          <p className="text-gray-600">Browse available time slots and book your preferred time.</p>
         </div>
 
         {/* Week navigation */}

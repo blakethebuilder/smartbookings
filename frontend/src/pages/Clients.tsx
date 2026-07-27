@@ -338,7 +338,7 @@ export default function Clients() {
         ))}
 
         {/* Add client card */}
-        <Card onClick={openAdd} className="border-dashed border-gray-700 hover:border-sb-red/50 flex flex-col items-center justify-center min-h-[200px] text-gray-500 hover:text-sb-red transition-colors cursor-pointer">
+        <Card onClick={openAdd} className="border-dashed border-gray-300 hover:border-sb-red/50 flex flex-col items-center justify-center min-h-[200px] text-gray-500 hover:text-sb-red transition-colors cursor-pointer">
           <CardContent className="pt-6 flex flex-col items-center">
             <Plus size={32} className="mb-2" />
             <span className="text-sm font-medium">Add Client</span>
@@ -450,19 +450,19 @@ export default function Clients() {
               <div className="flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-3">
                   <label className="text-sm text-gray-600">Show Difficulty</label>
-                  <button onClick={() => setForm(f => ({ ...f, show_difficulty: !f.show_difficulty }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.show_difficulty ? 'bg-green-500' : 'bg-gray-600'}`}>
+                  <button onClick={() => setForm(f => ({ ...f, show_difficulty: !f.show_difficulty }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.show_difficulty ? 'bg-green-500' : 'bg-gray-300'}`}>
                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.show_difficulty ? 'left-7' : 'left-1'}`} />
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <label className="text-sm text-gray-600">Show Player Count</label>
-                  <button onClick={() => setForm(f => ({ ...f, show_player_count: !f.show_player_count }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.show_player_count ? 'bg-green-500' : 'bg-gray-600'}`}>
+                  <label className="text-sm text-gray-600">Show Party Size</label>
+                  <button onClick={() => setForm(f => ({ ...f, show_player_count: !f.show_player_count }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.show_player_count ? 'bg-green-500' : 'bg-gray-300'}`}>
                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.show_player_count ? 'left-7' : 'left-1'}`} />
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
                   <label className="text-sm text-gray-600">Active</label>
-                  <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.is_active ? 'bg-green-500' : 'bg-gray-600'}`}>
+                  <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.is_active ? 'bg-green-500' : 'bg-gray-300'}`}>
                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.is_active ? 'left-7' : 'left-1'}`} />
                   </button>
                 </div>

@@ -22,10 +22,10 @@ const SETTING_LABELS: Record<string, { label: string; hint?: string }> = {
   business_name: { label: 'Business Name' },
   business_hours: { label: 'Operating Hours', hint: 'e.g. Thu-Sun 11:00-18:00' },
   cancellation_admin_fee: { label: 'Cancellation Admin Fee (Rands)', hint: 'Admin fee retained on deposit cancellation' },
-  cancellation_hours_before: { label: 'Cancellation Window (hours)', hint: 'Hours before game when cancellation is allowed' },
+  cancellation_hours_before: { label: 'Cancellation Window (hours)', hint: 'Hours before booking when cancellation is allowed' },
   default_currency: { label: 'Default Currency', hint: 'ISO code e.g. ZAR' },
-  default_reset_buffer: { label: 'Reset Buffer (minutes)', hint: 'Time between games for room reset' },
-  game_duration: { label: 'Game Duration (minutes)' },
+  default_reset_buffer: { label: 'Reset Buffer (minutes)', hint: 'Time between bookings for room reset' },
+  game_duration: { label: 'Duration (minutes)' },
   payfast_merchant_id: { label: 'Merchant ID', hint: 'Payfast merchant ID' },
   payfast_merchant_key: { label: 'Merchant Key', hint: 'Payfast merchant key (secret)' },
   payfast_passphrase: { label: 'Passphrase', hint: 'Payfast passphrase (secret)' },
@@ -34,9 +34,9 @@ const SETTING_LABELS: Record<string, { label: string; hint?: string }> = {
   evolution_api_key: { label: 'API Key', hint: 'Evolution API key (secret)' },
   evolution_instance: { label: 'Instance Name', hint: 'Evolution API instance' },
   whatsapp_enabled: { label: 'Enable WhatsApp', hint: 'true or false' },
-  reminder_hours_before: { label: 'Reminder Hours', hint: 'Hours before game to send reminder' },
+  reminder_hours_before: { label: 'Reminder Hours', hint: 'Hours before booking to send reminder' },
   waiver_enabled: { label: 'Enable Waivers', hint: 'true or false' },
-  waiver_hours_before: { label: 'Waiver Reminder Hours', hint: 'Hours before game to send waiver link' },
+  waiver_hours_before: { label: 'Waiver Reminder Hours', hint: 'Hours before booking to send waiver link' },
   // Branding fields
   business_type: { label: 'Business Type', hint: 'escape_room, medical, salon, restaurant, or custom' },
   resource_label: { label: 'Resource Label (Singular)', hint: 'e.g. Room, Doctor, Stylist, Table' },
@@ -48,7 +48,7 @@ const SETTING_LABELS: Record<string, { label: string; hint?: string }> = {
   primary_color: { label: 'Primary Color', hint: 'Hex color code, e.g. #E53935' },
   duration_unit: { label: 'Duration Unit', hint: 'minutes or slots' },
   show_difficulty: { label: 'Show Difficulty', hint: 'true or false' },
-  show_player_count: { label: 'Show Player Count', hint: 'true or false' },
+  show_player_count: { label: 'Show Party Size', hint: 'true or false' },
   logo_url: { label: 'Logo URL', hint: 'URL to your logo image' },
   customer_fields: { label: 'Customer Fields', hint: 'Comma-separated list of fields to collect' },
 }
@@ -292,17 +292,17 @@ export default function Settings() {
           <h2 className="text-lg font-bold text-gray-900">Reset Demo Data</h2>
         </div>
         <p className="text-sm text-gray-600 mb-4">
-          Wipes all bookings, waivers, game hosts, GM blocks, and time slots.
+          Wipes all bookings, waivers, staff unavailability blocks, and time slots.
           Keeps rooms, staff, and settings. Fresh time slots will be regenerated for the next 60 days.
         </p>
-        <button
+        <Button
           onClick={() => setShowResetDialog(true)}
           disabled={resetting}
-          className="px-4 py-2 rounded-lg bg-red-500/20 text-red-600 border border-red-500/30 hover:bg-red-500/30 font-bold text-sm flex items-center gap-2 disabled:opacity-50 transition-colors"
+          variant="destructive"
         >
           {resetting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
           {resetting ? 'Resetting...' : 'Reset All Demo Data'}
-        </button>
+        </Button>
       </div>
 
       {/* Reset Confirmation Dialog */}
@@ -312,7 +312,7 @@ export default function Settings() {
             <DialogTitle>Reset Demo Data?</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-gray-600">
-            This will DELETE all bookings, waivers, game hosts, GM blocks, and time slots. Rooms, staff, and settings will be kept. Fresh time slots will be regenerated. Are you sure?
+            This will DELETE all bookings, waivers, staff unavailability blocks, and time slots. Rooms, staff, and settings will be kept. Fresh time slots will be regenerated. Are you sure?
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowResetDialog(false)}>Cancel</Button>

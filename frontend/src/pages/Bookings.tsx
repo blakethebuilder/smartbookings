@@ -60,7 +60,7 @@ export default function Bookings() {
   }
 
   const exportCSV = () => {
-    const headers = ['Reference', 'Customer', 'Email', 'Phone', 'Room', 'Date', 'Time', 'Players', 'Total', 'Deposit', 'Balance', 'Payment Type', 'Status', 'Payment', 'Waiver']
+    const headers = ['Reference', 'Customer', 'Email', 'Phone', 'Room', 'Date', 'Time', 'Party size', 'Total', 'Deposit', 'Balance', 'Payment Type', 'Status', 'Payment', 'Waiver']
     const rows = filtered.map(b => {
       const room = rooms[b.room]
       const ts = slots[b.time_slot]
@@ -150,29 +150,22 @@ export default function Bookings() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Bookings</h1>
           <p className="text-gray-500 mt-1">{bookings.length} total bookings</p>
         </div>
-        <button
-          onClick={exportCSV}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 text-sm font-medium transition-colors"
-        >
+        <Button variant="outline" onClick={exportCSV}>
           <Download size={16} />
           Download CSV
-        </button>
+        </Button>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2 mb-6">
         {['all', 'pending', 'confirmed', 'cancelled', 'completed'].map(f => (
-          <button
+          <Button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              filter === f
-                ? 'bg-sb-orange text-white'
-                : 'bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200'
-            }`}
+            variant={filter === f ? 'default' : 'secondary'}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -192,7 +185,7 @@ export default function Bookings() {
                   <th className="text-left py-3 px-2 sm:px-4 text-gray-500 font-medium">Customer</th>
                   <th className="text-left py-3 px-4 text-gray-500 font-medium hidden sm:table-cell">{branding.resource_label}</th>
                   <th className="text-left py-3 px-2 sm:px-4 text-gray-500 font-medium">Date</th>
-                  {branding.show_player_count && <th className="text-left py-3 px-4 text-gray-500 font-medium hidden sm:table-cell">Players</th>}
+                  {branding.show_player_count && <th className="text-left py-3 px-4 text-gray-500 font-medium hidden sm:table-cell">Party size</th>}
                   <th className="text-left py-3 px-2 sm:px-4 text-gray-500 font-medium">Total</th>
                   <th className="text-left py-3 px-2 sm:px-4 text-gray-500 font-medium">Status</th>
                   <th className="text-left py-3 px-4 text-gray-500 font-medium hidden sm:table-cell">Staff</th>
@@ -245,12 +238,12 @@ export default function Bookings() {
                             <span className="text-xs text-gray-700">{host.staffName}</span>
                           </div>
                         ) : room && ts ? (
-                          <button
+                          <Button
+                            variant="ghost" size="sm"
                             onClick={() => setAssignModal({ booking: b, room, timeSlot: ts })}
-                            className="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-500 hover:text-sb-orange hover:bg-sb-orange/10 text-xs transition-colors"
                           >
                             <UserPlus size={12} /> Assign
-                          </button>
+                          </Button>
                         ) : (
                           <span className="text-xs text-gray-600">—</span>
                         )}
@@ -279,26 +272,26 @@ export default function Bookings() {
                         {b.waiver_signed ? (
                           <span className="text-green-600 text-xs font-bold">✓ Signed</span>
                         ) : (
-                          <button
+                          <Button
+                            variant="ghost" size="sm"
                             onClick={() => copyWaiverLink(b.reference)}
-                            className="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-500 hover:text-sb-orange hover:bg-sb-orange/10 text-xs transition-colors"
                           >
                             {copiedId === b.reference ? (
                               <><Check size={12} /> Copied</>
                             ) : (
                               <><Copy size={12} /> Send Waiver</>
                             )}
-                          </button>
+                          </Button>
                         )}
                       </td>
                       <td className="py-3 px-4">
                         {(b.status === 'pending' || b.status === 'confirmed') ? (
-                          <button
+                          <Button
+                            variant="destructive" size="sm"
                             onClick={() => setCancelConfirm(b)}
-                            className="px-2 py-1 rounded bg-red-500/20 text-red-600 text-xs font-bold hover:bg-red-500/30 transition-colors"
                           >
                             Cancel
-                          </button>
+                          </Button>
                         ) : (
                           <span className="text-xs text-gray-600">—</span>
                         )}
