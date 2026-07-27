@@ -122,7 +122,7 @@ async function loadBranding(client?: any): Promise<BrandingConfig> {
       business_type: 'custom' as BusinessType,
       business_name: 'My Business',
       ...DEFAULTS.custom,
-      primary_color: '#E53935',
+      primary_color: '#FF4500',
       logo_url: '',
     } as BrandingConfig
   } catch {
@@ -130,7 +130,7 @@ async function loadBranding(client?: any): Promise<BrandingConfig> {
       business_type: 'custom' as BusinessType,
       business_name: 'My Business',
       ...DEFAULTS.custom,
-      primary_color: '#E53935',
+      primary_color: '#FF4500',
       logo_url: '',
     } as BrandingConfig
   }

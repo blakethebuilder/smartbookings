@@ -48,36 +48,36 @@ export default function Layout() {
   const handleNav = () => setSidebarOpen(false)
 
   return (
-    <div className="flex h-screen bg-gr8-dark">
+    <div className="flex h-screen bg-gray-50">
       {/* Mobile overlay */}
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/30 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
       <aside className={`
-        fixed lg:static inset-y-0 left-0 z-50 w-64 bg-gr8-card border-r border-gray-800 flex flex-col
+        fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col
         transform transition-transform duration-200 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         {/* Header */}
-        <div className="p-6 border-b border-gray-800 flex items-center justify-between">
+        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-black text-white tracking-tight">
+            <h1 className="text-xl font-black text-gray-900 tracking-tight">
               {branding.business_name}
             </h1>
             <p className="text-xs text-gray-500 mt-1">
               {isGrandmaster ? `${branding.staff_role_admin} Portal` : `${branding.staff_role_worker} HQ`}
             </p>
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-gray-500 hover:text-white">
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-gray-500 hover:text-gray-900">
             <X size={20} />
           </button>
         </div>
 
         {/* User info */}
         {staff && (
-          <div className="px-4 py-3 border-b border-gray-800 flex items-center gap-3">
+          <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-3">
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
               style={{ backgroundColor: staff.avatar_color }}
@@ -85,7 +85,7 @@ export default function Layout() {
               {staff.name.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-white truncate">{staff.name}</p>
+              <p className="text-sm font-medium text-gray-900 truncate">{staff.name}</p>
               <p className="text-xs text-gray-500 flex items-center gap-1">
                 {isGrandmaster ? <Crown size={10} style={{ color: branding.primary_color }} /> : null}
                 {isGrandmaster ? branding.staff_role_admin : branding.staff_role_worker}
@@ -96,7 +96,7 @@ export default function Layout() {
 
         {/* Superadmin client switcher */}
         {isSuperadmin && allClients.length > 0 && (
-          <div className="px-4 py-3 border-b border-gray-800">
+          <div className="px-4 py-3 border-b border-gray-200">
             <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Switch Client</p>
             <div className="space-y-1 max-h-40 overflow-y-auto">
               {allClients.map(c => (
@@ -105,8 +105,8 @@ export default function Layout() {
                   onClick={() => switchClient(c.id)}
                   className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
                     currentClient?.id === c.id
-                      ? 'text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                      ? 'text-gray-900'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                   style={currentClient?.id === c.id ? { backgroundColor: branding.primary_color + '1A' } : undefined}
                 >
@@ -130,7 +130,7 @@ export default function Layout() {
                 `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                   isActive
                     ? ''
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    : 'text-gray-600 hover:text-gr8-orange hover:bg-orange-50'
                 }`
               }
               style={({ isActive }) => isActive ? { backgroundColor: branding.primary_color + '1A', color: branding.primary_color } : undefined}

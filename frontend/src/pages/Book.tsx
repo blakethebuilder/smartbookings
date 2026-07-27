@@ -281,14 +281,14 @@ export default function Book() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <Loader2 className="animate-spin text-gr8-red" size={32} />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="animate-spin text-gr8-orange" size={32} />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="border-b border-white/10 py-4 px-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
@@ -312,7 +312,7 @@ export default function Book() {
               const isComplete = i < currentIdx
               return (
                 <div key={s.key} className="flex items-center">
-                  <div className={`flex items-center gap-2 ${isActive ? 'text-gr8-red' : isComplete ? 'text-green-400' : 'text-gray-600'}`}>
+                  <div className={`flex items-center gap-2 ${isActive ? 'text-gr8-orange' : isComplete ? 'text-green-400' : 'text-gray-600'}`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
                       isActive ? 'bg-gr8-red text-white' : isComplete ? 'bg-green-500/20 text-green-400' : 'bg-white/5 text-gray-600'
                     }`}>
@@ -372,7 +372,7 @@ export default function Book() {
                         {room.duration_minutes}min
                         {branding.show_player_count ? ` • ${room.min_players}-${room.max_players} players` : ''}
                       </span>
-                      <span className="text-gr8-gold font-bold">R{room.price_per_player}{branding.pricing_model === 'per_person' ? '/pp' : ''}</span>
+                      <span className="text-gr8-orange font-bold">R{room.price_per_player}{branding.pricing_model === 'per_person' ? '/pp' : ''}</span>
                     </div>
                   </div>
                 </button>
@@ -429,7 +429,7 @@ export default function Book() {
             {slots.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-gray-500 text-lg">No available slots for this date.</p>
-                <button onClick={() => setStep('date')} className="mt-4 text-gr8-red hover:underline">
+                <button onClick={() => setStep('date')} className="mt-4 text-gr8-orange hover:underline">
                   Try another date
                 </button>
               </div>
@@ -536,7 +536,7 @@ export default function Book() {
                 </div>
                 <div className="flex justify-between font-bold text-white text-lg pt-2 border-t border-gray-700/50">
                   <span>Total</span>
-                  <span className="text-gr8-gold">R{formData.playerCount * formData.room.price_per_player}</span>
+                  <span className="text-gr8-orange">R{formData.playerCount * formData.room.price_per_player}</span>
                 </div>
               </div>
 
@@ -609,7 +609,7 @@ export default function Book() {
                     }`}
                   >
                     <p className="text-white font-bold mb-1">Deposit</p>
-                    <p className="text-2xl font-black text-gr8-gold">R{depositAmount}</p>
+                    <p className="text-2xl font-black text-gr8-orange">R{depositAmount}</p>
                     <p className="text-xs text-gray-500 mt-1">Covers {formData.room.min_players} player{formData.room.min_players !== 1 ? 's' : ''}. R{balanceDue} balance due on arrival.</p>
                   </button>
                   <button
@@ -621,7 +621,7 @@ export default function Book() {
                     }`}
                   >
                     <p className="text-white font-bold mb-1">Pay Full</p>
-                    <p className="text-2xl font-black text-gr8-gold">R{fullAmount}</p>
+                    <p className="text-2xl font-black text-gr8-orange">R{fullAmount}</p>
                     <p className="text-xs text-gray-500 mt-1">Pay for all {formData.playerCount} players now.</p>
                   </button>
                 </div>
@@ -634,7 +634,7 @@ export default function Book() {
                     <span>Full amount ({formData.playerCount} × R{formData.room.price_per_player})</span>
                     <span className="text-white">R{fullAmount}</span>
                   </div>
-                  <div className="flex justify-between text-gr8-gold font-bold">
+                  <div className="flex justify-between text-gr8-orange font-bold">
                     <span>Pay now</span>
                     <span>R{amountToPay}</span>
                   </div>
@@ -653,7 +653,7 @@ export default function Book() {
                 </div>
               ) : (
                 <div className="bg-gr8-gold/10 border border-gr8-gold/30 rounded-xl p-4 mb-6 text-sm">
-                  <p className="text-gr8-gold font-bold mb-1">Demo Mode</p>
+                  <p className="text-gr8-orange font-bold mb-1">Demo Mode</p>
                   <p className="text-gray-400">Payfast not configured. Booking will be confirmed instantly for testing.</p>
                 </div>
               )}
