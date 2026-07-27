@@ -5,7 +5,7 @@ version: '3.8'
 services:
   app:
     build: .
-    container_name: gr8escape
+    container_name: smartbookings
     restart: unless-stopped
     ports:
       - "8090:8090"
