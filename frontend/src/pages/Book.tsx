@@ -23,11 +23,11 @@ interface FormData {
 }
 
 const steps = [
-  { key: 'rooms', label: 'Choose Room', icon: Users },
-  { key: 'date', label: 'Pick Date', icon: Calendar },
-  { key: 'slot', label: 'Pick Time', icon: Clock },
-  { key: 'details', label: 'Your Details', icon: Users },
-  { key: 'payment', label: 'Payment', icon: CreditCard },
+  { key: 'rooms', label: 'Select', icon: Calendar },
+  { key: 'date', label: 'Date', icon: Calendar },
+  { key: 'slot', label: 'Time', icon: Clock },
+  { key: 'details', label: 'Details', icon: Users },
+  { key: 'payment', label: 'Confirm', icon: CreditCard },
 ]
 
 const roomEmoji = (_slug?: string): string => '\u{1F4C5}'
@@ -327,8 +327,8 @@ export default function Book() {
         {/* Step: Choose Room */}
         {step === 'rooms' && (
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Choose Your {branding.resource_label}</h1>
-            <p className="text-gray-600 mb-8">{`Choose your ${branding.resource_label.toLowerCase()} for your booking.`}</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Select a {branding.resource_label}</h1>
+            <p className="text-gray-500 mb-8">Choose from available options below.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {rooms.map(room => (
                 <button
@@ -337,33 +337,27 @@ export default function Book() {
                   className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden text-left hover:border-sb-orange hover:shadow-md transition-all group"
                 >
                   <div
-                    className="h-28 sm:h-40 bg-cover bg-center relative"
-                    style={{ backgroundColor: room.color + '22' }}
+                    className="h-24 sm:h-32 relative flex items-center justify-center"
+                    style={{ backgroundColor: room.color + '18' }}
                   >
-                    <span className="absolute inset-0 flex items-center justify-center text-5xl opacity-30 select-none">
-                      {roomEmoji(room.slug)}
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
-                    <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: room.color }} />
-                      {branding.show_difficulty && room.difficulty && (
-                        <span className="text-[10px] font-bold text-white bg-black/50 px-2 py-0.5 rounded-full">
-                          {room.difficulty}/10
-                        </span>
-                      )}
-                    </div>
+                    <div className="absolute top-3 left-3 w-3 h-3 rounded-full" style={{ backgroundColor: room.color }} />
+                    <span className="text-4xl opacity-20 select-none">📅</span>
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-bold text-gray-900 mb-1 transition-colors">
+                  <div className="p-5">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-sb-orange transition-colors">
                       {room.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">{room.description}</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-600">
-                        {room.duration_minutes}min
-                        {branding.show_player_count ? ` • ${room.min_capacity}-${room.max_capacity} players` : ''}
+                    <p className="text-sm text-gray-500 mb-4 line-clamp-2">{room.description || 'No description'}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                        <span className="flex items-center gap-1"><Clock size={12} /> {room.duration_minutes}min</span>
+                        {branding.show_player_count && (
+                          <span className="flex items-center gap-1"><Users size={12} /> {room.min_capacity}–{room.max_capacity}</span>
+                        )}
+                      </div>
+                      <span className="text-sb-orange font-bold text-sm">
+                        R{room.unit_price}{branding.pricing_model === 'per_person' ? '/person' : ''}
                       </span>
-                      <span className="text-sb-orange font-bold">R{room.unit_price}{branding.pricing_model === 'per_person' ? '/pp' : ''}</span>
                     </div>
                   </div>
                 </button>
@@ -378,9 +372,9 @@ export default function Book() {
             <button onClick={() => setStep('rooms')} className="text-sm text-gray-500 hover:text-sb-orange mb-4 flex items-center gap-1">
               ← Back to {branding.resource_label_plural.toLowerCase()}
             </button>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Pick a Date</h1>
-            <p className="text-gray-600 mb-8">
-              <span className="font-medium" style={{ color: formData.room.color }}>{formData.room.name}</span> — Select a date for your booking.
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Select a Date</h1>
+            <p className="text-gray-500 mb-8">
+              <span className="font-medium" style={{ color: formData.room.color }}>{formData.room.name}</span> — Choose your preferred date.
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-3">
               {Array.from({ length: 14 }, (_, i) => addDays(new Date(), i + 1)).map(date => {
@@ -413,7 +407,7 @@ export default function Book() {
             <button onClick={() => setStep('date')} className="text-sm text-gray-500 hover:text-sb-orange mb-4 flex items-center gap-1">
               ← Back to dates
             </button>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Pick a Time</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Select a Time</h1>
             <p className="text-gray-600 mb-8">
               <span className="font-medium" style={{ color: formData.room.color }}>{formData.room.name}</span> — {format(formData.date, 'EEEE, MMMM d')}
             </p>
@@ -448,7 +442,7 @@ export default function Book() {
               ← Back to times
             </button>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Your Details</h1>
-            <p className="text-gray-600 mb-8">Tell us about your group.</p>
+            <p className="text-gray-500 mb-8">Enter your contact information to complete the booking.</p>
 
             {/* Booking summary */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-8">
@@ -499,7 +493,7 @@ export default function Book() {
               </div>
               {branding.show_player_count && (
               <div>
-                <label className="text-sm text-gray-600 mb-1 block">Number of Players</label>
+                <label className="text-sm text-gray-600 mb-1 block">Party Size</label>
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setFormData(prev => ({ ...prev, playerCount: Math.max(formData.room!.min_capacity, prev.playerCount - 1) }))}
@@ -515,7 +509,7 @@ export default function Book() {
                     +
                   </button>
                 </div>
-                <p className="text-xs text-gray-600 mt-1">{formData.room.min_capacity}–{formData.room.max_capacity} players allowed</p>
+                <p className="text-xs text-gray-500 mt-1">{formData.room.min_capacity}–{formData.room.max_capacity} people max</p>
               </div>
               )}
 
@@ -553,7 +547,7 @@ export default function Book() {
               ← Back to details
             </button>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Confirm & Pay</h1>
-            <p className="text-gray-600 mb-8">Review your booking and choose payment option.</p>
+            <p className="text-gray-500 mb-8">Review your booking details and choose a payment option.</p>
 
             <div className="max-w-lg">
               {/* Booking summary */}
@@ -573,7 +567,7 @@ export default function Book() {
                   </div>
                   {branding.show_player_count && (
                   <div className="flex justify-between text-gray-600">
-                    <span>Players</span>
+                    <span>Party size</span>
                     <span className="text-gray-900">{formData.playerCount} × R{formData.room.unit_price}</span>
                   </div>
                   )}
@@ -602,7 +596,7 @@ export default function Book() {
                   >
                     <p className="text-gray-900 font-bold mb-1">Deposit</p>
                     <p className="text-2xl font-black text-sb-orange">R{depositAmount}</p>
-                    <p className="text-xs text-gray-600 mt-1">Covers {formData.room.min_capacity} player{formData.room.min_capacity !== 1 ? 's' : ''}. R{balanceDue} balance due on arrival.</p>
+                    <p className="text-xs text-gray-500 mt-1">Covers {formData.room.min_capacity} {formData.room.min_capacity !== 1 ? 'people' : 'person'}. R{balanceDue} due on arrival.</p>
                   </button>
                   <button
                     onClick={() => setFormData(prev => ({ ...prev, paymentType: 'full' }))}
@@ -614,7 +608,7 @@ export default function Book() {
                   >
                     <p className="text-gray-900 font-bold mb-1">Pay Full</p>
                     <p className="text-2xl font-black text-sb-orange">R{fullAmount}</p>
-                    <p className="text-xs text-gray-600 mt-1">Pay for all {formData.playerCount} players now.</p>
+                    <p className="text-xs text-gray-500 mt-1">Full payment upfront — no balance on arrival.</p>
                   </button>
                 </div>
               </div>
