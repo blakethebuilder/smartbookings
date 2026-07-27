@@ -4,8 +4,8 @@
   "description": "Business booking & scheduling platform",
   "start_url": "/login",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#E53935",
+  "background_color": "#F8F9FA",
+  "theme_color": "#FF4500",
   "orientation": "any",
   "icons": [
     {

@@ -71,7 +71,7 @@ export default function SlotGenerator({ rooms, onClose, onComplete }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="card-dark w-full max-w-lg">
+      <div className="card w-full max-w-lg">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-white">Generate Time Slots</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-white">
@@ -87,7 +87,7 @@ export default function SlotGenerator({ rooms, onClose, onComplete }: Props) {
                 type="date"
                 value={startDate}
                 onChange={e => setStartDate(e.target.value)}
-                className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-gr8-red"
+                className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-sb-red"
               />
             </div>
             <div>
@@ -98,7 +98,7 @@ export default function SlotGenerator({ rooms, onClose, onComplete }: Props) {
                 onChange={e => setDaysAhead(parseInt(e.target.value) || 14)}
                 min={1}
                 max={90}
-                className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-gr8-red"
+                className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-sb-red"
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function SlotGenerator({ rooms, onClose, onComplete }: Props) {
           <button
             onClick={handleGenerate}
             disabled={generating || selectedRooms.length === 0}
-            className="flex-1 btn-gr8 flex items-center justify-center gap-2"
+            className="flex-1 btn-sb flex items-center justify-center gap-2"
           >
             {generating ? (
               <><Loader2 size={16} className="animate-spin" /> Generating...</>

@@ -7,8 +7,8 @@
  */
 
 const PB_URL = process.env.PB_URL || process.argv[2] || 'http://localhost:8090'
-const ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'grandmaster@smartbookings.local'
-const ADMIN_PASSWORD = process.env.PB_ADMIN_PASSWORD || 'gr8@2026!'
+const ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@smartbookings.local'
+const ADMIN_PASSWORD = process.env.PB_ADMIN_PASSWORD || 'admin123456'
 
 let token = null
 
@@ -86,9 +86,9 @@ async function createCollections() {
         { name: 'difficulty', type: 'number' },
         { name: 'duration_minutes', type: 'number', required: true },
         { name: 'reset_buffer_minutes', type: 'number', required: true },
-        { name: 'min_players', type: 'number', required: true },
-        { name: 'max_players', type: 'number', required: true },
-        { name: 'price_per_player', type: 'number', required: true },
+        { name: 'min_capacity', type: 'number', required: true },
+        { name: 'max_capacity', type: 'number', required: true },
+        { name: 'unit_price', type: 'number', required: true },
         { name: 'currency', type: 'text', required: true },
         { name: 'color', type: 'text' },
         { name: 'is_active', type: 'bool', required: true },
@@ -128,8 +128,8 @@ async function createCollections() {
         { name: 'customer_name', type: 'text', required: true },
         { name: 'customer_email', type: 'text', required: true },
         { name: 'customer_phone', type: 'text' },
-        { name: 'player_count', type: 'number', required: true },
-        { name: 'price_per_player', type: 'number', required: true },
+        { name: 'party_size', type: 'number', required: true },
+        { name: 'unit_price', type: 'number', required: true },
         { name: 'total_amount', type: 'number', required: true },
         { name: 'currency', type: 'text', required: true },
         { name: 'status', type: 'select', required: true, values: ['pending', 'confirmed', 'cancelled', 'completed'] },
@@ -152,7 +152,7 @@ async function createCollections() {
       deleteRule: '@request.auth.id != ""',
     },
     {
-      name: 'gm_blocks',
+      name: 'blocks',
       type: 'base',
       fields: [
         { name: 'room', type: 'relation', required: true, collectionId: '__rooms__', maxSelect: 1, cascadeDelete: true },
@@ -213,7 +213,7 @@ async function createCollections() {
         { name: 'name', type: 'text', required: true },
         { name: 'email', type: 'text', required: true, unique: true },
         { name: 'phone', type: 'text' },
-        { name: 'role', type: 'select', required: true, values: ['grandmaster', 'gamemaster'] },
+        { name: 'role', type: 'select', required: true, values: ['admin', 'staff'] },
         { name: 'avatar_color', type: 'text' },
         { name: 'is_active', type: 'bool', required: true },
         { name: 'password', type: 'text' },
@@ -227,7 +227,7 @@ async function createCollections() {
       deleteRule: '@request.auth.id != ""',
     },
     {
-      name: 'game_hosts',
+      name: 'booking_staff',
       type: 'base',
       fields: [
         { name: 'booking', type: 'relation', required: true, collectionId: '__bookings__', maxSelect: 1, cascadeDelete: true },
@@ -318,10 +318,10 @@ async function seedRooms() {
 
 async function seedStaff() {
   const staff = [
-    { name: 'Daylin', email: 'daylin@smartbookings.local', role: 'grandmaster', avatar_color: '#E53935', is_active: true, password: '2536' },
-    { name: 'Thabo', email: 'thabo@smartbookings.local', role: 'gamemaster', avatar_color: '#FFB900', is_active: true, password: '5678' },
-    { name: 'Zanele', email: 'zanele@smartbookings.local', role: 'gamemaster', avatar_color: '#4CAF50', is_active: true, password: '9012' },
-    { name: 'Ryan', email: 'ryan@smartbookings.local', role: 'gamemaster', avatar_color: '#9C27B0', is_active: true, password: '3456' },
+    { name: 'Daylin', email: 'daylin@smartbookings.local', role: 'admin', avatar_color: '#E53935', is_active: true, password: '2536' },
+    { name: 'Thabo', email: 'thabo@smartbookings.local', role: 'staff', avatar_color: '#FFB900', is_active: true, password: '5678' },
+    { name: 'Zanele', email: 'zanele@smartbookings.local', role: 'staff', avatar_color: '#4CAF50', is_active: true, password: '9012' },
+    { name: 'Ryan', email: 'ryan@smartbookings.local', role: 'staff', avatar_color: '#9C27B0', is_active: true, password: '3456' },
   ]
 
   for (const s of staff) {

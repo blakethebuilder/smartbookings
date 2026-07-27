@@ -6,8 +6,8 @@ if [ ! -d "pb_data" ] || [ ! -f "pb_data/data.db" ]; then
   echo "Initializing PocketBase with admin..."
   ./pocketbase migrate
   # Create default admin via CLI
-  echo "admin@gr8escape.co.za" | ./pocketbase admin create --password "admin123456" 2>/dev/null || true
-  echo "Admin created: admin@gr8escape.co.za / admin123456"
+  echo "admin@smartbookings.local" | ./pocketbase admin create --password "admin123456" 2>/dev/null || true
+  echo "Admin created: admin@smartbookings.local / admin123456"
 fi
 
 echo "Starting PocketBase on http://localhost:8090"

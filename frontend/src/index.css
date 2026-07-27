@@ -3,57 +3,97 @@
 @tailwind utilities;
 
 :root {
-  --gr8-orange: #FF4500;
-  --gr8-orange-dark: #E03D00;
-  --gr8-bg: #F8F9FA;
-  --gr8-card: #FFFFFF;
-  --gr8-text: #1A1A2E;
-  --gr8-muted: #6B7280;
-  --gr8-border: #E5E7EB;
+  --sb-primary: #F45B31;
+  --sb-primary-dark: #D94828;
+  --sb-primary-light: #FFF0EB;
+  --sb-bg: #F9FAFB;
+  --sb-card: #FFFFFF;
+  --sb-text: #111827;
+  --sb-muted: #6B7280;
+  --sb-border: #E5E7EB;
 }
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--gr8-bg);
-  color: var(--gr8-text);
+  background-color: var(--sb-bg);
+  color: var(--sb-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ─── Buttons ─── */
-.btn-gr8 {
-  background: linear-gradient(135deg, #FF4500, #E03D00);
+.btn-sb {
+  background: var(--sb-primary);
   color: white;
   font-weight: 600;
-  padding: 0.7rem 1.75rem;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
-  letter-spacing: 0.01em;
-  box-shadow: 0 2px 8px rgba(255, 69, 0, 0.25);
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.625rem;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.btn-gr8:hover {
+.btn-sb:hover {
+  background: var(--sb-primary-dark);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(255, 69, 0, 0.35);
 }
 
-.btn-gr8:disabled {
+.btn-sb:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.btn-sb:disabled {
   opacity: 0.5;
   transform: none;
   box-shadow: none;
+  cursor: not-allowed;
 }
 
 /* ─── Cards ─── */
-.card-dark {
-  background: var(--gr8-card);
-  border: 1px solid var(--gr8-border);
+.card {
+  background: var(--sb-card);
+  border: 1px solid var(--sb-border);
   border-radius: 0.75rem;
   padding: 1.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 @media (min-width: 640px) {
-  .card-dark {
+  .card {
     padding: 1.5rem;
   }
+}
+
+/* ─── Input base ─── */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+select,
+textarea {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  ring: 2px solid var(--sb-primary);
+  border-color: var(--sb-primary);
 }
 
 /* ─── Tables ─── */
@@ -70,7 +110,7 @@ body {
 
 /* ─── Mobile / PWA ─── */
 @media (max-width: 640px) {
-  .btn-gr8 {
+  .btn-sb {
     padding: 0.6rem 1.25rem;
     font-size: 0.875rem;
   }
@@ -79,7 +119,7 @@ body {
   h2 { font-size: 1.15rem !important; }
 
   button:not(.fc-button):not([class*="p-1"]):not([class*="p-0"]),
-  a.btn-gr8 {
+  a.btn-sb {
     min-height: 44px;
   }
 
@@ -88,7 +128,7 @@ body {
     min-height: unset;
   }
 
-  .card-dark {
+  .card {
     padding: 0.75rem;
   }
 
@@ -111,12 +151,12 @@ body {
 }
 
 @media (max-width: 380px) {
-  .btn-gr8 {
+  .btn-sb {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
   }
 
-  .card-dark {
+  .card {
     padding: 0.6rem;
   }
 

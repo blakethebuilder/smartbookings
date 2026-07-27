@@ -60,10 +60,10 @@ const BUSINESS_TYPE_LABELS: Record<BusinessType, string> = {
 
 const DEFAULTS: Record<string, Partial<ClientFormData>> = {
   escape_room: {
-    resource_label: 'Room',
-    resource_label_plural: 'Rooms',
-    staff_role_admin: 'Grandmaster',
-    staff_role_worker: 'Game Master',
+    resource_label: 'Resource',
+    resource_label_plural: 'Resources',
+    staff_role_admin: 'Admin',
+    staff_role_worker: 'Staff',
     booking_verb: 'Book Now',
     pricing_model: 'per_person',
     duration_unit: 'minutes',
@@ -125,10 +125,10 @@ const EMPTY_FORM: ClientFormData = {
   name: '',
   subdomain: '',
   business_type: 'escape_room',
-  resource_label: 'Room',
-  resource_label_plural: 'Rooms',
-  staff_role_admin: 'Grandmaster',
-  staff_role_worker: 'Game Master',
+  resource_label: 'Resource',
+  resource_label_plural: 'Resources',
+  staff_role_admin: 'Admin',
+  staff_role_worker: 'Staff',
   booking_verb: 'Book Now',
   pricing_model: 'per_person',
   primary_color: BRAND_COLORS[0],
@@ -251,7 +251,7 @@ export default function Clients() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin text-gr8-red" size={32} />
+        <Loader2 className="animate-spin text-sb-red" size={32} />
       </div>
     )
   }
@@ -260,10 +260,10 @@ export default function Clients() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900">Clients</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Clients</h1>
           <p className="text-gray-500 mt-1">{clients.length} client{clients.length !== 1 ? 's' : ''} configured</p>
         </div>
-        <button onClick={openAdd} className="btn-gr8 flex items-center gap-2">
+        <button onClick={openAdd} className="btn-sb flex items-center gap-2">
           <Plus size={16} /> Add Client
         </button>
       </div>
@@ -273,7 +273,7 @@ export default function Clients() {
         {clients.map(client => (
           <div
             key={client.id}
-            className="card-dark group hover:border-gray-600 transition-all cursor-pointer"
+            className="card group hover:border-gray-600 transition-all cursor-pointer"
             onClick={() => handleSwitch(client)}
           >
             <div className="flex items-start justify-between mb-3">
@@ -321,18 +321,18 @@ export default function Clients() {
 
             <div className="grid grid-cols-2 gap-2 text-center mb-3">
               <div className="bg-gray-50 rounded p-2">
-                <p className="text-gr8-red font-bold text-sm">{client.resource_label_plural || '—'}</p>
+                <p className="text-sb-red font-bold text-sm">{client.resource_label_plural || '—'}</p>
                 <p className="text-[10px] text-gray-500 uppercase">Resources</p>
               </div>
               <div className="bg-gray-50 rounded p-2">
-                <p className="text-gr8-orange font-bold text-sm">{client.staff_role_admin || '—'}</p>
+                <p className="text-sb-orange font-bold text-sm">{client.staff_role_admin || '—'}</p>
                 <p className="text-[10px] text-gray-500 uppercase">Admin Role</p>
               </div>
             </div>
 
             {switchingId === client.id && (
               <div className="flex items-center justify-center gap-2 pt-3 border-t border-gray-200">
-                <Loader2 size={14} className="animate-spin text-gr8-red" />
+                <Loader2 size={14} className="animate-spin text-sb-red" />
                 <span className="text-xs text-gray-500">Switching...</span>
               </div>
             )}
@@ -340,7 +340,7 @@ export default function Clients() {
         ))}
 
         {/* Add client card */}
-        <button onClick={openAdd} className="card-dark border-dashed border-gray-700 hover:border-gr8-red/50 flex flex-col items-center justify-center min-h-[200px] text-gray-500 hover:text-gr8-red transition-colors">
+        <button onClick={openAdd} className="card border-dashed border-gray-700 hover:border-sb-red/50 flex flex-col items-center justify-center min-h-[200px] text-gray-500 hover:text-sb-red transition-colors">
           <Plus size={32} className="mb-2" />
           <span className="text-sm font-medium">Add Client</span>
         </button>
@@ -349,7 +349,7 @@ export default function Clients() {
       {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="card-dark w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="card w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-gray-900">{editingClient ? 'Edit Client' : 'Add Client'}</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700"><X size={18} /></button>
@@ -360,11 +360,11 @@ export default function Clients() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="text-sm text-gray-600 mb-1 block">Business Name *</label>
-                  <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
+                  <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
                 </div>
                 <div>
                   <label className="text-sm text-gray-600 mb-1 block">Subdomain *</label>
-                  <input type="text" value={form.subdomain} onChange={e => setForm(f => ({ ...f, subdomain: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange font-mono" />
+                  <input type="text" value={form.subdomain} onChange={e => setForm(f => ({ ...f, subdomain: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange font-mono" />
                 </div>
               </div>
 
@@ -396,27 +396,27 @@ export default function Clients() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">Resource Label (Singular)</label>
-                    <input type="text" value={form.resource_label} onChange={e => setForm(f => ({ ...f, resource_label: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
+                    <input type="text" value={form.resource_label} onChange={e => setForm(f => ({ ...f, resource_label: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">Resource Label (Plural)</label>
-                    <input type="text" value={form.resource_label_plural} onChange={e => setForm(f => ({ ...f, resource_label_plural: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
+                    <input type="text" value={form.resource_label_plural} onChange={e => setForm(f => ({ ...f, resource_label_plural: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">Admin Role Title</label>
-                    <input type="text" value={form.staff_role_admin} onChange={e => setForm(f => ({ ...f, staff_role_admin: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
+                    <input type="text" value={form.staff_role_admin} onChange={e => setForm(f => ({ ...f, staff_role_admin: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">Worker Role Title</label>
-                    <input type="text" value={form.staff_role_worker} onChange={e => setForm(f => ({ ...f, staff_role_worker: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
+                    <input type="text" value={form.staff_role_worker} onChange={e => setForm(f => ({ ...f, staff_role_worker: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">Booking Verb / CTA</label>
-                    <input type="text" value={form.booking_verb} onChange={e => setForm(f => ({ ...f, booking_verb: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
+                    <input type="text" value={form.booking_verb} onChange={e => setForm(f => ({ ...f, booking_verb: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">Pricing Model</label>
-                    <select value={form.pricing_model} onChange={e => setForm(f => ({ ...f, pricing_model: e.target.value }))} className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange">
+                    <select value={form.pricing_model} onChange={e => setForm(f => ({ ...f, pricing_model: e.target.value }))} className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange">
                       <option value="per_person">Per Person</option>
                       <option value="per_slot">Per Slot</option>
                       <option value="flat">Flat Rate</option>
@@ -424,14 +424,14 @@ export default function Clients() {
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">Duration Unit</label>
-                    <select value={form.duration_unit} onChange={e => setForm(f => ({ ...f, duration_unit: e.target.value }))} className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange">
+                    <select value={form.duration_unit} onChange={e => setForm(f => ({ ...f, duration_unit: e.target.value }))} className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange">
                       <option value="minutes">Minutes</option>
                       <option value="slots">Slots</option>
                     </select>
                   </div>
                   <div>
                     <label className="text-sm text-gray-600 mb-1 block">Logo URL</label>
-                    <input type="text" value={form.logo_url} onChange={e => setForm(f => ({ ...f, logo_url: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" placeholder="https://..." />
+                    <input type="text" value={form.logo_url} onChange={e => setForm(f => ({ ...f, logo_url: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" placeholder="https://..." />
                   </div>
                 </div>
               </div>
@@ -441,7 +441,7 @@ export default function Clients() {
                 <h3 className="text-sm font-bold text-gray-900 mb-3">Customer Form Fields</h3>
                 <div>
                   <label className="text-sm text-gray-600 mb-1 block">Comma-separated field names</label>
-                  <input type="text" value={form.customer_fields} onChange={e => setForm(f => ({ ...f, customer_fields: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange" />
+                  <input type="text" value={form.customer_fields} onChange={e => setForm(f => ({ ...f, customer_fields: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
                   <p className="text-[10px] text-gray-600 mt-1">Examples: name,email,phone or name,email,phone,id_number,medical_aid</p>
                 </div>
               </div>
@@ -484,7 +484,7 @@ export default function Clients() {
 
             <div className="flex gap-3 mt-6">
               <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 rounded-lg bg-gray-50 text-gray-500 hover:text-gray-900 text-sm">Cancel</button>
-              <button onClick={handleSave} disabled={saving || !form.name || !form.subdomain} className="flex-1 btn-gr8 py-2 text-sm flex items-center justify-center gap-2 disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving || !form.name || !form.subdomain} className="flex-1 btn-sb py-2 text-sm flex items-center justify-center gap-2 disabled:opacity-50">
                 {saving ? <Loader2 size={14} className="animate-spin" /> : null}
                 {saving ? 'Saving...' : editingClient ? 'Update Client' : 'Add Client'}
               </button>

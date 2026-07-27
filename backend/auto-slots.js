@@ -25,8 +25,8 @@ async function api(method, path, data = null) {
 }
 
 async function auth() {
-  const email = process.env.PB_ADMIN_EMAIL || 'grandmaster@gr8escape.co.za'
-  const password = process.env.PB_ADMIN_PASSWORD || 'gr8@2026!'
+  const email = process.env.PB_ADMIN_EMAIL || 'admin@smartbookings.local'
+  const password = process.env.PB_ADMIN_PASSWORD || 'admin123456'
   const data = await api('POST', '/api/collections/_superusers/auth-with-password', {
     identity: email,
     password,

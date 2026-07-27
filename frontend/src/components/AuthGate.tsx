@@ -12,7 +12,7 @@ export default function AuthGate({ allowedRoles }: AuthGateProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin text-gr8-orange" size={32} />
+        <Loader2 className="animate-spin text-sb-orange" size={32} />
       </div>
     )
   }
@@ -25,7 +25,7 @@ export default function AuthGate({ allowedRoles }: AuthGateProps) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 text-center max-w-sm">
-          <p className="text-gr8-orange font-bold text-lg mb-2">Access Denied</p>
+          <p className="text-sb-orange font-bold text-lg mb-2">Access Denied</p>
           <p className="text-gray-500 text-sm">
             You don't have permission to view this page. Your role: <span className="text-gray-900 font-medium">{staff.role}</span>
           </p>

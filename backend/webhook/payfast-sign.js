@@ -17,8 +17,8 @@ async function loadSettings() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      identity: process.env.PB_ADMIN_EMAIL || 'grandmaster@gr8escape.co.za',
-      password: process.env.PB_ADMIN_PASSWORD || 'gr8@2026!',
+      identity: process.env.PB_ADMIN_EMAIL || 'admin@smartbookings.local',
+      password: process.env.PB_ADMIN_PASSWORD || 'admin123456',
     }),
   })
   const { token } = await authReq.json()

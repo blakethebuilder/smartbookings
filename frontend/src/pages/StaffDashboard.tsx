@@ -15,7 +15,7 @@ interface HostedGame {
   hintsUsed: number
 }
 
-export default function GMDashboard() {
+export default function StaffDashboard() {
   const { staff } = useAuth()
   const { branding } = useBranding()
   const [games, setGames] = useState<HostedGame[]>([])
@@ -25,7 +25,7 @@ export default function GMDashboard() {
   const loadGames = async () => {
     if (!staff) return
     try {
-      const hosts = await pb.collection('game_hosts').getFullList({
+      const hosts = await pb.collection('booking_staff').getFullList({
         filter: `staff = "${staff.id}" && status != "completed"`,
         expand: 'booking,booking.room,booking.time_slot',
         sort: '-assigned_at',
@@ -50,23 +50,23 @@ export default function GMDashboard() {
 
   useEffect(() => { loadGames() }, [staff])
 
-  useRealtime('game_hosts', () => loadGames())
+  useRealtime('booking_staff', () => loadGames())
   useRealtime('bookings', () => loadGames())
 
   const updateHostStatus = async (hostId: string, status: string) => {
-    await pb.collection('game_hosts').update(hostId, { status })
+    await pb.collection('booking_staff').update(hostId, { status })
     loadGames()
   }
 
   const addHint = async (hostId: string, current: number) => {
-    await pb.collection('game_hosts').update(hostId, { hints_used: current + 1 })
+    await pb.collection('booking_staff').update(hostId, { hints_used: current + 1 })
     loadGames()
   }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin text-gr8-red" size={32} />
+        <Loader2 className="animate-spin text-sb-red" size={32} />
       </div>
     )
   }
@@ -77,34 +77,34 @@ export default function GMDashboard() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-black text-gray-900">
-          Welcome, <span className="text-gr8-orange">{staff?.name}</span>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          Welcome, <span className="text-sb-orange">{staff?.name}</span>
         </h1>
         <p className="text-gray-500 mt-1">{branding.staff_role_worker} Dashboard</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-8">
-        <div className="card-dark text-center">
-          <p className="text-2xl sm:text-3xl font-black text-gr8-red">{activeGames.length}</p>
-          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Active Games</p>
+        <div className="card text-center">
+          <p className="text-2xl sm:text-3xl font-black text-sb-red">{activeGames.length}</p>
+          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Active Bookings</p>
         </div>
-        <div className="card-dark text-center">
-          <p className="text-2xl sm:text-3xl font-black text-gr8-orange">{upcomingGames.length}</p>
+        <div className="card text-center">
+          <p className="text-2xl sm:text-3xl font-black text-sb-orange">{upcomingGames.length}</p>
           <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Upcoming</p>
         </div>
-        <div className="card-dark text-center">
+        <div className="card text-center">
           <p className="text-2xl sm:text-3xl font-black text-gray-900">{games.reduce((sum, g) => sum + g.hintsUsed, 0)}</p>
           <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Hints Given</p>
         </div>
       </div>
 
-      {/* Active Games */}
+      {/* Active Bookings */}
       {activeGames.length > 0 && (
         <div className="mb-8">
           <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            Active Games
+            Active Bookings
           </h2>
           <div className="space-y-3">
             {activeGames.map(game => (
@@ -120,11 +120,11 @@ export default function GMDashboard() {
         </div>
       )}
 
-      {/* Upcoming Games */}
+      {/* Upcoming Bookings */}
       <div>
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Upcoming Games</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Upcoming Bookings</h2>
         {upcomingGames.length === 0 ? (
-          <div className="card-dark text-center py-8">
+          <div className="card text-center py-8">
             <p className="text-gray-500">No upcoming games assigned to you.</p>
           </div>
         ) : (
@@ -145,7 +145,7 @@ export default function GMDashboard() {
       {/* Game Detail Modal */}
       {selectedGame && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedGame(null)}>
-          <div className="card-dark w-full max-w-md" onClick={e => e.stopPropagation()}>
+          <div className="card w-full max-w-md" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: selectedGame.room.color }} />
@@ -170,7 +170,7 @@ export default function GMDashboard() {
                 {branding.show_player_count && (
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-xs text-gray-500">Players</p>
-                    <p className="text-gray-900 font-bold text-lg">{selectedGame.booking.player_count}</p>
+                    <p className="text-gray-900 font-bold text-lg">{selectedGame.booking.party_size}</p>
                   </div>
                 )}
                 <div className="bg-gray-50 rounded-lg p-3">
@@ -193,25 +193,25 @@ export default function GMDashboard() {
             <div className="flex gap-2">
               {selectedGame.status === 'assigned' && (
                 <button onClick={() => { updateHostStatus(selectedGame.id, 'checked_in'); setSelectedGame(null) }}
-                  className="flex-1 px-4 py-2 rounded-lg bg-gr8-orange text-black font-bold text-sm">
+                  className="flex-1 px-4 py-2 rounded-lg bg-sb-orange text-black font-bold text-sm">
                   Check In Players
                 </button>
               )}
               {selectedGame.status === 'checked_in' && (
                 <button onClick={() => { updateHostStatus(selectedGame.id, 'in_progress'); setSelectedGame(null) }}
                   className="flex-1 px-4 py-2 rounded-lg bg-green-600 text-white font-bold text-sm">
-                  Start Game
+                  Start Booking
                 </button>
               )}
               {selectedGame.status === 'in_progress' && (
                 <>
                   <button onClick={() => addHint(selectedGame.id, selectedGame.hintsUsed)}
                     className="flex-1 px-4 py-2 rounded-lg bg-gray-100 text-gray-900 font-bold text-sm">
-                    Give Hint ({selectedGame.hintsUsed})
+                    Add Note ({selectedGame.hintsUsed})
                   </button>
                   <button onClick={() => { updateHostStatus(selectedGame.id, 'completed'); setSelectedGame(null) }}
-                    className="flex-1 px-4 py-2 rounded-lg bg-gr8-red text-white font-bold text-sm">
-                    End Game
+                    className="flex-1 px-4 py-2 rounded-lg bg-sb-red text-white font-bold text-sm">
+                    Complete Booking
                   </button>
                 </>
               )}
@@ -239,7 +239,7 @@ function GameCard({ game, onSelect, onStart, onCheckIn, onEnd, onHint }: {
   }
 
   return (
-    <div className="card-dark flex items-center gap-4 cursor-pointer hover:border-gray-600 transition-colors" onClick={onSelect}>
+    <div className="card flex items-center gap-4 cursor-pointer hover:border-gray-600 transition-colors" onClick={onSelect}>
       <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: game.room.color }} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
@@ -248,7 +248,7 @@ function GameCard({ game, onSelect, onStart, onCheckIn, onEnd, onHint }: {
             {game.status.replace('_', ' ').toUpperCase()}
           </span>
         </div>
-        <p className="text-sm text-gray-600">{game.booking.customer_name}{branding.show_player_count ? ` • ${game.booking.player_count} players` : ''}</p>
+        <p className="text-sm text-gray-600">{game.booking.customer_name}{branding.show_player_count ? ` • ${game.booking.party_size} players` : ''}</p>
         <p className="text-xs text-gray-500">{game.timeSlot.start_time} — {game.timeSlot.end_time}</p>
       </div>
       <div className="flex items-center gap-2">

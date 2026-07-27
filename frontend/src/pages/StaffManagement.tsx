@@ -10,7 +10,7 @@ export default function StaffManagement() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editingStaff, setEditingStaff] = useState<Staff | null>(null)
-  const [form, setForm] = useState({ name: '', email: '', phone: '', role: 'gamemaster' as Staff['role'], password: '' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', role: 'staff' as Staff['role'], password: '' })
   const [saving, setSaving] = useState(false)
   const [visiblePins, setVisiblePins] = useState<Record<string, boolean>>({})
 
@@ -29,7 +29,7 @@ export default function StaffManagement() {
 
   const openAdd = () => {
     setEditingStaff(null)
-    setForm({ name: '', email: '', phone: '', role: 'gamemaster', password: '' })
+    setForm({ name: '', email: '', phone: '', role: 'staff', password: '' })
     setShowModal(true)
   }
 
@@ -72,7 +72,7 @@ export default function StaffManagement() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin text-gr8-red" size={32} />
+        <Loader2 className="animate-spin text-sb-red" size={32} />
       </div>
     )
   }
@@ -81,16 +81,16 @@ export default function StaffManagement() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900">Staff Management</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Staff Management</h1>
           <p className="text-gray-500 mt-1">{staffList.length} team members</p>
         </div>
-        <button onClick={openAdd} className="btn-gr8 flex items-center gap-2">
+        <button onClick={openAdd} className="btn-sb flex items-center gap-2">
           <Plus size={16} />
           Add Staff
         </button>
       </div>
 
-      <div className="card-dark">
+      <div className="card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -122,11 +122,11 @@ export default function StaffManagement() {
                   <td className="py-3 px-4 text-gray-600">{s.phone || '—'}</td>
                   <td className="py-3 px-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                      s.role === 'grandmaster'
-                        ? 'bg-orange-100 text-gr8-orange'
+                      s.role === 'admin'
+                        ? 'bg-orange-100 text-sb-orange'
                         : 'bg-blue-100 text-blue-700'
                     }`}>
-                      {s.role === 'grandmaster' ? branding.staff_role_admin : branding.staff_role_worker}
+                      {s.role === 'admin' ? branding.staff_role_admin : branding.staff_role_worker}
                     </span>
                   </td>
                   <td className="py-3 px-4 font-mono text-xs text-gray-500">
@@ -172,7 +172,7 @@ export default function StaffManagement() {
       {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="card-dark w-full max-w-md">
+          <div className="card w-full max-w-md">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-gray-900">
                 {editingStaff ? 'Edit Staff Member' : 'Add Staff Member'}
@@ -189,7 +189,7 @@ export default function StaffManagement() {
                   type="text"
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
                   required
                 />
               </div>
@@ -202,7 +202,7 @@ export default function StaffManagement() {
                     type="email"
                     value={form.email}
                     onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
                     required
                   />
                 </div>
@@ -216,7 +216,7 @@ export default function StaffManagement() {
                     type="tel"
                     value={form.phone}
                     onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
                   />
                 </div>
               </div>
@@ -226,10 +226,10 @@ export default function StaffManagement() {
                 <select
                   value={form.role}
                   onChange={e => setForm(f => ({ ...f, role: e.target.value as Staff['role'] }))}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
                 >
-                  <option value="gamemaster">{branding.staff_role_worker}</option>
-                  <option value="grandmaster">{branding.staff_role_admin}</option>
+                  <option value="staff">{branding.staff_role_worker}</option>
+                  <option value="admin">{branding.staff_role_admin}</option>
                 </select>
               </div>
 
@@ -241,7 +241,7 @@ export default function StaffManagement() {
                     type="password"
                     value={form.password}
                     onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
                     placeholder="Enter password"
                     required
                   />
@@ -259,7 +259,7 @@ export default function StaffManagement() {
                 <button
                   type="submit"
                   disabled={saving || !form.name || !form.email || !form.password}
-                  className="flex-1 btn-gr8 flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="flex-1 btn-sb flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {saving ? <Loader2 size={16} className="animate-spin" /> : null}
                   {saving ? 'Saving...' : editingStaff ? 'Update' : 'Add Staff'}

@@ -18,7 +18,7 @@ interface Props {
   onComplete: () => void
 }
 
-export default function AssignGM({ booking, room, timeSlot, onClose, onComplete }: Props) {
+export default function AssignStaff({ booking, room, timeSlot, onClose, onComplete }: Props) {
   const [staff, setStaff] = useState<StaffMember[]>([])
   const [selectedStaff, setSelectedStaff] = useState<string>('')
   const [loading, setLoading] = useState(true)
@@ -26,7 +26,7 @@ export default function AssignGM({ booking, room, timeSlot, onClose, onComplete 
 
   useEffect(() => {
     pb.collection('staff').getFullList<StaffMember>({
-      filter: 'is_active = true && role = "gamemaster"',
+      filter: 'is_active = true && role = "staff"',
       sort: 'name',
     }).then(s => {
       setStaff(s)
@@ -39,7 +39,7 @@ export default function AssignGM({ booking, room, timeSlot, onClose, onComplete 
     setSaving(true)
 
     try {
-      await pb.collection('game_hosts').create({
+      await pb.collection('booking_staff').create({
         booking: booking.id,
         staff: selectedStaff,
         assigned_at: new Date().toISOString(),
@@ -48,7 +48,7 @@ export default function AssignGM({ booking, room, timeSlot, onClose, onComplete 
       })
       onComplete()
     } catch (e) {
-      console.error('Failed to assign GM:', e)
+      console.error('Failed to assign staff:', e)
     } finally {
       setSaving(false)
     }
@@ -56,11 +56,11 @@ export default function AssignGM({ booking, room, timeSlot, onClose, onComplete 
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="card-dark w-full max-w-md" onClick={e => e.stopPropagation()}>
+      <div className="card w-full max-w-md" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <UserPlus size={18} className="text-gr8-red" />
-            <h2 className="text-lg font-bold text-white">Assign Game Master</h2>
+            <UserPlus size={18} className="text-sb-red" />
+            <h2 className="text-lg font-bold text-white">Assign Staff</h2>
           </div>
           <button onClick={onClose} className="text-gray-500 hover:text-white"><X size={18} /></button>
         </div>
@@ -71,7 +71,7 @@ export default function AssignGM({ booking, room, timeSlot, onClose, onComplete 
             <span className="font-bold text-white">{room.name}</span>
           </div>
           <p className="text-gray-400">
-            {booking.customer_name} • {booking.player_count} players<br />
+            {booking.customer_name} • {booking.party_size} players<br />
             {format(new Date(timeSlot.date), 'EEE, MMM d')} • {timeSlot.start_time} — {timeSlot.end_time}
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function AssignGM({ booking, room, timeSlot, onClose, onComplete 
                 onClick={() => setSelectedStaff(s.id)}
                 className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors ${
                   selectedStaff === s.id
-                    ? 'border-gr8-red bg-gr8-red/10'
+                    ? 'border-sb-red bg-sb-red/10'
                     : 'border-gray-700/50 hover:border-gray-600'
                 }`}
               >
@@ -98,7 +98,7 @@ export default function AssignGM({ booking, room, timeSlot, onClose, onComplete 
               </button>
             ))}
             {staff.length === 0 && (
-              <p className="text-gray-500 text-sm text-center py-4">No active Game Masters found.</p>
+              <p className="text-gray-500 text-sm text-center py-4">No active staff found.</p>
             )}
           </div>
         )}
@@ -106,10 +106,10 @@ export default function AssignGM({ booking, room, timeSlot, onClose, onComplete 
         <button
           onClick={handleAssign}
           disabled={!selectedStaff || saving}
-          className="w-full btn-gr8 py-3 flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full btn-sb py-3 flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {saving ? <Loader2 size={16} className="animate-spin" /> : <UserPlus size={16} />}
-          {saving ? 'Assigning...' : 'Assign Game Master'}
+          {saving ? 'Assigning...' : 'Assign Staff'}
         </button>
       </div>
     </div>

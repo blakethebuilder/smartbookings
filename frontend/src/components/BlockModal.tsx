@@ -22,7 +22,7 @@ export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) 
     setSaving(true)
 
     try {
-      await pb.collection('gm_blocks').create({
+      await pb.collection('blocks').create({
         room: selectedRoom,
         date: format(slot.start, 'yyyy-MM-dd'),
         start_time: format(slot.start, 'HH:mm'),
@@ -52,7 +52,7 @@ export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) 
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="card-dark w-full max-w-md">
+      <div className="card w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <Ban size={20} className="text-gray-400" />
@@ -75,10 +75,10 @@ export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) 
             <select
               value={selectedRoom}
               onChange={e => setSelectedRoom(e.target.value)}
-              className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-gr8-red"
+              className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-sb-red"
             >
               {rooms.map(room => (
-                <option key={room.id} value={room.id} className="bg-gr8-card">
+                <option key={room.id} value={room.id} className="bg-sb-card">
                   {room.name}
                 </option>
               ))}
@@ -92,7 +92,7 @@ export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) 
               value={reason}
               onChange={e => setReason(e.target.value)}
               placeholder="e.g. Maintenance, Team event, Private function"
-              className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-gr8-red placeholder:text-gray-600"
+              className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-sb-red placeholder:text-gray-600"
             />
           </div>
         </div>

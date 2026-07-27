@@ -20,7 +20,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter)
 
 const PB_URL = process.env.PB_URL || 'http://localhost:8090'
-const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@gr8escape.co.za'
+const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@smartbookings.local'
 const PB_ADMIN_PASSWORD = process.env.PB_ADMIN_PASSWORD || 'admin123456'
 
 // Payfast sandbox IPs (for IP validation)
@@ -379,7 +379,7 @@ app.post('/api/reset-demo-data', async (req, res) => {
     const token = await getAdminToken()
     const headers = { 'Authorization': token, 'Content-Type': 'application/json' }
 
-    const COLLECTIONS_TO_WIPE = ['bookings', 'game_hosts', 'waivers', 'gm_blocks', 'time_slots']
+    const COLLECTIONS_TO_WIPE = ['bookings', 'booking_staff', 'waivers', 'blocks', 'time_slots']
     const results = {}
 
     for (const col of COLLECTIONS_TO_WIPE) {

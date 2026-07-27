@@ -17,8 +17,6 @@
 | WhatsApp reminders | Not started | Evolution API integration needed |
 | Email notifications | Not started | Confirmation emails, reminders |
 | Booking cancellation flow | ✅ Done | Customer self-service + admin cancel |
-| Murder mystery bookings | Not started | Separate product line (R200/pp @ Doppio Zero) |
-| Add-on packages | Not started | Birthday, Bachelor, Challenge Wheel |
 | Deposit-only model | Partial | Dynamic deposit calculation implemented |
 | Room images | Not uploaded | Asset files exist but not in PocketBase |
 | Reset demo data | ✅ Done | Settings → Reset All Demo Data button |
@@ -46,7 +44,7 @@
 | Manual booking flow | Tested |
 | Payfast sandbox | Tested |
 | Calendar + slot generation | Tested |
-| GM dashboard | Tested |
+| Staff dashboard | Tested |
 | Staff management | Tested |
 | Mobile responsive | Tested |
 | Docker deployment | Tested |
@@ -61,9 +59,3 @@ The current password-based auth uses a regular PocketBase collection (`staff`) r
 2. Migrate staff records to the auth collection
 3. Update the frontend to use `pb.collection('staff').authWithPassword()` instead of password comparison
 4. Then lock down collection rules to authenticated only
-
-### Cross-Domain Integration
-The marketing site (gr8.smartintegrate.co.za) links to the booking app (gr8bookings.smartintegrate.co.za) via URL params (?room=slug). Options to improve:
-- Reverse-proxy /book on the Astro site to the booking container
-- Relax X-Frame-Options to allow iframe embedding
-- Fetch PocketBase data at Astro build time to show live availability on the marketing site

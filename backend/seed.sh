@@ -13,7 +13,7 @@ done
 # Create superuser via CLI
 echo "👤 Creating superuser..."
 cd /pb
-./pocketbase superuser upsert "${PB_ADMIN_EMAIL:-grandmaster@gr8escape.co.za}" "${PB_ADMIN_PASSWORD:-gr8@2026!}" 2>/dev/null || echo "  (superuser may already exist)"
+./pocketbase superuser upsert "${PB_ADMIN_EMAIL:-admin@smartbookings.local}" "${PB_ADMIN_PASSWORD:-admin123456}" 2>/dev/null || echo "  (superuser may already exist)"
 
 # Check if already seeded
 ROOMS_COUNT=$(wget -q -O - "http://localhost:8090/api/collections/rooms/records?perPage=1" 2>/dev/null | grep -o '"totalItems":[0-9]*' | cut -d: -f2)

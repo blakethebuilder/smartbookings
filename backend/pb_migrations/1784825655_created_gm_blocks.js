@@ -87,10 +87,10 @@ migrate((app) => {
     ],
     "id": "pbc_1534854836",
     "indexes": [
-      "CREATE INDEX idx_gm_blocks_room_date ON gm_blocks (room, date)"
+      "CREATE INDEX idx_blocks_room_date ON blocks (room, date)"
     ],
     "listRule": null,
-    "name": "gm_blocks",
+    "name": "blocks",
     "system": false,
     "type": "base",
     "updateRule": null,

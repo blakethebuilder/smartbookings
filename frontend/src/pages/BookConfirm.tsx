@@ -53,7 +53,7 @@ export default function BookConfirm() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="animate-spin text-gr8-orange" size={32} />
+        <Loader2 className="animate-spin text-sb-orange" size={32} />
       </div>
     )
   }
@@ -65,7 +65,7 @@ export default function BookConfirm() {
           <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Booking not found</h1>
           <p className="text-gray-600 mb-6">Reference "{reference}" doesn't match any booking.</p>
-          <a href="https://gr8.smartintegrate.co.za" className="btn-gr8 px-6 py-3 inline-block">Go to Website</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="btn-sb px-6 py-3 inline-block">Go to Website</a>
         </div>
       </div>
     )
@@ -104,8 +104,8 @@ export default function BookConfirm() {
       `DTSTART:${startDateTime.replace(/[-:]/g, '').replace('T', 'T')}`,
       `DTEND:${endDateTime.replace(/[-:]/g, '').replace('T', 'T')}`,
       `SUMMARY:${branding.resource_label} - ${room.name}`,
-      `DESCRIPTION:${branding.business_name} - ${room.name}\\nBooking: ${booking.reference}\\nPlayers: ${booking.player_count}\\nPlease arrive 15 minutes early. No phones allowed.`,
-      `LOCATION:${branding.business_name}, Pineslopes Office Park, Fourways, Johannesburg`,
+      `DESCRIPTION:${branding.business_name} - ${room.name}\\nBooking: ${booking.reference}\\nPlayers: ${booking.party_size}\\nPlease arrive on time for your booking.`,
+      `LOCATION:${branding.business_name}`,
       `STATUS:CONFIRMED`,
       `END:VEVENT`,
       'END:VCALENDAR',
@@ -115,7 +115,7 @@ export default function BookConfirm() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `gr8escape-${room.name.toLowerCase().replace(/\s+/g, '-')}.ics`
+    a.download = `booking-${room.name.toLowerCase().replace(/\s+/g, '-')}.ics`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -124,7 +124,7 @@ export default function BookConfirm() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200 shadow-sm py-4 px-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <a href="https://gr8.smartintegrate.co.za" className="text-xl font-black text-gray-900 tracking-tight">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="text-xl font-bold text-gray-900 tracking-tight">
             {branding.business_name}
           </a>
         </div>
@@ -133,7 +133,7 @@ export default function BookConfirm() {
       <div className="max-w-2xl mx-auto px-6 py-8 sm:py-16 text-center">
         <div className="mb-8">
           {confirming ? (
-            <Loader2 size={64} className="text-gr8-orange mx-auto mb-4 animate-spin" />
+            <Loader2 size={64} className="text-sb-orange mx-auto mb-4 animate-spin" />
           ) : booking.status === 'cancelled' ? (
             <XCircle size={64} className="text-red-400 mx-auto mb-4" />
           ) : isConfirmed ? (
@@ -142,11 +142,11 @@ export default function BookConfirm() {
             <AlertCircle size={64} className="text-yellow-400 mx-auto mb-4" />
           )}
 
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             {confirming ? 'Confirming Payment...' : booking.status === 'cancelled' ? 'Booking Cancelled' : isConfirmed ? 'Booking Confirmed!' : 'Booking Received'}
           </h1>
           <p className="text-gray-600">
-            Reference: <span className="text-gr8-orange font-mono font-bold">{booking.reference}</span>
+            Reference: <span className="text-sb-orange font-mono font-bold">{booking.reference}</span>
           </p>
         </div>
 
@@ -170,7 +170,7 @@ export default function BookConfirm() {
             </div>
             <div className="flex items-center gap-3 text-gray-600">
               <Users size={16} className="text-gray-500" />
-              <span className="text-gray-900">{booking.player_count} players</span>
+              <span className="text-gray-900">{booking.party_size} players</span>
             </div>
             <div className="flex items-center gap-3 text-gray-600">
               <span className="text-gray-500">👤</span>
@@ -179,7 +179,7 @@ export default function BookConfirm() {
           </div>
           <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between">
             <span className="text-gray-600">Total</span>
-            <span className="text-gr8-orange font-bold text-lg">R{booking.total_amount}</span>
+            <span className="text-sb-orange font-bold text-lg">R{booking.total_amount}</span>
           </div>
         </div>
 
@@ -193,7 +193,7 @@ export default function BookConfirm() {
         {/* Share Waiver Link */}
         <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 mb-8 text-left">
           <div className="flex items-center gap-3 mb-3">
-            <Shield size={20} className="text-gr8-orange" />
+            <Shield size={20} className="text-sb-orange" />
             <h3 className="text-lg font-bold text-gray-900">Player Waiver</h3>
           </div>
           <p className="text-sm text-gray-600 mb-4">
@@ -211,7 +211,7 @@ export default function BookConfirm() {
                 setCopied(true)
                 setTimeout(() => setCopied(false), 2000)
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-orange-50 text-gr8-orange text-sm font-medium hover:bg-orange-100 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-orange-50 text-sb-orange text-sm font-medium hover:bg-orange-100 transition-colors"
             >
               {copied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
             </button>
@@ -223,7 +223,7 @@ export default function BookConfirm() {
 
         {/* Calendar download */}
         <button onClick={downloadICS} className="w-full bg-white border border-gray-200 shadow-sm rounded-xl p-4 mb-6 text-left hover:bg-gray-50 transition-colors flex items-center gap-3">
-          <Download size={20} className="text-gr8-orange" />
+          <Download size={20} className="text-sb-orange" />
           <div>
             <p className="text-gray-900 font-medium text-sm">Add to Calendar</p>
             <p className="text-xs text-gray-600">Download .ics file for Google Calendar, Apple Calendar, Outlook</p>
@@ -232,7 +232,7 @@ export default function BookConfirm() {
 
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-8 text-sm text-gray-600 text-left">
           <p className="mb-2">A confirmation email will be sent to <strong className="text-gray-900">{booking.customer_email}</strong></p>
-          <p>Please arrive <strong className="text-gray-900">15 minutes early</strong>. No phones or recording devices allowed in the rooms.</p>
+          <p>Please arrive <strong className="text-gray-900">15 minutes early</strong>. Please follow venue guidelines during your visit.</p>
         </div>
 
         {/* Cancel Booking */}
@@ -299,10 +299,10 @@ export default function BookConfirm() {
         )}
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="https://gr8.smartintegrate.co.za" className="btn-gr8 px-8 py-3 flex items-center justify-center gap-2">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="btn-sb px-8 py-3 flex items-center justify-center gap-2">
             <Home size={18} /> Back to Site
           </a>
-          <Link to="/book" className="px-8 py-3 rounded-lg border border-gray-200 text-gray-600 hover:text-gr8-orange hover:border-gr8-orange transition-colors flex items-center justify-center gap-2">
+          <Link to="/book" className="px-8 py-3 rounded-lg border border-gray-200 text-gray-600 hover:text-sb-orange hover:border-sb-orange transition-colors flex items-center justify-center gap-2">
             Book Another {branding.resource_label}
           </Link>
         </div>

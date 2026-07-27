@@ -14,9 +14,9 @@ export interface Room {
   difficulty: number | null
   duration_minutes: number
   reset_buffer_minutes: number
-  min_players: number
-  max_players: number
-  price_per_player: number
+  min_capacity: number
+  max_capacity: number
+  unit_price: number
   currency: string
   image: string
   color: string
@@ -45,8 +45,8 @@ export interface Booking {
   customer_name: string
   customer_email: string
   customer_phone: string
-  player_count: number
-  price_per_player: number
+  party_size: number
+  unit_price: number
   total_amount: number
   deposit_amount: number
   balance_due: number
@@ -68,7 +68,7 @@ export interface Booking {
   }
 }
 
-export interface GmBlock {
+export interface Block {
   id: string
   room: string
   date: string

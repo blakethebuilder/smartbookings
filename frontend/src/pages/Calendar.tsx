@@ -5,7 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { format, addDays, startOfWeek, endOfWeek } from 'date-fns'
 import { RefreshCw, Zap, UserPlus, Ban } from 'lucide-react'
-import pb, { type Room, type Booking, type TimeSlot, type GmBlock } from '../lib/pocketbase'
+import pb, { type Room, type Booking, type TimeSlot, type Block } from '../lib/pocketbase'
 import { useRealtime } from '../hooks/useRealtime'
 import { useBranding } from '../lib/branding'
 import BlockModal from '../components/BlockModal'
@@ -32,7 +32,7 @@ interface CalendarEvent {
   }
 }
 
-export default function GameMaster() {
+export default function Calendar() {
   const [rooms, setRooms] = useState<Room[]>([])
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [loading, setLoading] = useState(true)
@@ -64,10 +64,10 @@ export default function GameMaster() {
           filter: 'status != "cancelled"',
           expand: 'room,time_slot',
         }),
-        pb.collection('gm_blocks').getFullList<GmBlock>({
+        pb.collection('blocks').getFullList<Block>({
           expand: 'room',
         }),
-        pb.collection('game_hosts').getFullList({ expand: 'staff' }).catch(() => [] as any[]),
+        pb.collection('booking_staff').getFullList({ expand: 'staff' }).catch(() => [] as any[]),
       ])
 
       // Build host lookup: bookingId → GM name
@@ -88,7 +88,7 @@ export default function GameMaster() {
         const dateStr = ts.date.split(' ')[0]
         calendarEvents.push({
           id: `booking-${b.id}`,
-          title: `${b.customer_name} (${b.player_count}p)${gmName ? ` • ${gmName}` : ''}`,
+          title: `${b.customer_name} (${b.party_size}p)${gmName ? ` • ${gmName}` : ''}`,
           start: `${dateStr}T${ts.start_time}:00`,
           end: `${dateStr}T${ts.end_time}:00`,
           color: room.color,
@@ -100,7 +100,7 @@ export default function GameMaster() {
             customerName: b.customer_name,
             customerEmail: b.customer_email,
             customerPhone: b.customer_phone,
-            playerCount: b.player_count,
+            playerCount: b.party_size,
             reference: b.reference,
             waiverSigned: b.waiver_signed,
           },
@@ -141,7 +141,7 @@ export default function GameMaster() {
     loadCalendarData() // Reload on any booking change
   })
 
-  useRealtime('gm_blocks', (action, record) => {
+  useRealtime('blocks', (action, record) => {
     console.log(`[SSE] Block ${action}:`, record.id)
     loadCalendarData()
   })
@@ -188,7 +188,7 @@ export default function GameMaster() {
     <div>
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div>
-          <h1 className="text-xl sm:text-3xl font-black text-gray-900">{branding.staff_role_worker} HQ</h1>
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900">{branding.staff_role_worker} HQ</h1>
           <p className="text-gray-500 mt-1 text-xs sm:text-sm">Live booking calendar</p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
@@ -224,7 +224,7 @@ export default function GameMaster() {
       </div>
 
       {/* FullCalendar */}
-      <div className="card-dark p-2 sm:p-4 calendar-wrapper">
+      <div className="card p-2 sm:p-4 calendar-wrapper">
         <FullCalendar
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -292,15 +292,15 @@ export default function GameMaster() {
       {/* Action picker when selecting empty slot */}
       {selectedSlot && !slotAction && !showBlockModal && !showQuickBook && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedSlot(null)}>
-          <div className="card-dark w-full max-w-sm" onClick={e => e.stopPropagation()}>
+          <div className="card w-full max-w-sm" onClick={e => e.stopPropagation()}>
             <p className="text-sm text-gray-600 mb-1">What would you like to do?</p>
             <p className="text-gray-900 font-bold mb-4">
               {format(selectedSlot.start, 'EEE, MMM d • HH:mm')} — {format(selectedSlot.end, 'HH:mm')}
             </p>
             <div className="flex gap-3">
               <button onClick={() => { setShowQuickBook(true) }}
-                className="flex-1 flex flex-col items-center gap-2 p-4 rounded-lg bg-gr8-red/10 border border-gr8-red/30 hover:bg-gr8-red/20 transition-colors">
-                <UserPlus size={24} className="text-gr8-red" />
+                className="flex-1 flex flex-col items-center gap-2 p-4 rounded-lg bg-sb-red/10 border border-sb-red/30 hover:bg-sb-red/20 transition-colors">
+                <UserPlus size={24} className="text-sb-red" />
                 <span className="text-sm font-bold text-gray-900">Book Session</span>
                 <span className="text-xs text-gray-500">Walk-in or phone booking</span>
               </button>
@@ -319,7 +319,7 @@ export default function GameMaster() {
       {/* Event Detail Modal */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
-          <div className="card-dark w-full max-w-md" onClick={e => e.stopPropagation()}>
+          <div className="card w-full max-w-md" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedEvent.backgroundColor }} />
@@ -339,7 +339,7 @@ export default function GameMaster() {
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-gray-500 text-xs">Reference</p>
-                    <p className="text-gr8-orange font-mono text-sm">{selectedEvent.extendedProps.reference}</p>
+                    <p className="text-sb-orange font-mono text-sm">{selectedEvent.extendedProps.reference}</p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-gray-500 text-xs">Players</p>

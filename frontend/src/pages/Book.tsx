@@ -28,7 +28,7 @@ const steps = [
   { key: 'payment', label: 'Payment', icon: CreditCard },
 ]
 
-const roomEmoji = (): string => '\u{1F4C5}'
+const roomEmoji = (_slug?: string): string => '\u{1F4C5}'
 
 export default function Book() {
   const { branding } = useBranding()
@@ -136,8 +136,8 @@ export default function Book() {
   }
 
   // Calculate amounts based on payment type
-  const fullAmount = formData.room ? formData.playerCount * formData.room.price_per_player : 0
-  const depositAmount = formData.room ? Math.min(formData.room.min_players * formData.room.price_per_player, fullAmount) : 0
+  const fullAmount = formData.room ? formData.playerCount * formData.room.unit_price : 0
+  const depositAmount = formData.room ? Math.min(formData.room.min_capacity * formData.room.unit_price, fullAmount) : 0
   const amountToPay = formData.paymentType === 'deposit' ? Math.min(depositAmount, fullAmount) : fullAmount
   const balanceDue = fullAmount - amountToPay
 
@@ -146,7 +146,7 @@ export default function Book() {
     setSubmitting(true)
 
     try {
-      const reference = `GR8-${Date.now().toString(36).toUpperCase()}`
+      const reference = `SB-${Date.now().toString(36).toUpperCase()}`
 
       // Check if Payfast is configured
       const settings = await pb.collection('settings').getFullList()
@@ -162,8 +162,8 @@ export default function Book() {
         customer_name: formData.playerName,
         customer_email: formData.playerEmail,
         customer_phone: formData.playerPhone,
-        player_count: formData.playerCount,
-        price_per_player: formData.room.price_per_player,
+        party_size: formData.playerCount,
+        unit_price: formData.room.unit_price,
         total_amount: fullAmount,
         deposit_amount: amountToPay,
         balance_due: balanceDue,
@@ -185,7 +185,7 @@ export default function Book() {
             reference,
             customer_name: formData.playerName,
             customer_phone: formData.playerPhone,
-            player_count: formData.playerCount,
+            party_size: formData.playerCount,
             room_name: formData.room.name,
             date: formData.date && format(formData.date, 'EEEE, MMMM d'),
             time: `${formData.slot.start_time} — ${formData.slot.end_time}`,
@@ -272,7 +272,7 @@ export default function Book() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="animate-spin text-gr8-orange" size={32} />
+        <Loader2 className="animate-spin text-sb-orange" size={32} />
       </div>
     )
   }
@@ -282,10 +282,10 @@ export default function Book() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 shadow-sm py-4 px-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <a href="https://gr8.smartintegrate.co.za" className="text-xl font-black text-gray-900 tracking-tight">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="text-xl font-bold text-gray-900 tracking-tight">
             {branding.business_name}
           </a>
-          <a href="https://gr8.smartintegrate.co.za" className="text-sm text-gray-500 hover:text-gr8-orange transition-colors">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="text-sm text-gray-500 hover:text-sb-orange transition-colors">
             ← Back to site
           </a>
         </div>
@@ -302,9 +302,9 @@ export default function Book() {
               const isComplete = i < currentIdx
               return (
                 <div key={s.key} className="flex items-center">
-                  <div className={`flex items-center gap-2 ${isActive ? 'text-gr8-orange' : isComplete ? 'text-green-500' : 'text-gray-400'}`}>
+                  <div className={`flex items-center gap-2 ${isActive ? 'text-sb-orange' : isComplete ? 'text-green-500' : 'text-gray-400'}`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                      isActive ? 'bg-gr8-orange text-white' : isComplete ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
+                      isActive ? 'bg-sb-orange text-white' : isComplete ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
                     }`}>
                       {isComplete ? '✓' : i + 1}
                     </div>
@@ -326,14 +326,14 @@ export default function Book() {
         {/* Step: Choose Room */}
         {step === 'rooms' && (
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Choose Your {branding.resource_label}</h1>
-            <p className="text-gray-600 mb-8">Pick an escape room for your adventure.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Choose Your {branding.resource_label}</h1>
+            <p className="text-gray-600 mb-8">{`Choose your ${branding.resource_label.toLowerCase()} for your booking.`}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {rooms.map(room => (
                 <button
                   key={room.id}
                   onClick={() => selectRoom(room)}
-                  className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden text-left hover:border-gr8-orange hover:shadow-md transition-all group"
+                  className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden text-left hover:border-sb-orange hover:shadow-md transition-all group"
                 >
                   <div
                     className="h-28 sm:h-40 bg-cover bg-center relative"
@@ -360,9 +360,9 @@ export default function Book() {
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-gray-600">
                         {room.duration_minutes}min
-                        {branding.show_player_count ? ` • ${room.min_players}-${room.max_players} players` : ''}
+                        {branding.show_player_count ? ` • ${room.min_capacity}-${room.max_capacity} players` : ''}
                       </span>
-                      <span className="text-gr8-orange font-bold">R{room.price_per_player}{branding.pricing_model === 'per_person' ? '/pp' : ''}</span>
+                      <span className="text-sb-orange font-bold">R{room.unit_price}{branding.pricing_model === 'per_person' ? '/pp' : ''}</span>
                     </div>
                   </div>
                 </button>
@@ -374,12 +374,12 @@ export default function Book() {
         {/* Step: Pick Date */}
         {step === 'date' && formData.room && (
           <div>
-            <button onClick={() => setStep('rooms')} className="text-sm text-gray-500 hover:text-gr8-orange mb-4 flex items-center gap-1">
+            <button onClick={() => setStep('rooms')} className="text-sm text-gray-500 hover:text-sb-orange mb-4 flex items-center gap-1">
               ← Back to {branding.resource_label_plural.toLowerCase()}
             </button>
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Pick a Date</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Pick a Date</h1>
             <p className="text-gray-600 mb-8">
-              <span className="font-medium" style={{ color: formData.room.color }}>{formData.room.name}</span> — Select a date for your game.
+              <span className="font-medium" style={{ color: formData.room.color }}>{formData.room.name}</span> — Select a date for your booking.
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-3">
               {Array.from({ length: 14 }, (_, i) => addDays(new Date(), i + 1)).map(date => {
@@ -392,7 +392,7 @@ export default function Book() {
                     disabled={!isBusinessDay}
                     className={`p-3 rounded-xl text-center transition-all ${
                       isBusinessDay
-                        ? 'bg-white border border-gray-200 hover:border-gr8-orange cursor-pointer'
+                        ? 'bg-white border border-gray-200 hover:border-sb-orange cursor-pointer'
                         : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     }`}
                   >
@@ -409,17 +409,17 @@ export default function Book() {
         {/* Step: Pick Time */}
         {step === 'slot' && formData.room && formData.date && (
           <div>
-            <button onClick={() => setStep('date')} className="text-sm text-gray-500 hover:text-gr8-orange mb-4 flex items-center gap-1">
+            <button onClick={() => setStep('date')} className="text-sm text-gray-500 hover:text-sb-orange mb-4 flex items-center gap-1">
               ← Back to dates
             </button>
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Pick a Time</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Pick a Time</h1>
             <p className="text-gray-600 mb-8">
               <span className="font-medium" style={{ color: formData.room.color }}>{formData.room.name}</span> — {format(formData.date, 'EEEE, MMMM d')}
             </p>
             {slots.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-gray-600 text-lg">No available slots for this date.</p>
-                <button onClick={() => setStep('date')} className="mt-4 text-gr8-orange hover:underline">
+                <button onClick={() => setStep('date')} className="mt-4 text-sb-orange hover:underline">
                   Try another date
                 </button>
               </div>
@@ -429,7 +429,7 @@ export default function Book() {
                   <button
                     key={slot.id}
                     onClick={() => selectSlot(slot)}
-                    className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-gr8-orange transition-all"
+                    className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-sb-orange transition-all"
                   >
                     <p className="text-xl font-bold text-gray-900">{slot.start_time}</p>
                     <p className="text-xs text-gray-600 mt-1">{slot.end_time}</p>
@@ -443,10 +443,10 @@ export default function Book() {
         {/* Step: Your Details */}
         {step === 'details' && formData.room && formData.slot && (
           <div>
-            <button onClick={() => setStep('slot')} className="text-sm text-gray-500 hover:text-gr8-orange mb-4 flex items-center gap-1">
+            <button onClick={() => setStep('slot')} className="text-sm text-gray-500 hover:text-sb-orange mb-4 flex items-center gap-1">
               ← Back to times
             </button>
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Your Details</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Your Details</h1>
             <p className="text-gray-600 mb-8">Tell us about your group.</p>
 
             {/* Booking summary */}
@@ -467,7 +467,7 @@ export default function Book() {
                   type="text"
                   value={formData.playerName}
                   onChange={e => setFormData(prev => ({ ...prev, playerName: e.target.value.trim() }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-gr8-orange transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-sb-orange transition-colors"
                   placeholder="John Smith"
                   minLength={2}
                   maxLength={100}
@@ -480,7 +480,7 @@ export default function Book() {
                   type="email"
                   value={formData.playerEmail}
                   onChange={e => setFormData(prev => ({ ...prev, playerEmail: e.target.value.trim() }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-gr8-orange transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-sb-orange transition-colors"
                   placeholder="john@example.com"
                   maxLength={254}
                   required
@@ -492,7 +492,7 @@ export default function Book() {
                   type="tel"
                   value={formData.playerPhone}
                   onChange={e => setFormData(prev => ({ ...prev, playerPhone: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-gr8-orange transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-sb-orange transition-colors"
                   placeholder="076 362 0765"
                 />
               </div>
@@ -501,32 +501,32 @@ export default function Book() {
                 <label className="text-sm text-gray-600 mb-1 block">Number of Players</label>
                 <div className="flex items-center gap-4">
                   <button
-                    onClick={() => setFormData(prev => ({ ...prev, playerCount: Math.max(formData.room!.min_players, prev.playerCount - 1) }))}
+                    onClick={() => setFormData(prev => ({ ...prev, playerCount: Math.max(formData.room!.min_capacity, prev.playerCount - 1) }))}
                     className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 font-bold hover:bg-gray-100 transition-colors"
                   >
                     −
                   </button>
                   <span className="text-2xl font-bold text-gray-900 w-12 text-center">{formData.playerCount}</span>
                   <button
-                    onClick={() => setFormData(prev => ({ ...prev, playerCount: Math.min(formData.room!.max_players, prev.playerCount + 1) }))}
+                    onClick={() => setFormData(prev => ({ ...prev, playerCount: Math.min(formData.room!.max_capacity, prev.playerCount + 1) }))}
                     className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 font-bold hover:bg-gray-100 transition-colors"
                   >
                     +
                   </button>
                 </div>
-                <p className="text-xs text-gray-600 mt-1">{formData.room.min_players}–{formData.room.max_players} players allowed</p>
+                <p className="text-xs text-gray-600 mt-1">{formData.room.min_capacity}–{formData.room.max_capacity} players allowed</p>
               </div>
               )}
 
               {/* Price summary */}
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                 <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span>{formData.playerCount} × R{formData.room.price_per_player}</span>
-                  <span>R{formData.playerCount * formData.room.price_per_player}</span>
+                  <span>{formData.playerCount} × R{formData.room.unit_price}</span>
+                  <span>R{formData.playerCount * formData.room.unit_price}</span>
                 </div>
                 <div className="flex justify-between font-bold text-gray-900 text-lg pt-2 border-t border-gray-200">
                   <span>Total</span>
-                  <span className="text-gr8-orange">R{formData.playerCount * formData.room.price_per_player}</span>
+                  <span className="text-sb-orange">R{formData.playerCount * formData.room.unit_price}</span>
                 </div>
               </div>
 
@@ -535,7 +535,7 @@ export default function Book() {
                   if (formData.playerName && formData.playerEmail) setStep('payment')
                 }}
                 disabled={!formData.playerName || !formData.playerEmail}
-                className="w-full btn-gr8 py-4 text-lg flex items-center justify-center gap-2"
+                className="w-full btn-sb py-4 text-lg flex items-center justify-center gap-2"
               >
                 {branding.booking_verb}
                 <ChevronRight size={20} />
@@ -547,10 +547,10 @@ export default function Book() {
         {/* Step: Payment */}
         {step === 'payment' && formData.room && formData.slot && (
           <div>
-            <button onClick={() => setStep('details')} className="text-sm text-gray-500 hover:text-gr8-orange mb-4 flex items-center gap-1">
+            <button onClick={() => setStep('details')} className="text-sm text-gray-500 hover:text-sb-orange mb-4 flex items-center gap-1">
               ← Back to details
             </button>
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Confirm & Pay</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Confirm & Pay</h1>
             <p className="text-gray-600 mb-8">Review your booking and choose payment option.</p>
 
             <div className="max-w-lg">
@@ -572,7 +572,7 @@ export default function Book() {
                   {branding.show_player_count && (
                   <div className="flex justify-between text-gray-600">
                     <span>Players</span>
-                    <span className="text-gray-900">{formData.playerCount} × R{formData.room.price_per_player}</span>
+                    <span className="text-gray-900">{formData.playerCount} × R{formData.room.unit_price}</span>
                   </div>
                   )}
                   <div className="flex justify-between text-gray-600">
@@ -594,24 +594,24 @@ export default function Book() {
                     onClick={() => setFormData(prev => ({ ...prev, paymentType: 'deposit' }))}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       formData.paymentType === 'deposit'
-                        ? 'border-gr8-orange bg-orange-50'
+                        ? 'border-sb-orange bg-orange-50'
                         : 'border-gray-200 bg-white hover:border-gray-300'
                     }`}
                   >
                     <p className="text-gray-900 font-bold mb-1">Deposit</p>
-                    <p className="text-2xl font-black text-gr8-orange">R{depositAmount}</p>
-                    <p className="text-xs text-gray-600 mt-1">Covers {formData.room.min_players} player{formData.room.min_players !== 1 ? 's' : ''}. R{balanceDue} balance due on arrival.</p>
+                    <p className="text-2xl font-black text-sb-orange">R{depositAmount}</p>
+                    <p className="text-xs text-gray-600 mt-1">Covers {formData.room.min_capacity} player{formData.room.min_capacity !== 1 ? 's' : ''}. R{balanceDue} balance due on arrival.</p>
                   </button>
                   <button
                     onClick={() => setFormData(prev => ({ ...prev, paymentType: 'full' }))}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       formData.paymentType === 'full'
-                        ? 'border-gr8-orange bg-orange-50'
+                        ? 'border-sb-orange bg-orange-50'
                         : 'border-gray-200 bg-white hover:border-gray-300'
                     }`}
                   >
                     <p className="text-gray-900 font-bold mb-1">Pay Full</p>
-                    <p className="text-2xl font-black text-gr8-orange">R{fullAmount}</p>
+                    <p className="text-2xl font-black text-sb-orange">R{fullAmount}</p>
                     <p className="text-xs text-gray-600 mt-1">Pay for all {formData.playerCount} players now.</p>
                   </button>
                 </div>
@@ -621,10 +621,10 @@ export default function Book() {
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-gray-600">
-                    <span>Full amount ({formData.playerCount} × R{formData.room.price_per_player})</span>
+                    <span>Full amount ({formData.playerCount} × R{formData.room.unit_price})</span>
                     <span className="text-gray-900">R{fullAmount}</span>
                   </div>
-                  <div className="flex justify-between text-gr8-orange font-bold">
+                  <div className="flex justify-between text-sb-orange font-bold">
                     <span>Pay now</span>
                     <span>R{amountToPay}</span>
                   </div>
@@ -651,7 +651,7 @@ export default function Book() {
               <button
                 onClick={handleBooking}
                 disabled={submitting}
-                className="w-full btn-gr8 py-4 text-lg flex items-center justify-center gap-2"
+                className="w-full btn-sb py-4 text-lg flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <><Loader2 size={20} className="animate-spin" /> Processing...</>

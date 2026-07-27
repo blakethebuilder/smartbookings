@@ -10,8 +10,8 @@ export interface BrandingConfig {
   business_name: string
   resource_label: string       // singular: "Room" | "Doctor"
   resource_label_plural: string // plural: "Rooms" | "Doctors"
-  staff_role_admin: string      // "Grandmaster" | "Admin"
-  staff_role_worker: string     // "Game Master" | "Doctor"
+  staff_role_admin: string      // "Admin" | "Manager"
+  staff_role_worker: string     // "Staff" | "Doctor"
   booking_verb: string          // "Book Now" | "Book Appointment"
   pricing_model: PricingModel
   primary_color: string
@@ -81,7 +81,7 @@ async function loadBranding(client?: any): Promise<BrandingConfig> {
     }
 
     // Try to load from localStorage (stored by auth on login)
-    const storedClient = localStorage.getItem('gr8_current_client')
+    const storedClient = localStorage.getItem('sb_current_client')
     if (storedClient) {
       try {
         const parsed = JSON.parse(storedClient)
@@ -98,7 +98,7 @@ async function loadBranding(client?: any): Promise<BrandingConfig> {
         const matching = await pb.collection('clients').getFirstListItem(
           `subdomain = "${subdomain}"`
         )
-        localStorage.setItem('gr8_current_client', JSON.stringify(matching))
+        localStorage.setItem('sb_current_client', JSON.stringify(matching))
         return mapClientToBranding(matching)
       } catch {
         // No matching client for this subdomain
@@ -176,7 +176,7 @@ export function BrandingProvider({ children }: { children: ReactNode }) {
       const r = parseInt(hex.slice(1, 3), 16)
       const g = parseInt(hex.slice(3, 5), 16)
       const bVal = parseInt(hex.slice(5, 7), 16)
-      document.documentElement.style.setProperty('--gr8-red', `${r} ${g} ${bVal}`)
+      document.documentElement.style.setProperty('--sb-red', `${r} ${g} ${bVal}`)
       setLoading(false)
     })
   }, [currentClient])

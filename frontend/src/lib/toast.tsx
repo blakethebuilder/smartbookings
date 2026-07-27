@@ -89,7 +89,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {/* Confirm modal */}
       {confirmItem && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
-          <div className="card-dark w-full max-w-sm">
+          <div className="card w-full max-w-sm">
             <p className="text-white text-lg mb-6">{confirmItem.message}</p>
             <div className="flex gap-3">
               <button
@@ -100,7 +100,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               </button>
               <button
                 onClick={() => handleConfirm(true)}
-                className="flex-1 px-4 py-2 rounded-lg bg-gr8-red text-white font-bold hover:bg-red-600 transition-colors"
+                className="flex-1 px-4 py-2 rounded-lg bg-sb-red text-white font-bold hover:bg-red-600 transition-colors"
               >
                 Confirm
               </button>

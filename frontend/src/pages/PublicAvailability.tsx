@@ -58,7 +58,7 @@ export default function PublicAvailability() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="animate-spin text-gr8-orange" size={32} />
+        <Loader2 className="animate-spin text-sb-orange" size={32} />
       </div>
     )
   }
@@ -68,20 +68,22 @@ export default function PublicAvailability() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 shadow-sm py-4 px-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="https://gr8.smartintegrate.co.za" className="text-xl font-black text-gray-900 tracking-tight">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="text-xl font-bold text-gray-900 tracking-tight">
             {branding.business_name}
           </a>
-          <a href="/book" className="btn-gr8 text-sm px-5 py-2">{branding.booking_verb}</a>
+          <a href="/book" className="btn-sb text-sm px-5 py-2">{branding.booking_verb}</a>
         </div>
       </header>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
         {/* Title */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-4xl font-black text-gray-900 mb-2">
-            Check <span className="text-gr8-orange">Availability</span>
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">
+            Check <span className="text-sb-orange">Availability</span>
           </h1>
-          <p className="text-gray-600">See what's free before you book. Open 7 days — Mon–Thu 9:30–18:30, Fri–Sat 9:30–20:00, Sun 9:30–18:30.</p>
+          <p className="text-gray-600">See what's free before you book.{' '}
+            {/* TODO: load business hours from settings */}
+            Check availability below</p>
         </div>
 
         {/* Week navigation */}
@@ -89,7 +91,7 @@ export default function PublicAvailability() {
           <button
             onClick={() => setWeekOffset(prev => Math.max(0, prev - 1))}
             disabled={weekOffset === 0}
-            className="p-2 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gr8-orange hover:border-gr8-orange disabled:opacity-30 transition-colors"
+            className="p-2 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-sb-orange hover:border-sb-orange disabled:opacity-30 transition-colors"
           >
             <ChevronLeft size={20} />
           </button>
@@ -98,7 +100,7 @@ export default function PublicAvailability() {
           </span>
           <button
             onClick={() => setWeekOffset(prev => prev + 1)}
-            className="p-2 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gr8-orange hover:border-gr8-orange transition-colors"
+            className="p-2 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-sb-orange hover:border-sb-orange transition-colors"
           >
             <ChevronRight size={20} />
           </button>
@@ -118,9 +120,9 @@ export default function PublicAvailability() {
                 disabled={!isBusinessDay}
                 className={`flex flex-col items-center min-w-[80px] p-3 rounded-xl transition-all ${
                   isSelected
-                    ? 'bg-gr8-orange text-white'
+                    ? 'bg-sb-orange text-white'
                     : isBusinessDay
-                      ? 'bg-white border border-gray-200 text-gray-700 hover:border-gr8-orange'
+                      ? 'bg-white border border-gray-200 text-gray-700 hover:border-sb-orange'
                       : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
               >
@@ -140,11 +142,11 @@ export default function PublicAvailability() {
         {/* Slots by room */}
         <div className="space-y-6">
           {slotsByRoom.map(({ room, slots: roomSlots }) => (
-            <div key={room.id} className="card-dark">
+            <div key={room.id} className="card">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: room.color }} />
                 <h3 className="text-lg font-bold text-gray-900">{room.name}</h3>
-                <span className="text-xs text-gray-600">R{room.price_per_player}{branding.pricing_model === 'per_person' ? '/pp' : ''} • {room.duration_minutes}min</span>
+                <span className="text-xs text-gray-600">R{room.unit_price}{branding.pricing_model === 'per_person' ? '/pp' : ''} • {room.duration_minutes}min</span>
               </div>
 
               {roomSlots.length === 0 ? (
@@ -155,9 +157,9 @@ export default function PublicAvailability() {
                     <a
                       key={slot.id}
                       href={`/book?room=${room.slug}&date=${slot.date.split(' ')[0]}&time=${slot.start_time}`}
-                      className="bg-white border border-gray-200 rounded-lg p-3 text-center hover:border-gr8-orange transition-all group"
+                      className="bg-white border border-gray-200 rounded-lg p-3 text-center hover:border-sb-orange transition-all group"
                     >
-                      <p className="text-gray-900 font-bold group-hover:text-gr8-orange transition-colors">{slot.start_time}</p>
+                      <p className="text-gray-900 font-bold group-hover:text-sb-orange transition-colors">{slot.start_time}</p>
                       <p className="text-[10px] text-gray-600">{slot.end_time}</p>
                     </a>
                   ))}
@@ -169,8 +171,8 @@ export default function PublicAvailability() {
 
         {/* CTA */}
         <div className="text-center mt-10">
-          <a href="/book" className="btn-gr8 text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 inline-flex items-center gap-2">
-            <Calendar size={20} /> Book Your Escape
+          <a href="/book" className="btn-sb text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 inline-flex items-center gap-2">
+            <Calendar size={20} /> {branding.booking_verb}
           </a>
         </div>
       </div>

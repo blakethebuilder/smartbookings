@@ -100,12 +100,12 @@ migrate((app) => {
     ],
     "id": "pbc_340668326",
     "indexes": [
-      "CREATE INDEX idx_hosts_booking ON game_hosts (booking)",
-      "CREATE INDEX idx_hosts_staff ON game_hosts (staff)",
-      "CREATE INDEX idx_hosts_status ON game_hosts (status)"
+      "CREATE INDEX idx_booking_staff_booking ON booking_staff (booking)",
+      "CREATE INDEX idx_booking_staff_staff ON booking_staff (staff)",
+      "CREATE INDEX idx_booking_staff_status ON booking_staff (status)"
     ],
     "listRule": null,
-    "name": "game_hosts",
+    "name": "booking_staff",
     "system": false,
     "type": "base",
     "updateRule": null,

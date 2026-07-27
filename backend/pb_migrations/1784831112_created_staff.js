@@ -70,8 +70,8 @@ migrate((app) => {
         "system": false,
         "type": "select",
         "values": [
-          "grandmaster",
-          "gamemaster"
+          "admin",
+          "staff"
         ]
       },
       {

@@ -21,9 +21,9 @@ export default function Login() {
     const result = await login(email, password)
     if (result.success) {
       // Get staff from localStorage to route by role
-      const stored = localStorage.getItem('gr8_staff')
+      const stored = localStorage.getItem('sb_staff')
       const staff = stored ? JSON.parse(stored) : null
-      navigate(staff?.role === 'grandmaster' ? '/grandmaster' : '/gm')
+      navigate(staff?.role === 'admin' ? '/admin' : '/dashboard')
     } else {
       setError(result.error || 'Invalid email or PIN code')
     }
@@ -35,20 +35,20 @@ export default function Login() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             {branding.business_name}
           </h1>
-          <p className="text-gray-500 mt-2 text-sm">Staff Portal</p>
+          <p className="text-gray-500 mt-1.5 text-sm">Staff Portal</p>
         </div>
 
         {/* Login card */}
         <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-full flex items-center justify-center bg-orange-100">
-              <Lock size={18} className="text-gr8-orange" />
+              <Lock size={18} className="text-sb-orange" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Sign In</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Sign In</h2>
               <p className="text-xs text-gray-500">Enter your credentials</p>
             </div>
           </div>
@@ -62,8 +62,8 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
-                  placeholder="you@gr8escape.co.za"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
+                  placeholder="you@example.com"
                   required
                 />
               </div>
@@ -77,7 +77,7 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
                   placeholder="Enter your password"
                   required
                 />
@@ -94,7 +94,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading || !email || !password}
-              className="w-full btn-gr8 py-3 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full btn-sb py-3 flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : null}
               {loading ? 'Signing in...' : 'Sign In'}

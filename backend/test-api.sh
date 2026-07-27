@@ -31,7 +31,7 @@ test_endpoint "Time slots list" "$BASE/api/collections/time_slots/records?perPag
 test_endpoint "Bookings list" "$BASE/api/collections/bookings/records?perPage=1" "200"
 test_endpoint "Staff list" "$BASE/api/collections/staff/records?perPage=1" "200"
 test_endpoint "Settings list" "$BASE/api/collections/settings/records?perPage=1" "200"
-test_endpoint "Game hosts list" "$BASE/api/collections/game_hosts/records?perPage=1" "200"
+test_endpoint "Booking staff list" "$BASE/api/collections/booking_staff/records?perPage=1" "200"
 
 echo ""
 echo "=== Filtering ==="

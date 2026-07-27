@@ -4,14 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        gr8: {
-          orange: '#FF4500',
-          'orange-dark': '#E03D00',
-          red: 'rgb(var(--gr8-red) / <alpha-value>)',
+        sb: {
+          orange: '#F45B31',
+          'orange-dark': '#D94828',
+          'orange-light': '#FFF0EB',
+          red: 'rgb(var(--sb-red) / <alpha-value>)',
           gold: '#F59E0B',
-          bg: '#F8F9FA',
+          bg: '#F9FAFB',
           card: '#FFFFFF',
-          text: '#1A1A2E',
+          text: '#111827',
           muted: '#6B7280',
           border: '#E5E7EB',
         },

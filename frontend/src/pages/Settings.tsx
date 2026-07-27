@@ -37,8 +37,8 @@ const SETTING_LABELS: Record<string, { label: string; hint?: string }> = {
   business_type: { label: 'Business Type', hint: 'escape_room, medical, salon, restaurant, or custom' },
   resource_label: { label: 'Resource Label (Singular)', hint: 'e.g. Room, Doctor, Stylist, Table' },
   resource_label_plural: { label: 'Resource Label (Plural)', hint: 'e.g. Rooms, Doctors, Stylists, Tables' },
-  staff_role_admin: { label: 'Admin Role Name', hint: 'e.g. Grandmaster, Admin, Manager' },
-  staff_role_worker: { label: 'Worker Role Name', hint: 'e.g. Game Master, Doctor, Stylist, Host' },
+  staff_role_admin: { label: 'Admin Role Name', hint: 'e.g. Admin, Manager, Owner' },
+  staff_role_worker: { label: 'Worker Role Name', hint: 'e.g. Staff, Doctor, Stylist, Host' },
   booking_verb: { label: 'Booking Verb', hint: 'e.g. Book Now, Book Appointment, Reserve Table' },
   pricing_model: { label: 'Pricing Model', hint: 'per_person, per_slot, or flat' },
   primary_color: { label: 'Primary Color', hint: 'Hex color code, e.g. #E53935' },
@@ -166,7 +166,7 @@ export default function Settings() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900">Settings</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Settings</h1>
           <p className="text-gray-500 mt-1">Configure your booking system</p>
         </div>
         <button
@@ -175,7 +175,7 @@ export default function Settings() {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-all ${
             saved
               ? 'bg-green-500/20 text-green-600 border border-green-500/30'
-              : 'btn-gr8'
+              : 'btn-sb'
           }`}
         >
           {saved ? (
@@ -191,7 +191,7 @@ export default function Settings() {
           const isCollapsed = collapsedGroups[group]
 
           return (
-            <div key={group} className="card-dark">
+            <div key={group} className="card">
               <div className="flex items-center gap-3 mb-4">
                 {group === 'Payfast' && <span className="text-lg">💳</span>}
                 {group === 'WhatsApp' && <span className="text-lg">📱</span>}
@@ -211,7 +211,7 @@ export default function Settings() {
                     </div>
                     <button
                       onClick={() => setCollapsedGroups(prev => ({ ...prev, [group]: false }))}
-                      className="btn-gr8 px-4 py-2 text-sm flex items-center gap-2 shrink-0"
+                      className="btn-sb px-4 py-2 text-sm flex items-center gap-2 shrink-0"
                     >
                       <Cog size={14} />
                       Configure
@@ -238,13 +238,13 @@ export default function Settings() {
                               await pb.collection('settings').update(s.id, { value: e.target.value })
                               window.location.reload()
                             }}
-                            className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
+                            className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
                           >
-                            <option value="escape_room">Escape Room</option>
                             <option value="medical">Medical</option>
                             <option value="salon">Salon</option>
                             <option value="restaurant">Restaurant</option>
                             <option value="custom">Custom</option>
+                            <option value="escape_room">Escape Room</option>
                           </select>
                         ) : (
                           <div className="relative">
@@ -252,7 +252,7 @@ export default function Settings() {
                               type={isPassword ? 'password' : 'text'}
                               value={s.value}
                               onChange={e => updateSetting(s.id, e.target.value)}
-                              className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
+                              className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
                               placeholder={meta?.hint || s.key}
                             />
                             {isSecret && (

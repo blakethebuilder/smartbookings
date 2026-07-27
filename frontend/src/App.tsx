@@ -2,9 +2,9 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import AuthGate from './components/AuthGate'
 import Login from './pages/Login'
-import GMDashboard from './pages/GMDashboard'
-import GameMaster from './pages/GameMaster'
-import GrandmasterDashboard from './pages/GrandmasterDashboard'
+import StaffDashboard from './pages/StaffDashboard'
+import Calendar from './pages/Calendar'
+import AdminDashboard from './pages/AdminDashboard'
 import Rooms from './pages/Rooms'
 import Bookings from './pages/Bookings'
 import Settings from './pages/Settings'
@@ -29,19 +29,19 @@ function App() {
       <Route path="/waiver/:id" element={<Waiver />} />
 
       {/* Staff routes (both roles) */}
-      <Route element={<AuthGate allowedRoles={['grandmaster', 'gamemaster']} />}>
+      <Route element={<AuthGate allowedRoles={['admin', 'staff']} />}>
         <Route element={<Layout />}>
-          <Route path="/gm" element={<GMDashboard />} />
-          <Route path="/calendar" element={<GameMaster />} />
+          <Route path="/dashboard" element={<StaffDashboard />} />
+          <Route path="/calendar" element={<Calendar />} />
           <Route path="/rooms" element={<Rooms />} />
           <Route path="/bookings" element={<Bookings />} />
         </Route>
       </Route>
 
-      {/* Grandmaster-only routes */}
-      <Route element={<AuthGate allowedRoles={['grandmaster']} />}>
+      {/* Admin-only routes */}
+      <Route element={<AuthGate allowedRoles={['admin']} />}>
         <Route element={<Layout />}>
-          <Route path="/grandmaster" element={<GrandmasterDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/clients" element={<Clients />} />
           <Route path="/staff" element={<StaffManagement />} />
           <Route path="/settings" element={<Settings />} />

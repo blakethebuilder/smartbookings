@@ -226,7 +226,7 @@ export default function Waiver() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="animate-spin text-gr8-orange" size={32} />
+        <Loader2 className="animate-spin text-sb-orange" size={32} />
       </div>
     )
   }
@@ -248,7 +248,7 @@ export default function Waiver() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center max-w-md px-6">
           <CheckCircle size={64} className="text-green-400 mx-auto mb-4" />
-          <h1 className="text-3xl font-black text-gray-900 mb-2">Waiver Signed!</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Waiver Signed!</h1>
           <p className="text-gray-600 mb-6">
             You're all set for <span className="text-gray-900 font-bold">{room?.name}</span> on{' '}
             {timeSlot && format(new Date(timeSlot.date), 'EEEE, MMMM d')}.
@@ -266,10 +266,10 @@ export default function Waiver() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 shadow-sm py-4 px-6">
         <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <Shield size={24} className="text-gr8-orange" />
+          <Shield size={24} className="text-sb-orange" />
           <div>
             <h1 className="text-lg font-bold text-gray-900">Player Indemnity Waiver</h1>
-            <p className="text-xs text-gray-600">{branding.business_name} — Fourways, Johannesburg</p>
+            <p className="text-xs text-gray-600">{branding.business_name}</p>
           </div>
         </div>
       </header>
@@ -286,7 +286,7 @@ export default function Waiver() {
           </div>
           <div className="ml-auto text-right">
             <p className="text-xs text-gray-600">Booking</p>
-            <p className="text-sm font-mono text-gr8-orange">{booking.reference}</p>
+            <p className="text-sm font-mono text-sb-orange">{booking.reference}</p>
           </div>
         </div>
 
@@ -295,10 +295,10 @@ export default function Waiver() {
           <h2 className="text-xl font-bold text-gray-900 mb-4">Assumption of Risk & Indemnity</h2>
           <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
             <p>
-              I, the undersigned participant, acknowledge that escape room activities involve physical and mental challenges, and I voluntarily assume all risks associated with participation in escape room games at <strong className="text-gray-900">{branding.business_name}</strong>.
+              I, the undersigned participant, acknowledge that Activities at our venue involve physical participation. By signing this waiver, you acknowledge and accept any risks associated with these activities., and I voluntarily assume all risks associated with participation in escape room games at <strong className="text-gray-900">{branding.business_name}</strong>.
             </p>
             <p>
-              I understand that escape rooms may involve confined spaces, low lighting, physical exertion, and mentally stimulating puzzles. I confirm that I am physically and mentally capable of participating.
+              I understand that Activities may involve physical exertion. Please consult staff if you have any concerns.. I confirm that I am physically and mentally capable of participating.
             </p>
             <p>
               I agree to follow all rules and instructions provided by the {branding.staff_role_worker}, including but not limited to: no use of excessive force, no cell phones or recording devices, and no food or drinks in the game rooms.
@@ -323,7 +323,7 @@ export default function Waiver() {
                   type="text"
                   value={form.playerName}
                   onChange={e => setForm(prev => ({ ...prev, playerName: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
                 />
               </div>
               <div>
@@ -332,7 +332,7 @@ export default function Waiver() {
                   type="email"
                   value={form.playerEmail}
                   onChange={e => setForm(prev => ({ ...prev, playerEmail: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
                 />
               </div>
             </div>
@@ -343,7 +343,7 @@ export default function Waiver() {
                   type="text"
                   value={form.playerIdNumber}
                   onChange={e => setForm(prev => ({ ...prev, playerIdNumber: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
                 />
               </div>
               <div className="flex items-center gap-3 pt-6">
@@ -352,7 +352,7 @@ export default function Waiver() {
                   id="isMinor"
                   checked={form.isMinor}
                   onChange={e => setForm(prev => ({ ...prev, isMinor: e.target.checked }))}
-                  className="w-4 h-4 rounded border-gray-300 bg-gray-50 text-gr8-orange focus:ring-gr8-orange"
+                  className="w-4 h-4 rounded border-gray-300 bg-gray-50 text-sb-orange focus:ring-sb-orange"
                 />
                 <label htmlFor="isMinor" className="text-sm text-gray-600">I am under 16 years old</label>
               </div>
@@ -366,7 +366,7 @@ export default function Waiver() {
                     type="text"
                     value={form.guardianName}
                     onChange={e => setForm(prev => ({ ...prev, guardianName: e.target.value }))}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
                   />
                 </div>
                 <div>
@@ -375,7 +375,7 @@ export default function Waiver() {
                     type="text"
                     value={form.guardianIdNumber}
                     onChange={e => setForm(prev => ({ ...prev, guardianIdNumber: e.target.value }))}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange"
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
                   />
                 </div>
               </div>
@@ -392,7 +392,7 @@ export default function Waiver() {
                 type="checkbox"
                 checked={form.consentMedical}
                 onChange={e => setForm(prev => ({ ...prev, consentMedical: e.target.checked }))}
-                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-gr8-orange focus:ring-gr8-orange"
+                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-sb-orange focus:ring-sb-orange"
               />
               <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                 <strong className="text-gray-900">Medical:</strong> I confirm that I have no medical conditions that would prevent me from safely participating. I will inform the {branding.staff_role_worker} of any relevant conditions before the game. *
@@ -403,7 +403,7 @@ export default function Waiver() {
                 type="checkbox"
                 checked={form.consentRules}
                 onChange={e => setForm(prev => ({ ...prev, consentRules: e.target.checked }))}
-                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-gr8-orange focus:ring-gr8-orange"
+                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-sb-orange focus:ring-sb-orange"
               />
               <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                 <strong className="text-gray-900">Rules:</strong> I agree to follow all rules and instructions from the {branding.staff_role_worker}, including no phones, no excessive force, and no food/drinks in the rooms. *
@@ -414,7 +414,7 @@ export default function Waiver() {
                 type="checkbox"
                 checked={form.consentPhoto}
                 onChange={e => setForm(prev => ({ ...prev, consentPhoto: e.target.checked }))}
-                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-gr8-orange focus:ring-gr8-orange"
+                className="w-4 h-4 mt-0.5 rounded border-gray-300 bg-gray-50 text-sb-orange focus:ring-sb-orange"
               />
               <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                 <strong className="text-gray-900">Photos/Videos:</strong> I grant permission for photos or videos taken during my experience to be used for promotional purposes. (Optional)
@@ -443,7 +443,7 @@ export default function Waiver() {
           </div>
           <button
             onClick={clearSignature}
-            className="text-sm text-gray-500 hover:text-gr8-orange transition-colors"
+            className="text-sm text-gray-500 hover:text-sb-orange transition-colors"
           >
             Clear signature
           </button>
@@ -459,7 +459,7 @@ export default function Waiver() {
         <button
           onClick={handleSubmit}
           disabled={submitting || !hasSignature || !form.consentMedical || !form.consentRules || !form.playerName || !form.playerEmail}
-          className="w-full btn-gr8 py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full btn-sb py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? (
             <><Loader2 size={20} className="animate-spin" /> Submitting...</>

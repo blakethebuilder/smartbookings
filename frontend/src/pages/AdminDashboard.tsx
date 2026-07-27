@@ -34,7 +34,7 @@ interface GameHostRecord {
   }
 }
 
-interface GmBlock {
+interface Block {
   id: string
   room: string
   date: string
@@ -47,7 +47,7 @@ interface StaffRecord {
   id: string
   name: string
   email: string
-  role: 'grandmaster' | 'gamemaster'
+  role: 'admin' | 'staff'
   avatar_color: string
   is_active: boolean
 }
@@ -69,15 +69,15 @@ interface RoomStats {
   revenue: number
 }
 
-export default function GrandmasterDashboard() {
-  const { staff, isGrandmaster } = useAuth()
+export default function AdminDashboard() {
+  const { staff, isAdmin } = useAuth()
   const { branding } = useBranding()
   const [rooms, setRooms] = useState<Room[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
   const [gameHosts, setGameHosts] = useState<GameHostRecord[]>([])
   const [staffList, setStaffList] = useState<StaffRecord[]>([])
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([])
-  const [gmBlocks, setGmBlocks] = useState<GmBlock[]>([])
+  const [gmBlocks, setBlocks] = useState<Block[]>([])
   const [loading, setLoading] = useState(true)
 
   const loadData = async () => {
@@ -92,13 +92,13 @@ export default function GrandmasterDashboard() {
       ] = await Promise.all([
         pb.collection('rooms').getFullList<Room>({ sort: 'sort_order' }),
         pb.collection('bookings').getFullList<Booking>({ sort: '-id' }),
-        pb.collection('game_hosts').getFullList<GameHostRecord>({
+        pb.collection('booking_staff').getFullList<GameHostRecord>({
           expand: 'booking,staff',
           sort: '-assigned_at',
         }),
         pb.collection('staff').getFullList<StaffRecord>({ filter: 'is_active = true' }),
         pb.collection('time_slots').getFullList<TimeSlot>({ sort: 'date,start_time' }),
-        pb.collection('gm_blocks').getFullList<GmBlock>({ sort: 'date,start_time' }),
+        pb.collection('blocks').getFullList<Block>({ sort: 'date,start_time' }),
       ])
 
       setRooms(roomsData)
@@ -106,9 +106,9 @@ export default function GrandmasterDashboard() {
       setGameHosts(hostsData)
       setStaffList(staffData)
       setTimeSlots(slotsData)
-      setGmBlocks(blocksData)
+      setBlocks(blocksData)
     } catch (e) {
-      console.error('Failed to load grandmaster data:', e)
+      console.error('Failed to load admin data:', e)
     } finally {
       setLoading(false)
     }
@@ -117,9 +117,9 @@ export default function GrandmasterDashboard() {
   useEffect(() => { loadData() }, [])
 
   useRealtime('bookings', () => loadData())
-  useRealtime('game_hosts', () => loadData())
+  useRealtime('booking_staff', () => loadData())
   useRealtime('time_slots', () => loadData())
-  useRealtime('gm_blocks', () => loadData())
+  useRealtime('blocks', () => loadData())
 
   const now = new Date()
   const weekStart = startOfWeek(now, { weekStartsOn: 1 })
@@ -246,7 +246,7 @@ export default function GrandmasterDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin text-gr8-red" size={32} />
+        <Loader2 className="animate-spin text-sb-red" size={32} />
       </div>
     )
   }
@@ -264,46 +264,46 @@ export default function GrandmasterDashboard() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-black text-gray-900">
-          {branding.staff_role_admin} <span className="text-gr8-orange">Dashboard</span>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+          {branding.staff_role_admin} <span className="text-sb-orange">Dashboard</span>
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-gray-500 mt-1 text-sm">
           Welcome back, {staff?.name}. Here's your business overview.
         </p>
       </div>
 
       {/* Revenue Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="card-dark">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gr8-red/10 text-gr8-red">
-              <TrendingUp size={20} />
+        <div className="card">
+          <div className="flex items-center gap-4">
+            <div className="p-2.5 rounded-xl bg-sb-red/10">
+              <TrendingUp size={22} className="text-sb-red" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">R{revenueThisWeek.toLocaleString()}</p>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Revenue This Week</p>
+              <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueThisWeek.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 font-medium">Revenue This Week</p>
             </div>
           </div>
         </div>
-        <div className="card-dark">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gr8-orange/10 text-gr8-orange">
-              <DollarSign size={20} />
+        <div className="card">
+          <div className="flex items-center gap-4">
+            <div className="p-2.5 rounded-xl bg-sb-orange/10">
+              <DollarSign size={22} className="text-sb-orange" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">R{revenueThisMonth.toLocaleString()}</p>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Revenue This Month</p>
+              <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueThisMonth.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 font-medium">Revenue This Month</p>
             </div>
           </div>
         </div>
-        <div className="card-dark">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-green-500/10 text-green-400">
-              <BarChart3 size={20} />
+        <div className="card">
+          <div className="flex items-center gap-4">
+            <div className="p-2.5 rounded-xl bg-green-500/10">
+              <BarChart3 size={22} className="text-green-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">R{revenueAllTime.toLocaleString()}</p>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Revenue All Time</p>
+              <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueAllTime.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 font-medium">Revenue All Time</p>
             </div>
           </div>
         </div>
@@ -311,61 +311,61 @@ export default function GrandmasterDashboard() {
 
       {/* Deposit vs Full Payment Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="card-dark">
-          <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Deposits Collected</p>
-          <p className="text-2xl font-bold text-gr8-orange">
+        <div className="card">
+          <p className="text-xs text-gray-500 font-medium mb-1">Deposits Collected</p>
+          <p className="text-2xl font-bold tabular-nums text-sb-orange">
             R{bookings.filter(b => b.payment_type === 'deposit' && b.payment_status === 'paid')
               .reduce((sum, b) => sum + (b.deposit_amount || 640), 0).toLocaleString()}
           </p>
-          <p className="text-xs text-gray-600">{bookings.filter(b => b.payment_type === 'deposit').length} bookings</p>
+          <p className="text-xs text-gray-400 mt-0.5">{bookings.filter(b => b.payment_type === 'deposit').length} bookings</p>
         </div>
-        <div className="card-dark">
-          <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Balance Due at Venue</p>
-          <p className="text-2xl font-bold text-yellow-600">
+        <div className="card">
+          <p className="text-xs text-gray-500 font-medium mb-1">Balance Due at Venue</p>
+          <p className="text-2xl font-bold tabular-nums text-amber-600">
             R{bookings.filter(b => b.payment_type === 'deposit' && b.status !== 'cancelled')
               .reduce((sum, b) => sum + (b.balance_due || 0), 0).toLocaleString()}
           </p>
-          <p className="text-xs text-gray-600">To collect on arrival</p>
+          <p className="text-xs text-gray-400 mt-0.5">To collect on arrival</p>
         </div>
-        <div className="card-dark">
-          <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Full Payments</p>
-          <p className="text-2xl font-bold text-green-600">
+        <div className="card">
+          <p className="text-xs text-gray-500 font-medium mb-1">Full Payments</p>
+          <p className="text-2xl font-bold tabular-nums text-green-600">
             R{bookings.filter(b => b.payment_type === 'full' && b.payment_status === 'paid')
               .reduce((sum, b) => sum + b.total_amount, 0).toLocaleString()}
           </p>
-          <p className="text-xs text-gray-600">{bookings.filter(b => b.payment_type === 'full').length} bookings</p>
+          <p className="text-xs text-gray-400 mt-0.5">{bookings.filter(b => b.payment_type === 'full').length} bookings</p>
         </div>
-        <div className="card-dark">
-          <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Revenue</p>
-          <p className="text-2xl font-bold text-gray-900">R{revenueAllTime.toLocaleString()}</p>
-          <p className="text-xs text-gray-600">All confirmed bookings</p>
+        <div className="card">
+          <p className="text-xs text-gray-500 font-medium mb-1">Total Revenue</p>
+          <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueAllTime.toLocaleString()}</p>
+          <p className="text-xs text-gray-400 mt-0.5">All confirmed bookings</p>
         </div>
       </div>
 
       {/* Bookings Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="card-dark text-center">
-          <p className="text-2xl sm:text-3xl font-black text-gray-900">{bookingStats.total}</p>
-          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Total Bookings</p>
+        <div className="card text-center">
+          <p className="text-2xl sm:text-3xl font-bold tabular-nums text-gray-900">{bookingStats.total}</p>
+          <p className="text-xs text-gray-500 font-medium mt-1">Total Bookings</p>
         </div>
-        <div className="card-dark text-center">
-          <p className="text-2xl sm:text-3xl font-black text-green-600">{bookingStats.confirmed}</p>
-          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Confirmed</p>
+        <div className="card text-center">
+          <p className="text-2xl sm:text-3xl font-bold tabular-nums text-green-600">{bookingStats.confirmed}</p>
+          <p className="text-xs text-gray-500 font-medium mt-1">Confirmed</p>
         </div>
-        <div className="card-dark text-center">
-          <p className="text-2xl sm:text-3xl font-black text-yellow-600">{bookingStats.pending}</p>
-          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Pending</p>
+        <div className="card text-center">
+          <p className="text-2xl sm:text-3xl font-bold tabular-nums text-amber-600">{bookingStats.pending}</p>
+          <p className="text-xs text-gray-500 font-medium mt-1">Pending</p>
         </div>
-        <div className="card-dark text-center">
-          <p className="text-2xl sm:text-3xl font-black text-red-600">{bookingStats.cancelled}</p>
-          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Cancelled</p>
+        <div className="card text-center">
+          <p className="text-2xl sm:text-3xl font-bold tabular-nums text-red-600">{bookingStats.cancelled}</p>
+          <p className="text-xs text-gray-500 font-medium mt-1">Cancelled</p>
         </div>
       </div>
 
-      {/* Bookings per Game Master */}
-      <div className="card-dark mb-8">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Award size={18} className="text-gr8-orange" />
+      {/* Staff Performance */}
+      <div className="card mb-8">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <Award size={18} className="text-sb-orange" />
           {branding.staff_role_worker} Performance
         </h2>
         {gmStats.length === 0 ? (
@@ -397,7 +397,7 @@ export default function GrandmasterDashboard() {
                       </div>
                     </td>
                     <td className="py-3 px-4 text-center text-gray-900 font-bold">{gm.gamesHosted}</td>
-                    <td className="py-3 px-4 text-center text-gr8-orange font-bold">{gm.hintsUsed}</td>
+                    <td className="py-3 px-4 text-center text-sb-orange font-bold">{gm.hintsUsed}</td>
                     <td className="py-3 px-4 text-center">
                       <span className="text-green-600 font-bold">{gm.statusBreakdown['completed'] || 0}</span>
                     </td>
@@ -413,9 +413,9 @@ export default function GrandmasterDashboard() {
       </div>
 
       {/* Room Occupancy */}
-      <div className="card-dark mb-8">
+      <div className="card mb-8">
         <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <BedDouble size={18} className="text-gr8-red" />
+          <BedDouble size={18} className="text-sb-red" />
           {branding.resource_label} Occupancy
         </h2>
         {roomStats.length === 0 ? (
@@ -448,7 +448,7 @@ export default function GrandmasterDashboard() {
                     <span>{totalBookings} total bookings</span>
                     <span>{thisWeekBookings} this week</span>
                     <span>{thisMonthBookings} this month</span>
-                    <span className="text-gr8-orange font-medium">{utilization}% utilization</span>
+                    <span className="text-sb-orange font-medium">{utilization}% utilization</span>
                   </div>
                 </div>
               )
@@ -458,7 +458,7 @@ export default function GrandmasterDashboard() {
       </div>
 
       {/* Recent Bookings */}
-      <div className="card-dark mb-8">
+      <div className="card mb-8">
         <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
           <Clock size={18} className="text-gray-500" />
           Recent Bookings
@@ -484,7 +484,7 @@ export default function GrandmasterDashboard() {
                   const room = rooms.find(r => r.id === b.room)
                   return (
                     <tr key={b.id} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="py-3 px-4 font-mono text-xs text-gr8-orange">{b.reference}</td>
+                      <td className="py-3 px-4 font-mono text-xs text-sb-orange">{b.reference}</td>
                       <td className="py-3 px-4 text-gray-900">{b.customer_name}</td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
@@ -492,7 +492,7 @@ export default function GrandmasterDashboard() {
                           <span className="text-gray-600 text-xs">{room?.name || '—'}</span>
                         </div>
                       </td>
-                      {branding.show_player_count && <td className="py-3 px-4 text-center text-gray-600">{b.player_count}</td>}
+                      {branding.show_player_count && <td className="py-3 px-4 text-center text-gray-600">{b.party_size}</td>}
                       <td className="py-3 px-4 text-right text-gray-600">R{b.total_amount}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${
@@ -519,9 +519,9 @@ export default function GrandmasterDashboard() {
       </div>
 
       {/* Today's Schedule */}
-      <div className="card-dark">
+      <div className="card">
         <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Calendar size={18} className="text-gr8-red" />
+          <Calendar size={18} className="text-sb-red" />
           Today's Schedule
           <span className="text-sm font-normal text-gray-500 ml-2">{format(now, 'EEEE, d MMMM yyyy')}</span>
         </h2>
@@ -559,7 +559,7 @@ export default function GrandmasterDashboard() {
                       </p>
                       {event.booking ? (
                         <p className="text-gray-500 text-xs">
-                          {event.booking.customer_name}{branding.show_player_count ? ` • ${event.booking.player_count} players` : ''} •{' '}
+                          {event.booking.customer_name}{branding.show_player_count ? ` • ${event.booking.party_size} players` : ''} •{' '}
                           <span className={`font-bold ${
                             event.booking.status === 'confirmed' ? 'text-green-600' :
                             event.booking.status === 'pending' ? 'text-yellow-600' :

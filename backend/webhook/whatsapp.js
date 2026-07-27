@@ -1,12 +1,12 @@
 /**
  * Evolution API — WhatsApp integration
- * Instance: smarthq2
+ * Instance: smartbookings
  * Docs: https://doc.evolution-api.com
  */
 
 const EVOLUTION_URL = process.env.EVO_API_URL || ''
 const EVOLUTION_KEY = process.env.EVO_API_KEY || ''
-const EVOLUTION_INSTANCE = process.env.EVO_INSTANCE || 'smarthq2'
+const EVOLUTION_INSTANCE = process.env.EVO_INSTANCE || 'smartbookings'
 
 const BASE = `${EVOLUTION_URL}`
 

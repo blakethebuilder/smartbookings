@@ -6,7 +6,7 @@ export interface Staff {
   name: string
   email: string
   phone: string
-  role: 'grandmaster' | 'gamemaster'
+  role: 'admin' | 'staff'
   avatar_color: string
   is_active: boolean
   password: string
@@ -21,7 +21,7 @@ interface AuthContextType {
   currentClient: any | null
   login: (email: string, password: string) => Promise<{success: boolean; error?: string}>
   logout: () => void
-  isGrandmaster: boolean
+  isAdmin: boolean
   isSuperadmin: boolean
   switchClient: (clientId: string) => Promise<void>
   loading: boolean
@@ -32,7 +32,7 @@ export const AuthContext = createContext<AuthContextType>({
   currentClient: null,
   login: async () => ({ success: false }),
   logout: () => {},
-  isGrandmaster: false,
+  isAdmin: false,
   isSuperadmin: false,
   switchClient: async () => {},
   loading: true,
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Check stored session
-    const stored = localStorage.getItem('gr8_staff')
+    const stored = localStorage.getItem('sb_staff')
     if (stored) {
       try {
         const s = JSON.parse(stored)
@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch {}
     }
     // Restore current client
-    const clientStored = localStorage.getItem('gr8_current_client')
+    const clientStored = localStorage.getItem('sb_current_client')
     if (clientStored) {
       try {
         setCurrentClient(JSON.parse(clientStored))
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const client = await pb.collection('clients').getOne(clientId)
       setCurrentClient(client)
-      localStorage.setItem('gr8_current_client', JSON.stringify(client))
+      localStorage.setItem('sb_current_client', JSON.stringify(client))
     } catch (err: any) {
       console.error('[Auth] switchClient failed:', err)
     }
@@ -95,14 +95,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setStaff(result)
-      localStorage.setItem('gr8_staff', JSON.stringify(result))
+      localStorage.setItem('sb_staff', JSON.stringify(result))
 
       // Load client if staff has a client_id
       if (result.client_id) {
         try {
           const client = await pb.collection('clients').getOne(result.client_id)
           setCurrentClient(client)
-          localStorage.setItem('gr8_current_client', JSON.stringify(client))
+          localStorage.setItem('sb_current_client', JSON.stringify(client))
         } catch (err) {
           console.error('[Auth] Failed to load client for staff:', err)
         }
@@ -118,8 +118,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setStaff(null)
     setCurrentClient(null)
-    localStorage.removeItem('gr8_staff')
-    localStorage.removeItem('gr8_current_client')
+    localStorage.removeItem('sb_staff')
+    localStorage.removeItem('sb_current_client')
   }
 
   return (
@@ -128,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       currentClient,
       login,
       logout,
-      isGrandmaster: staff?.role === 'grandmaster',
+      isAdmin: staff?.role === 'admin',
       isSuperadmin,
       switchClient,
       loading,
