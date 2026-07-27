@@ -129,7 +129,7 @@ export default function Layout() {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? ''
+                    ? 'bg-orange-50 text-gr8-orange'
                     : 'text-gray-600 hover:text-gr8-orange hover:bg-orange-50'
                 }`
               }
@@ -142,10 +142,10 @@ export default function Layout() {
         </nav>
 
         {/* Logout */}
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-gray-200">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-gray-500 hover:text-white hover:bg-white/5 w-full transition-colors"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-gray-500 hover:text-gr8-orange hover:bg-gray-50 w-full transition-colors"
           >
             <LogOut size={18} />
             Logout
@@ -156,11 +156,11 @@ export default function Layout() {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile header */}
-        <header className="lg:hidden flex items-center gap-3 p-4 border-b border-gray-800 bg-gr8-card">
-          <button onClick={() => setSidebarOpen(true)} className="text-gray-400 hover:text-white">
+        <header className="lg:hidden flex items-center gap-3 p-4 border-b border-gray-200 bg-white">
+          <button onClick={() => setSidebarOpen(true)} className="text-gray-500 hover:text-gray-900">
             <Menu size={24} />
           </button>
-          <h1 className="text-lg font-black text-white tracking-tight">
+          <h1 className="text-lg font-black text-gray-900 tracking-tight">
             {branding.business_name}
           </h1>
         </header>

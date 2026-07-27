@@ -290,19 +290,19 @@ export default function Book() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b border-white/10 py-4 px-6">
+      <header className="bg-white border-b border-gray-200 shadow-sm py-4 px-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <a href="https://gr8.smartintegrate.co.za" className="text-xl font-black text-white tracking-tight">
+          <a href="https://gr8.smartintegrate.co.za" className="text-xl font-black text-gray-900 tracking-tight">
             {branding.business_name}
           </a>
-          <a href="https://gr8.smartintegrate.co.za" className="text-sm text-gray-400 hover:text-white transition-colors">
+          <a href="https://gr8.smartintegrate.co.za" className="text-sm text-gray-500 hover:text-gr8-orange transition-colors">
             ← Back to site
           </a>
         </div>
       </header>
 
       {/* Progress bar */}
-      <div className="border-b border-white/5 py-4 px-6">
+      <div className="bg-white border-b border-gray-200 py-4 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between">
             {steps.map((s, i) => {
@@ -312,16 +312,16 @@ export default function Book() {
               const isComplete = i < currentIdx
               return (
                 <div key={s.key} className="flex items-center">
-                  <div className={`flex items-center gap-2 ${isActive ? 'text-gr8-orange' : isComplete ? 'text-green-400' : 'text-gray-600'}`}>
+                  <div className={`flex items-center gap-2 ${isActive ? 'text-gr8-orange' : isComplete ? 'text-green-500' : 'text-gray-400'}`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                      isActive ? 'bg-gr8-red text-white' : isComplete ? 'bg-green-500/20 text-green-400' : 'bg-white/5 text-gray-600'
+                      isActive ? 'bg-gr8-orange text-white' : isComplete ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
                     }`}>
                       {isComplete ? '✓' : i + 1}
                     </div>
                     <span className="text-xs font-medium hidden sm:block">{s.label}</span>
                   </div>
                   {i < steps.length - 1 && (
-                    <div className={`w-8 h-px mx-2 ${i < currentIdx ? 'bg-green-500/50' : 'bg-white/10'}`} />
+                    <div className={`w-8 h-px mx-2 ${i < currentIdx ? 'bg-green-300' : 'bg-gray-200'}`} />
                   )}
                 </div>
               )
@@ -336,14 +336,14 @@ export default function Book() {
         {/* Step: Choose Room */}
         {step === 'rooms' && (
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">Choose Your {branding.resource_label}</h1>
-            <p className="text-gray-500 mb-8">Pick an escape room for your adventure.</p>
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Choose Your {branding.resource_label}</h1>
+            <p className="text-gray-600 mb-8">Pick an escape room for your adventure.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {rooms.map(room => (
                 <button
                   key={room.id}
                   onClick={() => selectRoom(room)}
-                  className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl overflow-hidden text-left hover:border-gr8-red/50 hover:shadow-lg hover:shadow-red-500/10 transition-all group"
+                  className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden text-left hover:border-gr8-orange hover:shadow-md transition-all group"
                 >
                   <div
                     className="h-28 sm:h-40 bg-cover bg-center relative"
@@ -352,7 +352,7 @@ export default function Book() {
                     <span className="absolute inset-0 flex items-center justify-center text-5xl opacity-30 select-none">
                       {roomEmoji(room.slug)}
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1e1e1e] to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
                     <div className="absolute bottom-3 left-3 flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: room.color }} />
                       {branding.show_difficulty && room.difficulty && (
@@ -363,12 +363,12 @@ export default function Book() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-white mb-1 transition-colors">
+                    <h3 className="text-lg font-bold text-gray-900 mb-1 transition-colors">
                       {room.name}
                     </h3>
-                    <p className="text-sm text-gray-400 mb-3 line-clamp-2">{room.description}</p>
+                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">{room.description}</p>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-500">
+                      <span className="text-gray-600">
                         {room.duration_minutes}min
                         {branding.show_player_count ? ` • ${room.min_players}-${room.max_players} players` : ''}
                       </span>
@@ -384,11 +384,11 @@ export default function Book() {
         {/* Step: Pick Date */}
         {step === 'date' && formData.room && (
           <div>
-            <button onClick={() => setStep('rooms')} className="text-sm text-gray-500 hover:text-white mb-4 flex items-center gap-1">
+            <button onClick={() => setStep('rooms')} className="text-sm text-gray-500 hover:text-gr8-orange mb-4 flex items-center gap-1">
               ← Back to {branding.resource_label_plural.toLowerCase()}
             </button>
-            <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">Pick a Date</h1>
-            <p className="text-gray-500 mb-8">
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Pick a Date</h1>
+            <p className="text-gray-600 mb-8">
               <span className="font-medium" style={{ color: formData.room.color }}>{formData.room.name}</span> — Select a date for your game.
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-3">
@@ -402,12 +402,12 @@ export default function Book() {
                     disabled={!isBusinessDay}
                     className={`p-3 rounded-xl text-center transition-all ${
                       isBusinessDay
-                        ? 'bg-[#1e1e1e] border border-gray-700/50 hover:border-gr8-red/50 hover:bg-gr8-red/10 cursor-pointer'
-                        : 'bg-white/3 border border-transparent text-gray-700 cursor-not-allowed'
+                        ? 'bg-white border border-gray-200 hover:border-gr8-orange cursor-pointer'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     }`}
                   >
                     <p className="text-[10px] text-gray-500 uppercase">{format(date, 'EEE')}</p>
-                    <p className="text-lg font-bold text-white">{format(date, 'd')}</p>
+                    <p className="text-lg font-bold text-gray-900">{format(date, 'd')}</p>
                     <p className="text-[10px] text-gray-500">{format(date, 'MMM')}</p>
                   </button>
                 )
@@ -419,16 +419,16 @@ export default function Book() {
         {/* Step: Pick Time */}
         {step === 'slot' && formData.room && formData.date && (
           <div>
-            <button onClick={() => setStep('date')} className="text-sm text-gray-500 hover:text-white mb-4 flex items-center gap-1">
+            <button onClick={() => setStep('date')} className="text-sm text-gray-500 hover:text-gr8-orange mb-4 flex items-center gap-1">
               ← Back to dates
             </button>
-            <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">Pick a Time</h1>
-            <p className="text-gray-500 mb-8">
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Pick a Time</h1>
+            <p className="text-gray-600 mb-8">
               <span className="font-medium" style={{ color: formData.room.color }}>{formData.room.name}</span> — {format(formData.date, 'EEEE, MMMM d')}
             </p>
             {slots.length === 0 ? (
               <div className="text-center py-16">
-                <p className="text-gray-500 text-lg">No available slots for this date.</p>
+                <p className="text-gray-600 text-lg">No available slots for this date.</p>
                 <button onClick={() => setStep('date')} className="mt-4 text-gr8-orange hover:underline">
                   Try another date
                 </button>
@@ -439,10 +439,10 @@ export default function Book() {
                   <button
                     key={slot.id}
                     onClick={() => selectSlot(slot)}
-                    className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-4 text-center hover:border-gr8-red/50 hover:bg-gr8-red/10 transition-all"
+                    className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-gr8-orange transition-all"
                   >
-                    <p className="text-xl font-bold text-white">{slot.start_time}</p>
-                    <p className="text-xs text-gray-500 mt-1">{slot.end_time}</p>
+                    <p className="text-xl font-bold text-gray-900">{slot.start_time}</p>
+                    <p className="text-xs text-gray-600 mt-1">{slot.end_time}</p>
                   </button>
                 ))}
               </div>
@@ -453,31 +453,31 @@ export default function Book() {
         {/* Step: Your Details */}
         {step === 'details' && formData.room && formData.slot && (
           <div>
-            <button onClick={() => setStep('slot')} className="text-sm text-gray-500 hover:text-white mb-4 flex items-center gap-1">
+            <button onClick={() => setStep('slot')} className="text-sm text-gray-500 hover:text-gr8-orange mb-4 flex items-center gap-1">
               ← Back to times
             </button>
-            <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">Your Details</h1>
-            <p className="text-gray-500 mb-8">Tell us about your group.</p>
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Your Details</h1>
+            <p className="text-gray-600 mb-8">Tell us about your group.</p>
 
             {/* Booking summary */}
-            <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-5 mb-8">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-8">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: formData.room.color }} />
-                <span className="font-bold text-white">{formData.room.name}</span>
+                <span className="font-bold text-gray-900">{formData.room.name}</span>
               </div>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-600 text-sm">
                 {formData.date && format(formData.date, 'EEEE, MMMM d')} • {formData.slot.start_time} — {formData.slot.end_time}
               </p>
             </div>
 
             <div className="max-w-md space-y-5">
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">Full Name *</label>
+                <label className="text-sm text-gray-600 mb-1 block">Full Name *</label>
                 <input
                   type="text"
                   value={formData.playerName}
                   onChange={e => setFormData(prev => ({ ...prev, playerName: e.target.value.trim() }))}
-                  className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gr8-red transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-gr8-orange transition-colors"
                   placeholder="John Smith"
                   minLength={2}
                   maxLength={100}
@@ -485,41 +485,41 @@ export default function Book() {
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">Email *</label>
+                <label className="text-sm text-gray-600 mb-1 block">Email *</label>
                 <input
                   type="email"
                   value={formData.playerEmail}
                   onChange={e => setFormData(prev => ({ ...prev, playerEmail: e.target.value.trim() }))}
-                  className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gr8-red transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-gr8-orange transition-colors"
                   placeholder="john@example.com"
                   maxLength={254}
                   required
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">Phone (optional)</label>
+                <label className="text-sm text-gray-600 mb-1 block">Phone (optional)</label>
                 <input
                   type="tel"
                   value={formData.playerPhone}
                   onChange={e => setFormData(prev => ({ ...prev, playerPhone: e.target.value }))}
-                  className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gr8-red transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-gr8-orange transition-colors"
                   placeholder="076 362 0765"
                 />
               </div>
               {branding.show_player_count && (
               <div>
-                <label className="text-sm text-gray-400 mb-1 block">Number of Players</label>
+                <label className="text-sm text-gray-600 mb-1 block">Number of Players</label>
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setFormData(prev => ({ ...prev, playerCount: Math.max(formData.room!.min_players, prev.playerCount - 1) }))}
-                    className="w-10 h-10 rounded-lg bg-white/5 border border-gray-700 text-white font-bold hover:bg-white/10 transition-colors"
+                    className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 font-bold hover:bg-gray-100 transition-colors"
                   >
                     −
                   </button>
-                  <span className="text-2xl font-bold text-white w-12 text-center">{formData.playerCount}</span>
+                  <span className="text-2xl font-bold text-gray-900 w-12 text-center">{formData.playerCount}</span>
                   <button
                     onClick={() => setFormData(prev => ({ ...prev, playerCount: Math.min(formData.room!.max_players, prev.playerCount + 1) }))}
-                    className="w-10 h-10 rounded-lg bg-white/5 border border-gray-700 text-white font-bold hover:bg-white/10 transition-colors"
+                    className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 font-bold hover:bg-gray-100 transition-colors"
                   >
                     +
                   </button>
@@ -529,12 +529,12 @@ export default function Book() {
               )}
 
               {/* Price summary */}
-              <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-4">
-                <div className="flex justify-between text-sm text-gray-400 mb-2">
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                <div className="flex justify-between text-sm text-gray-600 mb-2">
                   <span>{formData.playerCount} × R{formData.room.price_per_player}</span>
                   <span>R{formData.playerCount * formData.room.price_per_player}</span>
                 </div>
-                <div className="flex justify-between font-bold text-white text-lg pt-2 border-t border-gray-700/50">
+                <div className="flex justify-between font-bold text-gray-900 text-lg pt-2 border-t border-gray-200">
                   <span>Total</span>
                   <span className="text-gr8-orange">R{formData.playerCount * formData.room.price_per_player}</span>
                 </div>
@@ -557,89 +557,89 @@ export default function Book() {
         {/* Step: Payment */}
         {step === 'payment' && formData.room && formData.slot && (
           <div>
-            <button onClick={() => setStep('details')} className="text-sm text-gray-500 hover:text-white mb-4 flex items-center gap-1">
+            <button onClick={() => setStep('details')} className="text-sm text-gray-500 hover:text-gr8-orange mb-4 flex items-center gap-1">
               ← Back to details
             </button>
-            <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">Confirm & Pay</h1>
-            <p className="text-gray-500 mb-8">Review your booking and choose payment option.</p>
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Confirm & Pay</h1>
+            <p className="text-gray-600 mb-8">Review your booking and choose payment option.</p>
 
             <div className="max-w-lg">
               {/* Booking summary */}
-              <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-6 mb-6">
+              <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 mb-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-5 h-5 rounded-full" style={{ backgroundColor: formData.room.color }} />
-                  <span className="text-lg font-bold text-white">{formData.room.name}</span>
+                  <span className="text-lg font-bold text-gray-900">{formData.room.name}</span>
                 </div>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-gray-600">
                     <span>Date</span>
-                    <span className="text-white">{formData.date && format(formData.date, 'EEEE, MMMM d, yyyy')}</span>
+                    <span className="text-gray-900">{formData.date && format(formData.date, 'EEEE, MMMM d, yyyy')}</span>
                   </div>
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-gray-600">
                     <span>Time</span>
-                    <span className="text-white">{formData.slot.start_time} — {formData.slot.end_time}</span>
+                    <span className="text-gray-900">{formData.slot.start_time} — {formData.slot.end_time}</span>
                   </div>
                   {branding.show_player_count && (
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-gray-600">
                     <span>Players</span>
-                    <span className="text-white">{formData.playerCount} × R{formData.room.price_per_player}</span>
+                    <span className="text-gray-900">{formData.playerCount} × R{formData.room.price_per_player}</span>
                   </div>
                   )}
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-gray-600">
                     <span>Name</span>
-                    <span className="text-white">{formData.playerName}</span>
+                    <span className="text-gray-900">{formData.playerName}</span>
                   </div>
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-gray-600">
                     <span>Email</span>
-                    <span className="text-white">{formData.playerEmail}</span>
+                    <span className="text-gray-900">{formData.playerEmail}</span>
                   </div>
                 </div>
               </div>
 
               {/* Payment option selector */}
               <div className="mb-6">
-                <label className="text-sm text-gray-400 mb-2 block font-medium">Payment Option</label>
+                <label className="text-sm text-gray-600 mb-2 block font-medium">Payment Option</label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setFormData(prev => ({ ...prev, paymentType: 'deposit' }))}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       formData.paymentType === 'deposit'
-                        ? 'border-gr8-red bg-gr8-red/10'
-                        : 'border-gray-700/50 bg-white/5 hover:border-gray-600'
+                        ? 'border-gr8-orange bg-orange-50'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
                     }`}
                   >
-                    <p className="text-white font-bold mb-1">Deposit</p>
+                    <p className="text-gray-900 font-bold mb-1">Deposit</p>
                     <p className="text-2xl font-black text-gr8-orange">R{depositAmount}</p>
-                    <p className="text-xs text-gray-500 mt-1">Covers {formData.room.min_players} player{formData.room.min_players !== 1 ? 's' : ''}. R{balanceDue} balance due on arrival.</p>
+                    <p className="text-xs text-gray-600 mt-1">Covers {formData.room.min_players} player{formData.room.min_players !== 1 ? 's' : ''}. R{balanceDue} balance due on arrival.</p>
                   </button>
                   <button
                     onClick={() => setFormData(prev => ({ ...prev, paymentType: 'full' }))}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       formData.paymentType === 'full'
-                        ? 'border-gr8-red bg-gr8-red/10'
-                        : 'border-gray-700/50 bg-white/5 hover:border-gray-600'
+                        ? 'border-gr8-orange bg-orange-50'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
                     }`}
                   >
-                    <p className="text-white font-bold mb-1">Pay Full</p>
+                    <p className="text-gray-900 font-bold mb-1">Pay Full</p>
                     <p className="text-2xl font-black text-gr8-orange">R{fullAmount}</p>
-                    <p className="text-xs text-gray-500 mt-1">Pay for all {formData.playerCount} players now.</p>
+                    <p className="text-xs text-gray-600 mt-1">Pay for all {formData.playerCount} players now.</p>
                   </button>
                 </div>
               </div>
 
               {/* Price breakdown */}
-              <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-xl p-4 mb-6">
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-gray-600">
                     <span>Full amount ({formData.playerCount} × R{formData.room.price_per_player})</span>
-                    <span className="text-white">R{fullAmount}</span>
+                    <span className="text-gray-900">R{fullAmount}</span>
                   </div>
                   <div className="flex justify-between text-gr8-orange font-bold">
                     <span>Pay now</span>
                     <span>R{amountToPay}</span>
                   </div>
                   {balanceDue > 0 && (
-                    <div className="flex justify-between text-gray-500">
+                    <div className="flex justify-between text-gray-600">
                       <span>Balance due at venue</span>
                       <span>R{balanceDue}</span>
                     </div>
@@ -648,13 +648,13 @@ export default function Book() {
               </div>
 
               {payfastConfigured ? (
-                <div className="bg-white/5 border border-gray-700/50 rounded-xl p-4 mb-6 text-sm text-gray-400">
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 text-sm text-gray-600">
                   <p>You'll be redirected to Payfast to complete payment securely. After payment, you'll receive a confirmation email with your booking details.</p>
                 </div>
               ) : (
-                <div className="bg-gr8-gold/10 border border-gr8-gold/30 rounded-xl p-4 mb-6 text-sm">
-                  <p className="text-gr8-orange font-bold mb-1">Demo Mode</p>
-                  <p className="text-gray-400">Payfast not configured. Booking will be confirmed instantly for testing.</p>
+                <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6 text-sm">
+                  <p className="text-orange-700 font-bold mb-1">Demo Mode</p>
+                  <p className="text-orange-700">Payfast not configured. Booking will be confirmed instantly for testing.</p>
                 </div>
               )}
 

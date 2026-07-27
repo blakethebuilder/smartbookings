@@ -188,20 +188,20 @@ export default function GameMaster() {
     <div>
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div>
-          <h1 className="text-xl sm:text-3xl font-black text-white">{branding.staff_role_worker} HQ</h1>
+          <h1 className="text-xl sm:text-3xl font-black text-gray-900">{branding.staff_role_worker} HQ</h1>
           <p className="text-gray-500 mt-1 text-xs sm:text-sm">Live booking calendar</p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Realtime indicator */}
-          <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/5 text-[10px] sm:text-xs">
-            <Zap size={isMobile ? 10 : 12} className={realtimeConnected ? 'text-green-400' : 'text-gray-600'} />
-            <span className={realtimeConnected ? 'text-green-400 hidden sm:inline' : 'text-gray-600 hidden sm:inline'}>
+          <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-gray-100 text-[10px] sm:text-xs">
+            <Zap size={isMobile ? 10 : 12} className={realtimeConnected ? 'text-green-600' : 'text-gray-600'} />
+            <span className={realtimeConnected ? 'text-green-600 hidden sm:inline' : 'text-gray-600 hidden sm:inline'}>
               {realtimeConnected ? 'Live' : 'Disconnected'}
             </span>
           </div>
           <button
             onClick={() => loadCalendarData()}
-            className="p-1.5 sm:p-2 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 sm:p-2 rounded-lg bg-gray-100 text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"
           >
             <RefreshCw size={isMobile ? 14 : 16} />
           </button>
@@ -211,13 +211,13 @@ export default function GameMaster() {
       {/* Room color legend — compact on mobile */}
       <div className="flex flex-wrap gap-1.5 sm:gap-3 mb-3 sm:mb-4">
         {rooms.map(room => (
-          <div key={room.id} className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-gray-400">
+          <div key={room.id} className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-gray-600">
             <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full" style={{ backgroundColor: room.color }} />
             <span className="hidden sm:inline">{room.name}</span>
             <span className="sm:hidden">{room.name.split(' ').pop()}</span>
           </div>
         ))}
-        <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-gray-400">
+        <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-gray-600">
           <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gray-500" />
           <span className="hidden sm:inline">Blocked</span>
         </div>
@@ -291,34 +291,34 @@ export default function GameMaster() {
 
       {/* Action picker when selecting empty slot */}
       {selectedSlot && !slotAction && !showBlockModal && !showQuickBook && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedSlot(null)}>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedSlot(null)}>
           <div className="card-dark w-full max-w-sm" onClick={e => e.stopPropagation()}>
-            <p className="text-sm text-gray-400 mb-1">What would you like to do?</p>
-            <p className="text-white font-bold mb-4">
+            <p className="text-sm text-gray-600 mb-1">What would you like to do?</p>
+            <p className="text-gray-900 font-bold mb-4">
               {format(selectedSlot.start, 'EEE, MMM d • HH:mm')} — {format(selectedSlot.end, 'HH:mm')}
             </p>
             <div className="flex gap-3">
               <button onClick={() => { setShowQuickBook(true) }}
                 className="flex-1 flex flex-col items-center gap-2 p-4 rounded-lg bg-gr8-red/10 border border-gr8-red/30 hover:bg-gr8-red/20 transition-colors">
                 <UserPlus size={24} className="text-gr8-red" />
-                <span className="text-sm font-bold text-white">Book Session</span>
+                <span className="text-sm font-bold text-gray-900">Book Session</span>
                 <span className="text-xs text-gray-500">Walk-in or phone booking</span>
               </button>
               <button onClick={() => { setShowBlockModal(true) }}
-                className="flex-1 flex flex-col items-center gap-2 p-4 rounded-lg bg-white/5 border border-gray-700 hover:bg-white/10 transition-colors">
+                className="flex-1 flex flex-col items-center gap-2 p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors">
                 <Ban size={24} className="text-gray-400" />
-                <span className="text-sm font-bold text-white">Block Slot</span>
+                <span className="text-sm font-bold text-gray-900">Block Slot</span>
                 <span className="text-xs text-gray-500">Maintenance or event</span>
               </button>
             </div>
-            <button onClick={() => setSelectedSlot(null)} className="w-full mt-3 text-sm text-gray-500 hover:text-white py-2">Cancel</button>
+            <button onClick={() => setSelectedSlot(null)} className="w-full mt-3 text-sm text-gray-500 hover:text-gray-900 py-2">Cancel</button>
           </div>
         </div>
       )}
 
       {/* Event Detail Modal */}
       {selectedEvent && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
           <div className="card-dark w-full max-w-md" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -327,52 +327,52 @@ export default function GameMaster() {
                   {selectedEvent.extendedProps.type === 'booking' ? 'Booking' : 'Blocked'}
                 </span>
               </div>
-              <button onClick={() => setSelectedEvent(null)} className="text-gray-500 hover:text-white text-xl">&times;</button>
+              <button onClick={() => setSelectedEvent(null)} className="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
             </div>
 
             {selectedEvent.extendedProps.type === 'booking' ? (
               <div className="space-y-3">
                 <div>
-                  <p className="text-lg font-bold text-white">{selectedEvent.extendedProps.customerName}</p>
-                  <p className="text-sm text-gray-400">{selectedEvent.extendedProps.roomName}</p>
+                  <p className="text-lg font-bold text-gray-900">{selectedEvent.extendedProps.customerName}</p>
+                  <p className="text-sm text-gray-600">{selectedEvent.extendedProps.roomName}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="bg-white/5 rounded-lg p-3">
+                  <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-gray-500 text-xs">Reference</p>
-                    <p className="text-gr8-gold font-mono text-sm">{selectedEvent.extendedProps.reference}</p>
+                    <p className="text-gr8-orange font-mono text-sm">{selectedEvent.extendedProps.reference}</p>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-3">
+                  <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-gray-500 text-xs">Players</p>
-                    <p className="text-white font-bold">{selectedEvent.extendedProps.playerCount}</p>
+                    <p className="text-gray-900 font-bold">{selectedEvent.extendedProps.playerCount}</p>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-3">
+                  <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-gray-500 text-xs">Booking Status</p>
                     <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                      selectedEvent.extendedProps.status === 'confirmed' ? 'bg-green-500/20 text-green-400' :
-                      selectedEvent.extendedProps.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
-                      'bg-gray-500/20 text-gray-400'
+                      selectedEvent.extendedProps.status === 'confirmed' ? 'bg-green-500/20 text-green-700' :
+                      selectedEvent.extendedProps.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' :
+                      'bg-gray-500/20 text-gray-600'
                     }`}>{selectedEvent.extendedProps.status}</span>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-3">
+                  <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-gray-500 text-xs">Payment</p>
                     <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                      selectedEvent.extendedProps.paymentStatus === 'paid' ? 'bg-green-500/20 text-green-400' :
-                      'bg-yellow-500/20 text-yellow-400'
+                      selectedEvent.extendedProps.paymentStatus === 'paid' ? 'bg-green-500/20 text-green-700' :
+                      'bg-yellow-500/20 text-yellow-700'
                     }`}>{selectedEvent.extendedProps.paymentStatus}</span>
                   </div>
                 </div>
                 <div className="text-sm space-y-1">
-                  <div className="flex justify-between text-gray-400">
-                    <span>Email</span><span className="text-white">{selectedEvent.extendedProps.customerEmail}</span>
+                  <div className="flex justify-between text-gray-600">
+                    <span>Email</span><span className="text-gray-900">{selectedEvent.extendedProps.customerEmail}</span>
                   </div>
                   {selectedEvent.extendedProps.customerPhone && (
-                    <div className="flex justify-between text-gray-400">
-                      <span>Phone</span><span className="text-white">{selectedEvent.extendedProps.customerPhone}</span>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Phone</span><span className="text-gray-900">{selectedEvent.extendedProps.customerPhone}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-gray-600">
                     <span>Waiver</span>
-                    <span className={selectedEvent.extendedProps.waiverSigned ? 'text-green-400' : 'text-yellow-400'}>
+                    <span className={selectedEvent.extendedProps.waiverSigned ? 'text-green-600' : 'text-yellow-600'}>
                       {selectedEvent.extendedProps.waiverSigned ? '✓ Signed' : 'Pending'}
                     </span>
                   </div>
@@ -380,8 +380,8 @@ export default function GameMaster() {
               </div>
             ) : (
               <div>
-                <p className="text-lg font-bold text-white mb-2">{selectedEvent.title}</p>
-                <p className="text-sm text-gray-400">
+                <p className="text-lg font-bold text-gray-900 mb-2">{selectedEvent.title}</p>
+                <p className="text-sm text-gray-600">
                   {selectedEvent.start && format(selectedEvent.start, 'EEE, MMM d • HH:mm')}
                   {selectedEvent.end && ` — ${format(selectedEvent.end, 'HH:mm')}`}
                 </p>

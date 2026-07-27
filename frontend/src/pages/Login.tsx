@@ -31,38 +31,38 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-black text-white tracking-tight">
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight">
             {branding.business_name}
           </h1>
           <p className="text-gray-500 mt-2 text-sm">Staff Portal</p>
         </div>
 
         {/* Login card */}
-        <div className="bg-[#1e1e1e] border border-gray-700/50 rounded-2xl p-6 sm:p-8">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: branding.primary_color + '33' }}>
-              <Lock size={18} style={{ color: branding.primary_color }} />
+            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-orange-100">
+              <Lock size={18} className="text-gr8-orange" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Sign In</h2>
+              <h2 className="text-lg font-bold text-gray-900">Sign In</h2>
               <p className="text-xs text-gray-500">Enter your credentials</p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Email</label>
+              <label className="text-sm text-gray-600 mb-1 block">Email</label>
               <div className="relative">
                 <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-white/5 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-gr8-red transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
                   placeholder="you@gr8escape.co.za"
                   required
                 />
@@ -70,14 +70,14 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="text-sm text-gray-400 mb-1 block">Password</label>
+              <label className="text-sm text-gray-600 mb-1 block">Password</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input
                   type="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-gr8-red transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-gr8-orange transition-colors"
                   placeholder="Enter your password"
                   required
                 />
@@ -85,7 +85,7 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 text-sm text-red-400">
+              <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-sm text-red-600">
                 <AlertCircle size={14} />
                 {error}
               </div>
@@ -101,8 +101,8 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-gray-800 text-center">
-            <p className="text-xs text-gray-600">Contact your {branding.staff_role_admin} for credentials</p>
+          <div className="mt-6 pt-4 border-t border-gray-200 text-center">
+            <p className="text-xs text-gray-500">Contact your {branding.staff_role_admin} for credentials</p>
           </div>
         </div>
       </div>
