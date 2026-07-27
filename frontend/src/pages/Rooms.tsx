@@ -20,6 +20,8 @@ export default function Rooms() {
   const [saving, setSaving] = useState(false)
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<Room | null>(null)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [form, setForm] = useState({
     name: '', slug: '', description: '', difficulty: 7,
     duration_minutes: 60, reset_buffer_minutes: 15,
@@ -42,6 +44,8 @@ export default function Rooms() {
 
   const openAdd = () => {
     setEditingRoom(null)
+    setImageFile(null)
+    setImagePreview(null)
     setForm({
       name: '', slug: '', description: '', difficulty: 7,
       duration_minutes: 60, reset_buffer_minutes: 15,
@@ -53,6 +57,8 @@ export default function Rooms() {
 
   const openEdit = (room: Room) => {
     setEditingRoom(room)
+    setImageFile(null)
+    setImagePreview(null)
     setForm({
       name: room.name, slug: room.slug, description: room.description || '',
       difficulty: room.difficulty || 7, duration_minutes: room.duration_minutes,
@@ -68,7 +74,8 @@ export default function Rooms() {
     if (!form.name || !form.slug) return
     setSaving(true)
     try {
-      const data = { ...form }
+      const data: any = { ...form }
+      if (imageFile) data.image = imageFile
       if (editingRoom) {
         await pb.collection('rooms').update(editingRoom.id, data)
       } else {
@@ -124,11 +131,16 @@ export default function Rooms() {
       {/* Room grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {rooms.map(room => (
-          <Card key={room.id} className={`group hover:shadow-md transition-all ${!room.is_active ? 'opacity-60' : ''}`}>
-            <div className="flex items-start justify-between mb-3">
+          <Card key={room.id} className={`group hover:shadow-md transition-all overflow-hidden ${!room.is_active ? 'opacity-60' : ''}`}>
+            {room.image ? (
+              <div className="h-32 bg-cover bg-center" style={{ backgroundImage: `url(${pb.files.getUrl(room, room.image)})` }} />
+            ) : (
+              <div className="h-2" style={{ backgroundColor: room.color }} />
+            )}
+            <div className="px-5 pt-4 flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: room.color }} />
-                <h3 className="text-lg font-bold text-gray-900">{room.name}</h3>
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: room.color }} />
+                <h3 className="text-lg font-semibold text-gray-900">{room.name}</h3>
               </div>
               <div className="flex gap-1">
                 {togglingId === room.id ? (
@@ -219,6 +231,30 @@ export default function Rooms() {
             <div>
               <label className="text-sm text-gray-600 mb-1 block">Description</label>
               <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={2} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange resize-none" />
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-600 mb-1 block">Image</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      setImageFile(file)
+                      setImagePreview(URL.createObjectURL(file))
+                    }
+                  }}
+                  className="text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                />
+                {imagePreview && (
+                  <img src={imagePreview} alt="Preview" className="h-10 w-16 object-cover rounded border" />
+                )}
+                {!imagePreview && editingRoom?.image && (
+                  <img src={pb.files.getUrl(editingRoom, editingRoom.image)} alt="Current" className="h-10 w-16 object-cover rounded border" />
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">

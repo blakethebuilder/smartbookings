@@ -90,6 +90,7 @@ async function createCollections() {
         { name: 'max_capacity', type: 'number', required: true },
         { name: 'unit_price', type: 'number', required: true },
         { name: 'currency', type: 'text', required: true },
+        { name: 'image', type: 'file', maxSelect: 1, maxSize: 5242880 },
         { name: 'color', type: 'text' },
         { name: 'is_active', type: 'bool', required: true },
         { name: 'sort_order', type: 'number' },
