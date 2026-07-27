@@ -277,8 +277,14 @@ async function createCollections() {
           console.log(`  Collection: ${col.name} (added ${missingFields.length} fields: ${missingFields.map(f => f.name).join(', ')})`)
         }
 
-        // Update rules if they're null
-        if (existing.listRule === null || existing.viewRule === null) {
+        // Always sync rules to match current seed definitions
+        const rulesChanged =
+          existing.listRule !== col.listRule ||
+          existing.viewRule !== col.viewRule ||
+          existing.createRule !== col.createRule ||
+          existing.updateRule !== col.updateRule ||
+          existing.deleteRule !== col.deleteRule
+        if (rulesChanged) {
           await api('PATCH', `/api/collections/${existing.id}`, {
             listRule: col.listRule,
             viewRule: col.viewRule,
@@ -286,7 +292,7 @@ async function createCollections() {
             updateRule: col.updateRule,
             deleteRule: col.deleteRule,
           })
-          console.log(`  Collection: ${col.name} (rules updated)`)
+          console.log(`  Collection: ${col.name} (rules synced)`)
         } else if (missingFields.length === 0) {
           console.log(`  Collection: ${col.name} (existing ${existing.id})`)
         }
@@ -339,24 +345,24 @@ async function seedStaff() {
   ]
 
   for (const s of staff) {
-    try {
-      await api('POST', '/api/collections/staff/records', s)
+    const created = await api('POST', '/api/collections/staff/records', s)
+    if (created) {
       console.log(`✓ Staff: ${s.name} (${s.role})`)
-    } catch (e) {
-      // Already exists — update password + is_superadmin to ensure they're correct
+    } else {
+      // Already exists (api returns null for duplicates) — PATCH to ensure correct state
       try {
         const existing = await api('GET', `/api/collections/staff/records?filter=(email="${s.email}")`)
-        if (existing.items?.length > 0) {
+        if (existing?.items?.length > 0) {
           await api('PATCH', `/api/collections/staff/records/${existing.items[0].id}`, {
             password: s.password,
             is_superadmin: s.is_superadmin,
             role: s.role,
             is_active: true,
           })
-          console.log(`  Staff: ${s.name} (updated)`)
+          console.log(`  Staff: ${s.name} (updated — role=${s.role}, superadmin=${s.is_superadmin})`)
         }
-      } catch {
-        console.log(`  Staff: ${s.name} (exists)`)
+      } catch (err) {
+        console.log(`  Staff: ${s.name} (exists, update failed: ${err.message})`)
       }
     }
   }
