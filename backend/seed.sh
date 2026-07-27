@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Only seed on first deploy — skip if already seeded
+SEED_MARKER="/pb/pb_data/.seeded"
+if [ -f "$SEED_MARKER" ]; then
+  echo "✓ Already seeded — skipping (delete $SEED_MARKER to force re-seed)"
+  exit 0
+fi
+
 # Wait for PocketBase to be ready
 echo "⏳ Waiting for PocketBase..."
 for i in $(seq 1 30); do
@@ -31,6 +38,10 @@ fi
 # Auto-generate slots if fewer than 14 days ahead exist
 echo "🔄 Checking slot availability..."
 cd /app/backend && node auto-slots.js http://localhost:8090
+
+# Mark as seeded so future deploys skip
+touch "$SEED_MARKER"
+echo "✅ Seed complete — marked as seeded"
 
 # Start daily cron job for slot auto-generation
 echo "⏰ Starting daily slot cron (every 24h)..."
