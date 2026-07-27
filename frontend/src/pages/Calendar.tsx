@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { format, addDays, startOfWeek, endOfWeek } from 'date-fns'
-import { RefreshCw, Zap, UserPlus, Ban, LayoutGrid, Columns } from 'lucide-react'
+import { RefreshCw, Zap, UserPlus, Ban } from 'lucide-react'
 import pb, { type Room, type Booking, type TimeSlot, type Block } from '../lib/pocketbase'
 import { useRealtime } from '../hooks/useRealtime'
 import { useBranding } from '../lib/branding'
@@ -14,7 +14,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import BlockModal from '../components/BlockModal'
 import QuickBook from '../components/QuickBook'
-import WeekCalendar from '../components/WeekCalendar'
 
 interface CalendarEvent {
   id: string
@@ -38,7 +37,6 @@ interface CalendarEvent {
 }
 
 export default function Calendar() {
-  const [viewMode, setViewMode] = useState<'full' | 'week'>('full')
   const [rooms, setRooms] = useState<Room[]>([])
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [loading, setLoading] = useState(true)
@@ -195,22 +193,7 @@ export default function Calendar() {
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div>
           <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Calendar</h1>
-          <div className="flex items-center gap-1 mt-2">
-            <Button
-              variant={viewMode === 'full' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('full')}
-            >
-              <Columns size={14} className="mr-1.5" /> Full
-            </Button>
-            <Button
-              variant={viewMode === 'week' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('week')}
-            >
-              <LayoutGrid size={14} className="mr-1.5" /> Week
-            </Button>
-          </div>
+          <p className="text-gray-500 mt-1 text-xs sm:text-sm">Live booking calendar</p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Realtime indicator */}
@@ -229,10 +212,6 @@ export default function Calendar() {
         </div>
       </div>
 
-      {viewMode === 'week' && <WeekCalendar />}
-
-      {viewMode === 'full' && (
-      <>
       {/* Room color legend — compact on mobile */}
       <div className="flex flex-wrap gap-1.5 sm:gap-3 mb-3 sm:mb-4">
         {rooms.map(room => (
@@ -422,8 +401,6 @@ export default function Calendar() {
           )}
         </DialogContent>
       </Dialog>
-      </>
-      )}
     </div>
   )
 }
@@ -436,9 +413,9 @@ export default function Calendar() {
     --fc-button-border-color: #d1d5db;
     --fc-button-text-color: #374151;
     --fc-button-hover-bg-color: #f3f4f6;
-    --fc-button-active-bg-color: #FF4500;
+    --fc-button-active-bg-color: #F45B31;
     --fc-button-active-text-color: #fff;
-    --fc-today-bg-color: rgba(255,69,0,0.04);
+    --fc-today-bg-color: rgba(244,91,49,0.06);
     --fc-page-bg-color: #fff;
     --fc-neutral-bg-color: #f9fafb;
   }
@@ -452,7 +429,7 @@ export default function Calendar() {
     font-size: 0.8rem;
     font-weight: 600;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 0.5rem;
   }
   .calendar-wrapper .fc .fc-button-active {
     color: white !important;
@@ -481,13 +458,13 @@ export default function Calendar() {
     border-color: #e5e7eb;
   }
   .calendar-wrapper .fc .fc-timegrid-now-indicator-line {
-    border-color: #FF4500;
+    border-color: #F45B31;
   }
   .calendar-wrapper .fc .fc-timegrid-now-indicator-arrow {
-    border-color: #FF4500;
+    border-color: #F45B31;
   }
   .calendar-wrapper .fc .fc-event {
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.75rem;
     padding: 2px 6px;
     border: none;
