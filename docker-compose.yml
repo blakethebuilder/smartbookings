@@ -14,6 +14,9 @@ services:
     environment:
       - PB_ADMIN_EMAIL=${PB_ADMIN_EMAIL:-grandmaster@gr8escape.co.za}
       - PB_ADMIN_PASSWORD=${PB_ADMIN_PASSWORD:-gr8@2026!}
+      - EVO_API_URL=${EVO_API_URL}
+      - EVO_API_KEY=${EVO_API_KEY}
+      - EVO_INSTANCE=${EVO_INSTANCE:-smarthq2}
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8090/api/health"]
       interval: 30s

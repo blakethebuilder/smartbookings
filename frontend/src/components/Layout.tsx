@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, CalendarDays, Calendar, BookOpen, Settings, LogOut,
-  Users, Crown, Menu, X
+  Users, Crown, Building2, Menu, X
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { useBranding } from '../lib/branding'
@@ -29,7 +29,9 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { branding } = useBranding()
 
-  const navItems = isGrandmaster ? grandmasterNavItems : gmNavItems
+  const navItems = isGrandmaster ? (
+    isSuperadmin ? [...grandmasterNavItems, { to: '/clients', icon: Building2, label: 'Clients' }] : grandmasterNavItems
+  ) : gmNavItems
   const [allClients, setAllClients] = useState<any[]>([])
 
   useEffect(() => {

@@ -3,6 +3,7 @@ const crypto = require('crypto')
 const http = require('http')
 const rateLimit = require('express-rate-limit')
 const { generateSignature } = require('./payfast-sign')
+const whatsapp = require('./whatsapp')
 
 const app = express()
 app.use(express.urlencoded({ extended: false }))
@@ -199,6 +200,16 @@ async function getBooking(bookingId) {
 
 async function updateBooking(bookingId, status, paymentStatus, pfData) {
   const token = await getAdminToken()
+
+  // Fetch booking details before updating
+  let booking
+  try {
+    const bRes = await fetch(`${PB_URL}/api/collections/bookings/records/${bookingId}`, {
+      headers: { 'Authorization': token },
+    })
+    booking = await bRes.json()
+  } catch {}
+
   await fetch(`${PB_URL}/api/collections/bookings/records/${bookingId}`, {
     method: 'PATCH',
     headers: {
@@ -212,6 +223,21 @@ async function updateBooking(bookingId, status, paymentStatus, pfData) {
       payment_id: pfData.pf_payment_id || '',
     }),
   })
+
+  // Send WhatsApp confirmation on payment
+  if (paymentStatus === 'paid' && booking?.customer_phone) {
+    try {
+      await whatsapp.sendPaymentConfirmation({
+        reference: booking.reference,
+        customer_name: booking.customer_name,
+        customer_phone: booking.customer_phone,
+        total_amount: booking.total_amount,
+        venue_name: 'SmartBookings',
+      })
+    } catch (e) {
+      console.error('[WhatsApp] Payment notification failed:', e.message)
+    }
+  }
 }
 
 async function updateSlot(slotId, status) {
@@ -284,6 +310,65 @@ app.post('/api/payfast/sign', (req, res) => {
   } catch (err) {
     console.error('[Sign] Error:', err)
     res.status(500).json({ error: 'Signature generation failed' })
+  }
+})
+
+// ─── WhatsApp Endpoints ────────────────────────────────────
+
+// Send booking confirmation via WhatsApp
+app.post('/api/whatsapp/confirm', async (req, res) => {
+  try {
+    const result = await whatsapp.sendBookingConfirmation(req.body)
+    res.json({ success: true, result })
+  } catch (err) {
+    console.error('[WhatsApp] Confirm error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Send waiver link via WhatsApp
+app.post('/api/whatsapp/waiver', async (req, res) => {
+  try {
+    const { phone, name, waiverUrl, venueName } = req.body
+    const result = await whatsapp.sendWaiverLink(phone, name, waiverUrl, venueName)
+    res.json({ success: true, result })
+  } catch (err) {
+    console.error('[WhatsApp] Waiver error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Send payment confirmation
+app.post('/api/whatsapp/payment', async (req, res) => {
+  try {
+    const result = await whatsapp.sendPaymentConfirmation(req.body)
+    res.json({ success: true, result })
+  } catch (err) {
+    console.error('[WhatsApp] Payment error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Send manual message
+app.post('/api/whatsapp/send', async (req, res) => {
+  try {
+    const { number, text } = req.body
+    if (!number || !text) return res.status(400).json({ error: 'number and text required' })
+    const result = await whatsapp.sendText(number, text)
+    res.json({ success: true, result })
+  } catch (err) {
+    console.error('[WhatsApp] Send error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Health check
+app.get('/api/whatsapp/health', async (req, res) => {
+  try {
+    const alive = await whatsapp.healthCheck()
+    res.json({ alive })
+  } catch {
+    res.json({ alive: false })
   }
 })
 

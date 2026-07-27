@@ -9,6 +9,7 @@ import Rooms from './pages/Rooms'
 import Bookings from './pages/Bookings'
 import Settings from './pages/Settings'
 import StaffManagement from './pages/StaffManagement'
+import Clients from './pages/Clients'
 import Book from './pages/Book'
 import BookConfirm from './pages/BookConfirm'
 import Waiver from './pages/Waiver'
@@ -41,6 +42,7 @@ function App() {
       <Route element={<AuthGate allowedRoles={['grandmaster']} />}>
         <Route element={<Layout />}>
           <Route path="/grandmaster" element={<GrandmasterDashboard />} />
+          <Route path="/clients" element={<Clients />} />
           <Route path="/staff" element={<StaffManagement />} />
           <Route path="/settings" element={<Settings />} />
         </Route>

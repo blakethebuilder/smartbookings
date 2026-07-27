@@ -186,6 +186,24 @@ export default function Book() {
       // Mark slot as reserved/full
       await pb.collection('time_slots').update(formData.slot.id, { status: isDemo ? 'full' : 'reserved' })
 
+      // Send WhatsApp confirmation if phone provided
+      if (formData.playerPhone) {
+        fetch('/api/whatsapp/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reference,
+            customer_name: formData.playerName,
+            customer_phone: formData.playerPhone,
+            player_count: formData.playerCount,
+            room_name: formData.room.name,
+            date: formData.date && format(formData.date, 'EEEE, MMMM d'),
+            time: `${formData.slot.start_time} — ${formData.slot.end_time}`,
+            venue_name: branding.business_name,
+          }),
+        }).catch(() => {})
+      }
+
       if (isDemo) {
         // Demo mode — skip Payfast, go straight to confirmation
         window.location.href = `/book/confirm/${reference}`

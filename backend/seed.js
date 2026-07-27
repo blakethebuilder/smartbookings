@@ -298,6 +298,7 @@ async function createCollections() {
 async function seedClients() {
   const clients = [
     { name: 'The Gr8 Escape', subdomain: 'gr8bookings', business_type: 'escape_room', resource_label: 'Room', resource_label_plural: 'Rooms', staff_role_admin: 'Grandmaster', staff_role_worker: 'Game Master', booking_verb: 'Book Now', pricing_model: 'per_person', primary_color: '#E53935', logo_url: '', customer_fields: 'name,email,phone', duration_unit: 'minutes', show_difficulty: true, show_player_count: true, is_active: true },
+    { name: 'Fourways Medical Centre', subdomain: 'fourwaysmed', business_type: 'medical', resource_label: 'Doctor', resource_label_plural: 'Doctors', staff_role_admin: 'Admin', staff_role_worker: 'Doctor', booking_verb: 'Book Appointment', pricing_model: 'per_slot', primary_color: '#2563EB', logo_url: '', customer_fields: 'name,email,phone,id_number,medical_aid', duration_unit: 'minutes', show_difficulty: false, show_player_count: false, is_active: true },
   ]
 
   for (const c of clients) {

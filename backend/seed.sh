@@ -23,6 +23,9 @@ if [ "$ROOMS_COUNT" = "0" ] || [ -z "$ROOMS_COUNT" ]; then
   cd /app/backend && node seed.js http://localhost:8090
 else
   echo "✓ Already seeded (${ROOMS_COUNT} rooms)"
+  # Always run seed to fix collection rules (idempotent — skips existing data)
+  echo "🔒 Fixing collection rules..."
+  cd /app/backend && node seed.js http://localhost:8090 2>&1 | grep -E "✓|✗|rules"
 fi
 
 # Auto-generate slots if fewer than 14 days ahead exist
