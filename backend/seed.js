@@ -208,7 +208,7 @@ async function createCollections() {
     },
     {
       name: 'staff',
-      type: 'base',
+      type: 'auth',
       fields: [
         { name: 'name', type: 'text', required: true },
         { name: 'email', type: 'text', required: true, unique: true },
@@ -216,15 +216,15 @@ async function createCollections() {
         { name: 'role', type: 'select', required: true, values: ['admin', 'staff'] },
         { name: 'avatar_color', type: 'text' },
         { name: 'is_active', type: 'bool', required: true },
-        { name: 'password', type: 'text' },
         { name: 'client_id', type: 'relation', collectionId: '__clients__', maxSelect: 1 },
         { name: 'is_superadmin', type: 'bool' },
       ],
       listRule: '',
       viewRule: '',
-      createRule: '@request.auth.id != ""',
+      createRule: '',
       updateRule: '@request.auth.id != ""',
       deleteRule: '@request.auth.id != ""',
+      passwordAuth: { enabled: true, identityFields: ['email'] },
     },
     {
       name: 'booking_staff',
@@ -339,9 +339,9 @@ async function seedStaff() {
   const adminPassword = process.env.PB_ADMIN_PASSWORD || 'admin123456'
 
   const staff = [
-    { name: 'Super Admin', email: adminEmail, role: 'admin', avatar_color: '#F45B31', is_active: true, password: adminPassword, is_superadmin: true },
-    { name: 'Demo Admin', email: 'admin@smartbookings.local', role: 'admin', avatar_color: '#E53935', is_active: true, password: 'admin123', is_superadmin: true },
-    { name: 'Staff Demo', email: 'staff@smartbookings.local', role: 'staff', avatar_color: '#FFB900', is_active: true, password: 'staff123' },
+    { name: 'Super Admin', email: adminEmail, role: 'admin', avatar_color: '#F45B31', is_active: true, password: adminPassword, passwordConfirm: adminPassword, is_superadmin: true },
+    { name: 'Demo Admin', email: 'admin@smartbookings.local', role: 'admin', avatar_color: '#E53935', is_active: true, password: 'admin123', passwordConfirm: 'admin123', is_superadmin: true },
+    { name: 'Staff Demo', email: 'staff@smartbookings.local', role: 'staff', avatar_color: '#FFB900', is_active: true, password: 'staff123', passwordConfirm: 'staff123' },
   ]
 
   for (const s of staff) {

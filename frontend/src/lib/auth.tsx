@@ -80,27 +80,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string): Promise<{success: boolean; error?: string}> => {
     try {
-      const result = await pb.collection('staff').getFirstListItem<Staff>(
-        `email = "${email}" && is_active = true`
-      )
+      // Use PocketBase's built-in authWithPassword — the password field
+      // is a server-side bcrypt hash, never returned in list responses.
+      const authResult = await pb.collection('staff').authWithPassword(email, password)
 
-      if (!result) {
-        return { success: false, error: 'Staff account not found' }
-      }
-
-      // Accept either password or legacy pin_code field
-      const pw = (result as any).password || (result as any).pin_code
-      if (pw !== password) {
-        return { success: false, error: 'Invalid password' }
-      }
-
-      setStaff(result)
-      localStorage.setItem('sb_staff', JSON.stringify(result))
+      // authWithPassword returns { token, record } — record has all fields except password
+      const staffRecord = authResult.record as unknown as Staff
+      setStaff(staffRecord)
+      localStorage.setItem('sb_staff', JSON.stringify(staffRecord))
 
       // Load client if staff has a client_id
-      if (result.client_id) {
+      if (staffRecord.client_id) {
         try {
-          const client = await pb.collection('clients').getOne(result.client_id)
+          const client = await pb.collection('clients').getOne(staffRecord.client_id)
           setCurrentClient(client)
           localStorage.setItem('sb_current_client', JSON.stringify(client))
         } catch (err) {
@@ -111,11 +103,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { success: true }
     } catch (err: any) {
       console.error('[Auth] Login failed:', err)
+      if (err?.status === 400) {
+        return { success: false, error: 'Invalid email or password' }
+      }
       return { success: false, error: err?.message || 'Connection failed — is PocketBase running?' }
     }
   }
 
   const logout = () => {
+    pb.authStore.clear()
     setStaff(null)
     setCurrentClient(null)
     localStorage.removeItem('sb_staff')
