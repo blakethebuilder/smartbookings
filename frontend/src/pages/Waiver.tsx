@@ -4,6 +4,8 @@ import { AlertCircle, CheckCircle, Shield, Loader2, Info } from 'lucide-react'
 import { format } from 'date-fns'
 import pb, { type Booking, type Room, type TimeSlot } from '../lib/pocketbase'
 import { useBranding } from '../lib/branding'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 interface WaiverForm {
   playerName: string
@@ -319,31 +321,31 @@ export default function Waiver() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-gray-600 mb-1 block">Full Name *</label>
-                <input
+                <Input
                   type="text"
                   value={form.playerName}
                   onChange={e => setForm(prev => ({ ...prev, playerName: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
+                  className="w-full"
                 />
               </div>
               <div>
                 <label className="text-sm text-gray-600 mb-1 block">Email *</label>
-                <input
+                <Input
                   type="email"
                   value={form.playerEmail}
                   onChange={e => setForm(prev => ({ ...prev, playerEmail: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
+                  className="w-full"
                 />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-gray-600 mb-1 block">ID / Passport Number</label>
-                <input
+                <Input
                   type="text"
                   value={form.playerIdNumber}
                   onChange={e => setForm(prev => ({ ...prev, playerIdNumber: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
+                  className="w-full"
                 />
               </div>
               <div className="flex items-center gap-3 pt-6">
@@ -362,20 +364,20 @@ export default function Waiver() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div>
                   <label className="text-sm text-gray-600 mb-1 block">Guardian Full Name *</label>
-                  <input
+                  <Input
                     type="text"
                     value={form.guardianName}
                     onChange={e => setForm(prev => ({ ...prev, guardianName: e.target.value }))}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
+                    className="w-full"
                   />
                 </div>
                 <div>
                   <label className="text-sm text-gray-600 mb-1 block">Guardian ID Number</label>
-                  <input
+                  <Input
                     type="text"
                     value={form.guardianIdNumber}
                     onChange={e => setForm(prev => ({ ...prev, guardianIdNumber: e.target.value }))}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange"
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -456,17 +458,18 @@ export default function Waiver() {
         )}
 
         {/* Submit */}
-        <button
+        <Button
           onClick={handleSubmit}
           disabled={submitting || !hasSignature || !form.consentMedical || !form.consentRules || !form.playerName || !form.playerEmail}
-          className="w-full btn-sb py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full"
+          size="lg"
         >
           {submitting ? (
-            <><Loader2 size={20} className="animate-spin" /> Submitting...</>
+            <><Loader2 className="animate-spin" /> Submitting...</>
           ) : (
             <><Shield size={20} /> Sign & Submit Waiver</>
           )}
-        </button>
+        </Button>
 
         <p className="text-center text-xs text-gray-500 mt-4">
           By signing this waiver, you confirm that you have read, understood, and agree to the terms above.

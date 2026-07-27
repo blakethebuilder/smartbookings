@@ -8,6 +8,10 @@ import { RefreshCw, Zap, UserPlus, Ban } from 'lucide-react'
 import pb, { type Room, type Booking, type TimeSlot, type Block } from '../lib/pocketbase'
 import { useRealtime } from '../hooks/useRealtime'
 import { useBranding } from '../lib/branding'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import BlockModal from '../components/BlockModal'
 import QuickBook from '../components/QuickBook'
 
@@ -224,7 +228,7 @@ export default function Calendar() {
       </div>
 
       {/* FullCalendar */}
-      <div className="card p-2 sm:p-4 calendar-wrapper">
+      <Card className="p-2 sm:p-4 calendar-wrapper"><CardContent className="p-0">
         <FullCalendar
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -254,7 +258,8 @@ export default function Calendar() {
           eventDisplay="block"
           nowIndicator={true}
         />
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Modals */}
       {showBlockModal && selectedSlot && (
@@ -290,106 +295,112 @@ export default function Calendar() {
       )}
 
       {/* Action picker when selecting empty slot */}
-      {selectedSlot && !slotAction && !showBlockModal && !showQuickBook && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedSlot(null)}>
-          <div className="card w-full max-w-sm" onClick={e => e.stopPropagation()}>
-            <p className="text-sm text-gray-600 mb-1">What would you like to do?</p>
-            <p className="text-gray-900 font-bold mb-4">
-              {format(selectedSlot.start, 'EEE, MMM d • HH:mm')} — {format(selectedSlot.end, 'HH:mm')}
-            </p>
-            <div className="flex gap-3">
-              <button onClick={() => { setShowQuickBook(true) }}
-                className="flex-1 flex flex-col items-center gap-2 p-4 rounded-lg bg-sb-red/10 border border-sb-red/30 hover:bg-sb-red/20 transition-colors">
-                <UserPlus size={24} className="text-sb-red" />
-                <span className="text-sm font-bold text-gray-900">Book Session</span>
-                <span className="text-xs text-gray-500">Walk-in or phone booking</span>
-              </button>
-              <button onClick={() => { setShowBlockModal(true) }}
-                className="flex-1 flex flex-col items-center gap-2 p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors">
-                <Ban size={24} className="text-gray-400" />
-                <span className="text-sm font-bold text-gray-900">Block Slot</span>
-                <span className="text-xs text-gray-500">Maintenance or event</span>
-              </button>
-            </div>
-            <button onClick={() => setSelectedSlot(null)} className="w-full mt-3 text-sm text-gray-500 hover:text-gray-900 py-2">Cancel</button>
-          </div>
-        </div>
-      )}
+      <Dialog open={!!(selectedSlot && !slotAction && !showBlockModal && !showQuickBook)} onOpenChange={(open) => { if (!open) setSelectedSlot(null) }}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>What would you like to do?</DialogTitle>
+          </DialogHeader>
+          {selectedSlot && (
+            <>
+              <p className="text-gray-900 font-bold mb-4">
+                {format(selectedSlot.start, 'EEE, MMM d • HH:mm')} — {format(selectedSlot.end, 'HH:mm')}
+              </p>
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => { setShowQuickBook(true) }}
+                  className="flex-1 flex flex-col items-center gap-2 p-4 h-auto"
+                >
+                  <UserPlus size={24} className="text-sb-red" />
+                  <span className="text-sm font-bold text-gray-900">Book Session</span>
+                  <span className="text-xs text-gray-500">Walk-in or phone booking</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => { setShowBlockModal(true) }}
+                  className="flex-1 flex flex-col items-center gap-2 p-4 h-auto"
+                >
+                  <Ban size={24} className="text-gray-400" />
+                  <span className="text-sm font-bold text-gray-900">Block Slot</span>
+                  <span className="text-xs text-gray-500">Maintenance or event</span>
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Event Detail Modal */}
-      {selectedEvent && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
-          <div className="card w-full max-w-md" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedEvent.backgroundColor }} />
-                <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
-                  {selectedEvent.extendedProps.type === 'booking' ? 'Booking' : 'Blocked'}
-                </span>
-              </div>
-              <button onClick={() => setSelectedEvent(null)} className="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+      <Dialog open={!!selectedEvent} onOpenChange={(open) => { if (!open) setSelectedEvent(null) }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              {selectedEvent && <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedEvent.backgroundColor }} />}
+              <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                {selectedEvent?.extendedProps.type === 'booking' ? 'Booking' : 'Blocked'}
+              </span>
             </div>
+          </DialogHeader>
 
-            {selectedEvent.extendedProps.type === 'booking' ? (
-              <div className="space-y-3">
-                <div>
-                  <p className="text-lg font-bold text-gray-900">{selectedEvent.extendedProps.customerName}</p>
-                  <p className="text-sm text-gray-600">{selectedEvent.extendedProps.roomName}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-gray-500 text-xs">Reference</p>
-                    <p className="text-sb-orange font-mono text-sm">{selectedEvent.extendedProps.reference}</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-gray-500 text-xs">Players</p>
-                    <p className="text-gray-900 font-bold">{selectedEvent.extendedProps.playerCount}</p>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-gray-500 text-xs">Booking Status</p>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                      selectedEvent.extendedProps.status === 'confirmed' ? 'bg-green-500/20 text-green-700' :
-                      selectedEvent.extendedProps.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' :
-                      'bg-gray-500/20 text-gray-600'
-                    }`}>{selectedEvent.extendedProps.status}</span>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <p className="text-gray-500 text-xs">Payment</p>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                      selectedEvent.extendedProps.paymentStatus === 'paid' ? 'bg-green-500/20 text-green-700' :
-                      'bg-yellow-500/20 text-yellow-700'
-                    }`}>{selectedEvent.extendedProps.paymentStatus}</span>
-                  </div>
-                </div>
-                <div className="text-sm space-y-1">
-                  <div className="flex justify-between text-gray-600">
-                    <span>Email</span><span className="text-gray-900">{selectedEvent.extendedProps.customerEmail}</span>
-                  </div>
-                  {selectedEvent.extendedProps.customerPhone && (
-                    <div className="flex justify-between text-gray-600">
-                      <span>Phone</span><span className="text-gray-900">{selectedEvent.extendedProps.customerPhone}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between text-gray-600">
-                    <span>Waiver</span>
-                    <span className={selectedEvent.extendedProps.waiverSigned ? 'text-green-600' : 'text-yellow-600'}>
-                      {selectedEvent.extendedProps.waiverSigned ? '✓ Signed' : 'Pending'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
+          {selectedEvent?.extendedProps.type === 'booking' ? (
+            <div className="space-y-3">
               <div>
-                <p className="text-lg font-bold text-gray-900 mb-2">{selectedEvent.title}</p>
-                <p className="text-sm text-gray-600">
-                  {selectedEvent.start && format(selectedEvent.start, 'EEE, MMM d • HH:mm')}
-                  {selectedEvent.end && ` — ${format(selectedEvent.end, 'HH:mm')}`}
-                </p>
+                <p className="text-lg font-bold text-gray-900">{selectedEvent.extendedProps.customerName}</p>
+                <p className="text-sm text-gray-600">{selectedEvent.extendedProps.roomName}</p>
               </div>
-            )}
-          </div>
-        </div>
-      )}
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-gray-500 text-xs">Reference</p>
+                  <p className="text-sb-orange font-mono text-sm">{selectedEvent.extendedProps.reference}</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-gray-500 text-xs">Players</p>
+                  <p className="text-gray-900 font-bold">{selectedEvent.extendedProps.playerCount}</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-gray-500 text-xs">Booking Status</p>
+                  <Badge variant={
+                    selectedEvent.extendedProps.status === 'confirmed' ? 'success' :
+                    selectedEvent.extendedProps.status === 'pending' ? 'warning' :
+                    'secondary'
+                  }>{selectedEvent.extendedProps.status}</Badge>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-gray-500 text-xs">Payment</p>
+                  <Badge variant={
+                    selectedEvent.extendedProps.paymentStatus === 'paid' ? 'success' :
+                    'warning'
+                  }>{selectedEvent.extendedProps.paymentStatus}</Badge>
+                </div>
+              </div>
+              <div className="text-sm space-y-1">
+                <div className="flex justify-between text-gray-600">
+                  <span>Email</span><span className="text-gray-900">{selectedEvent.extendedProps.customerEmail}</span>
+                </div>
+                {selectedEvent.extendedProps.customerPhone && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Phone</span><span className="text-gray-900">{selectedEvent.extendedProps.customerPhone}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-gray-600">
+                  <span>Waiver</span>
+                  <span className={selectedEvent.extendedProps.waiverSigned ? 'text-green-600' : 'text-yellow-600'}>
+                    {selectedEvent.extendedProps.waiverSigned ? '✓ Signed' : 'Pending'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className="text-lg font-bold text-gray-900 mb-2">{selectedEvent?.title}</p>
+              <p className="text-sm text-gray-600">
+                {selectedEvent?.start && format(selectedEvent.start, 'EEE, MMM d • HH:mm')}
+                {selectedEvent?.end && ` — ${format(selectedEvent.end, 'HH:mm')}`}
+              </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

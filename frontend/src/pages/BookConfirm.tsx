@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { CheckCircle, Calendar, Clock, Users, Home, AlertCircle, Loader2, Share2, Copy, Check, Shield, Download, XCircle } from 'lucide-react'
+import { CheckCircle, Calendar, Clock, Users, Home, AlertCircle, Loader2, Copy, Check, Shield, Download, XCircle } from 'lucide-react'
 import { format } from 'date-fns'
 import pb, { type Booking, type Room, type TimeSlot } from '../lib/pocketbase'
 import { useBranding } from '../lib/branding'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export default function BookConfirm() {
   const { branding } = useBranding()
@@ -65,7 +68,9 @@ export default function BookConfirm() {
           <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Booking not found</h1>
           <p className="text-gray-600 mb-6">Reference "{reference}" doesn't match any booking.</p>
-          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="btn-sb px-6 py-3 inline-block">Go to Website</a>
+          <Button asChild>
+            <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }}>Go to Website</a>
+          </Button>
         </div>
       </div>
     )
@@ -200,10 +205,10 @@ export default function BookConfirm() {
             All players must sign an indemnity waiver before the game. Share this link with your group:
           </p>
           <div className="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-lg p-3">
-            <input
+            <Input
               readOnly
               value={`${window.location.origin}/waiver/${booking.reference}`}
-              className="flex-1 bg-transparent text-sm text-gray-900 font-mono outline-none"
+              className="flex-1 font-mono bg-transparent"
             />
             <button
               onClick={() => {
@@ -268,40 +273,34 @@ export default function BookConfirm() {
         )}
 
         {/* Cancel Confirmation Dialog */}
-        {showCancelDialog && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-            <div className="bg-white border border-gray-200 shadow-xl rounded-xl p-6 max-w-md w-full">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Cancel Booking?</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Are you sure you want to cancel your booking{room ? ` for ${room.name}` : ''}?
-                {booking.payment_type === 'deposit' && booking.deposit_amount > 0 && (
-                  <> If you paid a deposit, R{Math.max(0, Number(booking.deposit_amount) - Number(cancelAdminFee))} will be refunded within 5-7 business days.</>
-                )}
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowCancelDialog(false)}
-                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:text-gray-900 hover:border-gray-300 transition-colors"
-                  disabled={cancelling}
-                >
-                  Keep Booking
-                </button>
-                <button
-                  onClick={handleCancel}
-                  disabled={cancelling}
-                  className="flex-1 px-4 py-2 rounded-lg bg-red-100 text-red-600 text-sm font-bold hover:bg-red-200 transition-colors disabled:opacity-50"
-                >
-                  {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Cancel Booking?</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-gray-600 mb-4">
+              Are you sure you want to cancel your booking{room ? ` for ${room.name}` : ''}?
+              {booking.payment_type === 'deposit' && booking.deposit_amount > 0 && (
+                <> If you paid a deposit, R{Math.max(0, Number(booking.deposit_amount) - Number(cancelAdminFee))} will be refunded within 5-7 business days.</>
+              )}
+            </p>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowCancelDialog(false)} disabled={cancelling}>
+                Keep Booking
+              </Button>
+              <Button variant="destructive" onClick={handleCancel} disabled={cancelling}>
+                {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="btn-sb px-8 py-3 flex items-center justify-center gap-2">
-            <Home size={18} /> Back to Site
-          </a>
+          <Button asChild>
+            <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }}>
+              <Home size={18} /> Back to Site
+            </a>
+          </Button>
           <Link to="/book" className="px-8 py-3 rounded-lg border border-gray-200 text-gray-600 hover:text-sb-orange hover:border-sb-orange transition-colors flex items-center justify-center gap-2">
             Book Another {branding.resource_label}
           </Link>

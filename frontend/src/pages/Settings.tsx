@@ -2,6 +2,10 @@ import { useEffect, useState, useRef } from 'react'
 import { Save, Check, Eye, EyeOff, Cog, Trash2, Loader2 } from 'lucide-react'
 import pb from '../lib/pocketbase'
 import { useBranding, type BusinessType } from '../lib/branding'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 
 interface Setting {
   id: string
@@ -61,20 +65,23 @@ export default function Settings() {
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({})
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
   const initRef = useRef(false)
+  const [showResetDialog, setShowResetDialog] = useState(false)
+  const [resetMessage, setResetMessage] = useState<string | null>(null)
 
   const handleReset = async () => {
-    if (!confirm('This will DELETE all bookings, waivers, game hosts, GM blocks, and time slots. Rooms, staff, and settings will be kept. Fresh time slots will be regenerated. Are you sure?')) return
+    setShowResetDialog(false)
     setResetting(true)
+    setResetMessage(null)
     try {
       const res = await fetch('/api/reset-demo-data', { method: 'POST' })
       const data = await res.json()
       if (data.success) {
-        alert(`Reset complete!\nWiped: ${JSON.stringify(data.wiped)}\nRegenerated: ${data.slotsCreated} time slots`)
+        setResetMessage(`Reset complete!\nWiped: ${JSON.stringify(data.wiped)}\nRegenerated: ${data.slotsCreated} time slots`)
       } else {
-        alert('Reset failed: ' + (data.error || 'Unknown error'))
+        setResetMessage('Reset failed: ' + (data.error || 'Unknown error'))
       }
     } catch (e: any) {
-      alert('Reset failed: ' + e.message)
+      setResetMessage('Reset failed: ' + e.message)
     } finally {
       setResetting(false)
     }
@@ -169,21 +176,15 @@ export default function Settings() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Settings</h1>
           <p className="text-gray-500 mt-1">Configure your booking system</p>
         </div>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-all ${
-            saved
-              ? 'bg-green-500/20 text-green-600 border border-green-500/30'
-              : 'btn-sb'
-          }`}
-        >
-          {saved ? (
-            <><Check size={16} /> Saved!</>
-          ) : (
-            <><Save size={16} /> {saving ? 'Saving...' : 'Save Changes'}</>
-          )}
-        </button>
+        {saved ? (
+          <span className="flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm bg-green-500/20 text-green-600 border border-green-500/30">
+            <Check size={16} /> Saved!
+          </span>
+        ) : (
+          <Button onClick={handleSave} disabled={saving}>
+            <Save size={16} /> {saving ? 'Saving...' : 'Save Changes'}
+          </Button>
+        )}
       </div>
 
       <div className="space-y-8">
@@ -191,14 +192,17 @@ export default function Settings() {
           const isCollapsed = collapsedGroups[group]
 
           return (
-            <div key={group} className="card">
-              <div className="flex items-center gap-3 mb-4">
-                {group === 'Payfast' && <span className="text-lg">💳</span>}
-                {group === 'WhatsApp' && <span className="text-lg">📱</span>}
-                {group === 'Evolution API' && <span className="text-lg">🔗</span>}
-                {group === 'General' && <span className="text-lg">⚙️</span>}
-                <h2 className="text-lg font-bold text-gray-900">{group}</h2>
-              </div>
+            <Card key={group}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  {group === 'Payfast' && <span className="text-lg">💳</span>}
+                  {group === 'WhatsApp' && <span className="text-lg">📱</span>}
+                  {group === 'Evolution API' && <span className="text-lg">🔗</span>}
+                  {group === 'General' && <span className="text-lg">⚙️</span>}
+                  {group}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
               {isCollapsed ? (
                 <div className="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-5">
                   <div className="flex items-center justify-between gap-4">
@@ -209,13 +213,14 @@ export default function Settings() {
                           : 'Not configured — set up WhatsApp messaging features'}
                       </p>
                     </div>
-                    <button
+                    <Button
                       onClick={() => setCollapsedGroups(prev => ({ ...prev, [group]: false }))}
-                      className="btn-sb px-4 py-2 text-sm flex items-center gap-2 shrink-0"
+                      size="sm"
+                      className="shrink-0"
                     >
                       <Cog size={14} />
                       Configure
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ) : (
@@ -248,11 +253,11 @@ export default function Settings() {
                           </select>
                         ) : (
                           <div className="relative">
-                            <input
+                            <Input
                               type={isPassword ? 'password' : 'text'}
                               value={s.value}
                               onChange={e => updateSetting(s.id, e.target.value)}
-                              className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
+                              className="pr-10"
                               placeholder={meta?.hint || s.key}
                             />
                             {isSecret && (
@@ -274,7 +279,8 @@ export default function Settings() {
                   })}
                 </div>
               )}
-            </div>
+            </CardContent>
+          </Card>
           )
         })}
       </div>
@@ -290,7 +296,7 @@ export default function Settings() {
           Keeps rooms, staff, and settings. Fresh time slots will be regenerated for the next 60 days.
         </p>
         <button
-          onClick={handleReset}
+          onClick={() => setShowResetDialog(true)}
           disabled={resetting}
           className="px-4 py-2 rounded-lg bg-red-500/20 text-red-600 border border-red-500/30 hover:bg-red-500/30 font-bold text-sm flex items-center gap-2 disabled:opacity-50 transition-colors"
         >
@@ -298,6 +304,35 @@ export default function Settings() {
           {resetting ? 'Resetting...' : 'Reset All Demo Data'}
         </button>
       </div>
+
+      {/* Reset Confirmation Dialog */}
+      <Dialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reset Demo Data?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600">
+            This will DELETE all bookings, waivers, game hosts, GM blocks, and time slots. Rooms, staff, and settings will be kept. Fresh time slots will be regenerated. Are you sure?
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowResetDialog(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleReset}>Yes, Reset</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reset Result Dialog */}
+      <Dialog open={!!resetMessage} onOpenChange={(open) => { if (!open) setResetMessage(null) }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reset Result</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600 whitespace-pre-line">{resetMessage}</p>
+          <DialogFooter>
+            <Button onClick={() => setResetMessage(null)}>OK</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -19,6 +19,8 @@ import pb, { type Room, type Booking, type TimeSlot } from '../lib/pocketbase'
 import { useAuth } from '../lib/auth'
 import { useBranding } from '../lib/branding'
 import { useRealtime } from '../hooks/useRealtime'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 interface GameHostRecord {
   id: string
@@ -251,13 +253,13 @@ export default function AdminDashboard() {
     )
   }
 
-  const statusColor = (status: string) => {
+  const statusVariant = (status: string) => {
     switch (status) {
-      case 'confirmed': return 'bg-green-500/20 text-green-700'
-      case 'pending': return 'bg-yellow-500/20 text-yellow-700'
-      case 'cancelled': return 'bg-red-500/20 text-red-700'
-      case 'completed': return 'bg-blue-500/20 text-blue-700'
-      default: return 'bg-gray-500/20 text-gray-600'
+      case 'confirmed': return 'success'
+      case 'pending': return 'warning'
+      case 'cancelled': return 'destructive'
+      case 'completed': return 'success'
+      default: return 'secondary'
     }
   }
 
@@ -274,100 +276,125 @@ export default function AdminDashboard() {
 
       {/* Revenue Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="card">
-          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-sb-red/10">
-              <TrendingUp size={22} className="text-sb-red" />
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 rounded-xl bg-sb-red/10">
+                <TrendingUp size={22} className="text-sb-red" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueThisWeek.toLocaleString()}</p>
+                <p className="text-xs text-gray-500 font-medium">Revenue This Week</p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueThisWeek.toLocaleString()}</p>
-              <p className="text-xs text-gray-500 font-medium">Revenue This Week</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 rounded-xl bg-sb-orange/10">
+                <DollarSign size={22} className="text-sb-orange" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueThisMonth.toLocaleString()}</p>
+                <p className="text-xs text-gray-500 font-medium">Revenue This Month</p>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-sb-orange/10">
-              <DollarSign size={22} className="text-sb-orange" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 rounded-xl bg-green-500/10">
+                <BarChart3 size={22} className="text-green-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueAllTime.toLocaleString()}</p>
+                <p className="text-xs text-gray-500 font-medium">Revenue All Time</p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueThisMonth.toLocaleString()}</p>
-              <p className="text-xs text-gray-500 font-medium">Revenue This Month</p>
-            </div>
-          </div>
-        </div>
-        <div className="card">
-          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-green-500/10">
-              <BarChart3 size={22} className="text-green-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueAllTime.toLocaleString()}</p>
-              <p className="text-xs text-gray-500 font-medium">Revenue All Time</p>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Deposit vs Full Payment Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="card">
-          <p className="text-xs text-gray-500 font-medium mb-1">Deposits Collected</p>
-          <p className="text-2xl font-bold tabular-nums text-sb-orange">
-            R{bookings.filter(b => b.payment_type === 'deposit' && b.payment_status === 'paid')
-              .reduce((sum, b) => sum + (b.deposit_amount || 640), 0).toLocaleString()}
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">{bookings.filter(b => b.payment_type === 'deposit').length} bookings</p>
-        </div>
-        <div className="card">
-          <p className="text-xs text-gray-500 font-medium mb-1">Balance Due at Venue</p>
-          <p className="text-2xl font-bold tabular-nums text-amber-600">
-            R{bookings.filter(b => b.payment_type === 'deposit' && b.status !== 'cancelled')
-              .reduce((sum, b) => sum + (b.balance_due || 0), 0).toLocaleString()}
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">To collect on arrival</p>
-        </div>
-        <div className="card">
-          <p className="text-xs text-gray-500 font-medium mb-1">Full Payments</p>
-          <p className="text-2xl font-bold tabular-nums text-green-600">
-            R{bookings.filter(b => b.payment_type === 'full' && b.payment_status === 'paid')
-              .reduce((sum, b) => sum + b.total_amount, 0).toLocaleString()}
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5">{bookings.filter(b => b.payment_type === 'full').length} bookings</p>
-        </div>
-        <div className="card">
-          <p className="text-xs text-gray-500 font-medium mb-1">Total Revenue</p>
-          <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueAllTime.toLocaleString()}</p>
-          <p className="text-xs text-gray-400 mt-0.5">All confirmed bookings</p>
-        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-xs text-gray-500 font-medium mb-1">Deposits Collected</p>
+            <p className="text-2xl font-bold tabular-nums text-sb-orange">
+              R{bookings.filter(b => b.payment_type === 'deposit' && b.payment_status === 'paid')
+                .reduce((sum, b) => sum + (b.deposit_amount || 640), 0).toLocaleString()}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">{bookings.filter(b => b.payment_type === 'deposit').length} bookings</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-xs text-gray-500 font-medium mb-1">Balance Due at Venue</p>
+            <p className="text-2xl font-bold tabular-nums text-amber-600">
+              R{bookings.filter(b => b.payment_type === 'deposit' && b.status !== 'cancelled')
+                .reduce((sum, b) => sum + (b.balance_due || 0), 0).toLocaleString()}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">To collect on arrival</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-xs text-gray-500 font-medium mb-1">Full Payments</p>
+            <p className="text-2xl font-bold tabular-nums text-green-600">
+              R{bookings.filter(b => b.payment_type === 'full' && b.payment_status === 'paid')
+                .reduce((sum, b) => sum + b.total_amount, 0).toLocaleString()}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">{bookings.filter(b => b.payment_type === 'full').length} bookings</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-xs text-gray-500 font-medium mb-1">Total Revenue</p>
+            <p className="text-2xl font-bold tabular-nums text-gray-900">R{revenueAllTime.toLocaleString()}</p>
+            <p className="text-xs text-gray-400 mt-0.5">All confirmed bookings</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Bookings Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="card text-center">
-          <p className="text-2xl sm:text-3xl font-bold tabular-nums text-gray-900">{bookingStats.total}</p>
-          <p className="text-xs text-gray-500 font-medium mt-1">Total Bookings</p>
-        </div>
-        <div className="card text-center">
-          <p className="text-2xl sm:text-3xl font-bold tabular-nums text-green-600">{bookingStats.confirmed}</p>
-          <p className="text-xs text-gray-500 font-medium mt-1">Confirmed</p>
-        </div>
-        <div className="card text-center">
-          <p className="text-2xl sm:text-3xl font-bold tabular-nums text-amber-600">{bookingStats.pending}</p>
-          <p className="text-xs text-gray-500 font-medium mt-1">Pending</p>
-        </div>
-        <div className="card text-center">
-          <p className="text-2xl sm:text-3xl font-bold tabular-nums text-red-600">{bookingStats.cancelled}</p>
-          <p className="text-xs text-gray-500 font-medium mt-1">Cancelled</p>
-        </div>
+        <Card>
+          <CardContent className="pt-6 text-center">
+            <p className="text-2xl sm:text-3xl font-bold tabular-nums text-gray-900">{bookingStats.total}</p>
+            <p className="text-xs text-gray-500 font-medium mt-1">Total Bookings</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6 text-center">
+            <p className="text-2xl sm:text-3xl font-bold tabular-nums text-green-600">{bookingStats.confirmed}</p>
+            <p className="text-xs text-gray-500 font-medium mt-1">Confirmed</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6 text-center">
+            <p className="text-2xl sm:text-3xl font-bold tabular-nums text-amber-600">{bookingStats.pending}</p>
+            <p className="text-xs text-gray-500 font-medium mt-1">Pending</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6 text-center">
+            <p className="text-2xl sm:text-3xl font-bold tabular-nums text-red-600">{bookingStats.cancelled}</p>
+            <p className="text-xs text-gray-500 font-medium mt-1">Cancelled</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Staff Performance */}
-      <div className="card mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Award size={18} className="text-sb-orange" />
-          {branding.staff_role_worker} Performance
-        </h2>
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Award size={18} className="text-sb-orange" />
+            {branding.staff_role_worker} Performance
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
         {gmStats.length === 0 ? (
           <p className="text-gray-500 text-sm">No game host data yet.</p>
         ) : (
@@ -410,14 +437,18 @@ export default function AdminDashboard() {
             </table>
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Room Occupancy */}
-      <div className="card mb-8">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <BedDouble size={18} className="text-sb-red" />
-          {branding.resource_label} Occupancy
-        </h2>
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <BedDouble size={18} className="text-sb-red" />
+            {branding.resource_label} Occupancy
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
         {roomStats.length === 0 ? (
           <p className="text-gray-500 text-sm">No {branding.resource_label.toLowerCase()} data available.</p>
         ) : (
@@ -455,14 +486,18 @@ export default function AdminDashboard() {
             })}
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Recent Bookings */}
-      <div className="card mb-8">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Clock size={18} className="text-gray-500" />
-          Recent Bookings
-        </h2>
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Clock size={18} className="text-gray-500" />
+            Recent Bookings
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
         {recentBookings.length === 0 ? (
           <p className="text-gray-500 text-sm">No bookings yet.</p>
         ) : (
@@ -495,19 +530,19 @@ export default function AdminDashboard() {
                       {branding.show_player_count && <td className="py-3 px-4 text-center text-gray-600">{b.party_size}</td>}
                       <td className="py-3 px-4 text-right text-gray-600">R{b.total_amount}</td>
                       <td className="py-3 px-4">
-                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${
-                          b.payment_status === 'paid' ? 'bg-green-500/20 text-green-700' :
-                          b.payment_status === 'refunded' ? 'bg-yellow-500/20 text-yellow-700' :
-                          b.payment_status === 'failed' ? 'bg-red-500/20 text-red-700' :
-                          'bg-gray-500/20 text-gray-600'
-                        }`}>
+                        <Badge variant={
+                          b.payment_status === 'paid' ? 'success' :
+                          b.payment_status === 'refunded' ? 'secondary' :
+                          b.payment_status === 'failed' ? 'destructive' :
+                          'secondary'
+                        }>
                           {b.payment_status}
-                        </span>
+                        </Badge>
                       </td>
                       <td className="py-3 px-4">
-                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${statusColor(b.status)}`}>
+                        <Badge variant={statusVariant(b.status)}>
                           {b.status}
-                        </span>
+                        </Badge>
                       </td>
                     </tr>
                   )
@@ -516,15 +551,19 @@ export default function AdminDashboard() {
             </table>
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Today's Schedule */}
-      <div className="card">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Calendar size={18} className="text-sb-red" />
-          Today's Schedule
-          <span className="text-sm font-normal text-gray-500 ml-2">{format(now, 'EEEE, d MMMM yyyy')}</span>
-        </h2>
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Calendar size={18} className="text-sb-red" />
+            Today's Schedule
+            <span className="text-sm font-normal text-gray-500 ml-2">{format(now, 'EEEE, d MMMM yyyy')}</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
         {todaysSchedule.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">Nothing scheduled for today.</p>
@@ -577,20 +616,21 @@ export default function AdminDashboard() {
                   )}
                 </div>
                 {event.type !== 'block' && event.slot && (
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                    event.slot.status === 'available' ? 'bg-green-500/20 text-green-700' :
-                    event.slot.status === 'reserved' ? 'bg-blue-500/20 text-blue-700' :
-                    event.slot.status === 'full' ? 'bg-red-500/20 text-red-700' :
-                    'bg-gray-500/20 text-gray-600'
-                  }`}>
+                  <Badge variant={
+                    event.slot.status === 'available' ? 'success' :
+                    event.slot.status === 'reserved' ? 'secondary' :
+                    event.slot.status === 'full' ? 'destructive' :
+                    'secondary'
+                  }>
                     {event.slot.status}
-                  </span>
+                  </Badge>
                 )}
               </div>
             ))}
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

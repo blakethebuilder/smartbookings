@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react'
-import { Plus, Trash2, Edit, X, Loader2, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Plus, Trash2, Edit, Loader2, ToggleLeft, ToggleRight } from 'lucide-react'
 import pb, { type Room } from '../lib/pocketbase'
-import { useToast } from '../lib/toast'
+import { toast } from 'sonner'
 import { useBranding } from '../lib/branding'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 const COLORS = ['#E53935', '#FFB900', '#4CAF50', '#9C27B0', '#FF9800', '#E040FB', '#06B6D4', '#F43F5E']
 
 export default function Rooms() {
-  const { toast, confirm } = useToast()
   const { branding } = useBranding()
   const [rooms, setRooms] = useState<Room[]>([])
   const [loading, setLoading] = useState(true)
@@ -15,6 +19,7 @@ export default function Rooms() {
   const [editingRoom, setEditingRoom] = useState<Room | null>(null)
   const [saving, setSaving] = useState(false)
   const [togglingId, setTogglingId] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<Room | null>(null)
   const [form, setForm] = useState({
     name: '', slug: '', description: '', difficulty: 7,
     duration_minutes: 60, reset_buffer_minutes: 15,
@@ -73,7 +78,7 @@ export default function Rooms() {
       loadRooms()
     } catch (e) {
       console.error('Failed to save room:', e)
-      toast('Failed to save room. Check if slug is unique.', 'error')
+      toast.error('Failed to save room. Check if slug is unique.')
     } finally {
       setSaving(false)
     }
@@ -87,8 +92,7 @@ export default function Rooms() {
   }
 
   const deleteRoom = async (room: Room) => {
-    const confirmed = await confirm(`Delete "${room.name}"? This cannot be undone.`)
-    if (!confirmed) return
+    setConfirmDelete(null)
     await pb.collection('rooms').delete(room.id)
     loadRooms()
   }
@@ -112,15 +116,15 @@ export default function Rooms() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{branding.resource_label_plural}</h1>
           <p className="text-gray-500 mt-1">{rooms.length} {branding.resource_label_plural.toLowerCase()} configured</p>
         </div>
-        <button onClick={openAdd} className="btn-sb flex items-center gap-2">
+        <Button onClick={openAdd}>
           <Plus size={16} /> Add {branding.resource_label}
-        </button>
+        </Button>
       </div>
 
       {/* Room grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {rooms.map(room => (
-          <div key={room.id} className={`card group hover:border-gray-600 transition-all ${!room.is_active ? 'opacity-50' : ''}`}>
+          <Card key={room.id} className={`group hover:border-gray-600 transition-all ${!room.is_active ? 'opacity-50' : ''}`}>
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: room.color }} />
@@ -137,7 +141,7 @@ export default function Rooms() {
                 <button onClick={() => openEdit(room)} className="p-1.5 rounded hover:bg-gray-50 text-gray-500 hover:text-gray-900" title="Edit">
                   <Edit size={14} />
                 </button>
-                <button onClick={() => deleteRoom(room)} className="p-1.5 rounded hover:bg-red-500/20 text-gray-500 hover:text-red-600" title="Delete">
+                <button onClick={() => setConfirmDelete(room)} className="p-1.5 rounded hover:bg-red-500/20 text-gray-500 hover:text-red-600" title="Delete">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -173,107 +177,124 @@ export default function Rooms() {
             )}
 
             <div className="flex items-center gap-2 pt-3 border-t border-gray-200">
-              <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${room.is_active ? 'bg-green-500/20 text-green-700' : 'bg-gray-500/20 text-gray-500'}`}>
+              <Badge variant={room.is_active ? 'success' : 'secondary'} className="uppercase">
                 {room.is_active ? 'Active' : 'Disabled'}
-              </span>
+              </Badge>
               <span className="text-[10px] text-gray-600">Reset: {room.reset_buffer_minutes}min</span>
             </div>
-          </div>
+          </Card>
         ))}
 
         {/* Add room card */}
-        <button onClick={openAdd} className="card border-dashed border-gray-700 hover:border-sb-red/50 flex flex-col items-center justify-center min-h-[200px] text-gray-500 hover:text-sb-red transition-colors">
-          <Plus size={32} className="mb-2" />
-          <span className="text-sm font-medium">Add {branding.resource_label}</span>
-        </button>
+        <Card onClick={openAdd} className="border-dashed border-gray-700 hover:border-sb-red/50 flex flex-col items-center justify-center min-h-[200px] text-gray-500 hover:text-sb-red transition-colors cursor-pointer">
+          <CardContent className="pt-6 flex flex-col items-center">
+            <Plus size={32} className="mb-2" />
+            <span className="text-sm font-medium">Add {branding.resource_label}</span>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Add/Edit Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="card w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-gray-900">{editingRoom ? `Edit ${branding.resource_label}` : `Add ${branding.resource_label}`}</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700"><X size={18} /></button>
-            </div>
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingRoom ? `Edit ${branding.resource_label}` : `Add ${branding.resource_label}`}</DialogTitle>
+          </DialogHeader>
 
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <label className="text-sm text-gray-600 mb-1 block">Name *</label>
-                  <input type="text" value={form.name} onChange={e => {
-                    const name = e.target.value
-                    setForm(f => ({ ...f, name, slug: f.slug || generateSlug(name) }))
-                  }} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
-                </div>
-                <div>
-                  <label className="text-sm text-gray-600 mb-1 block">Slug *</label>
-                  <input type="text" value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange font-mono" />
-                </div>
-              </div>
-
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="text-sm text-gray-600 mb-1 block">Description</label>
-                <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={2} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange resize-none" />
+                <label className="text-sm text-gray-600 mb-1 block">Name *</label>
+                <Input type="text" value={form.name} onChange={e => {
+                  const name = e.target.value
+                  setForm(f => ({ ...f, name, slug: f.slug || generateSlug(name) }))
+                }} className="w-full" />
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                <div>
-                  <label className="text-sm text-gray-600 mb-1 block">Difficulty (1-10)</label>
-                  <input type="number" value={form.difficulty} onChange={e => setForm(f => ({ ...f, difficulty: +e.target.value }))} min={1} max={10} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
-                </div>
-                <div>
-                  <label className="text-sm text-gray-600 mb-1 block">Duration (min)</label>
-                  <input type="number" value={form.duration_minutes} onChange={e => setForm(f => ({ ...f, duration_minutes: +e.target.value }))} min={15} max={120} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
-                </div>
-                <div>
-                  <label className="text-sm text-gray-600 mb-1 block">Reset Buffer</label>
-                  <input type="number" value={form.reset_buffer_minutes} onChange={e => setForm(f => ({ ...f, reset_buffer_minutes: +e.target.value }))} min={0} max={60} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                <div>
-                  <label className="text-sm text-gray-600 mb-1 block">Min Players</label>
-                  <input type="number" value={form.min_capacity} onChange={e => setForm(f => ({ ...f, min_capacity: +e.target.value }))} min={1} max={20} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
-                </div>
-                <div>
-                  <label className="text-sm text-gray-600 mb-1 block">Max Players</label>
-                  <input type="number" value={form.max_capacity} onChange={e => setForm(f => ({ ...f, max_capacity: +e.target.value }))} min={1} max={20} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
-                </div>
-                <div>
-                  <label className="text-sm text-gray-600 mb-1 block">Price/pp (R)</label>
-                  <input type="number" value={form.unit_price} onChange={e => setForm(f => ({ ...f, unit_price: +e.target.value }))} min={0} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange" />
-                </div>
-              </div>
-
               <div>
-                <label className="text-sm text-gray-600 mb-1 block">Color</label>
-                <div className="flex gap-2">
-                  {COLORS.map(c => (
-                    <button key={c} onClick={() => setForm(f => ({ ...f, color: c }))} className={`w-8 h-8 rounded-full transition-transform ${form.color === c ? 'ring-2 ring-white ring-offset-2 ring-offset-white scale-110' : 'hover:scale-110'}`} style={{ backgroundColor: c }} />
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <label className="text-sm text-gray-600">Active</label>
-                <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.is_active ? 'bg-green-500' : 'bg-gray-600'}`}>
-                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.is_active ? 'left-7' : 'left-1'}`} />
-                </button>
+                <label className="text-sm text-gray-600 mb-1 block">Slug *</label>
+                <Input type="text" value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} className="w-full font-mono" />
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 rounded-lg bg-gray-50 text-gray-500 hover:text-gray-900 text-sm">Cancel</button>
-              <button onClick={handleSave} disabled={saving || !form.name || !form.slug} className="flex-1 btn-sb py-2 text-sm flex items-center justify-center gap-2 disabled:opacity-50">
-                {saving ? <Loader2 size={14} className="animate-spin" /> : null}
-                {saving ? 'Saving...' : editingRoom ? `Update ${branding.resource_label}` : `Add ${branding.resource_label}`}
+            <div>
+              <label className="text-sm text-gray-600 mb-1 block">Description</label>
+              <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={2} className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-sb-orange resize-none" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div>
+                <label className="text-sm text-gray-600 mb-1 block">Difficulty (1-10)</label>
+                <Input type="number" value={form.difficulty} onChange={e => setForm(f => ({ ...f, difficulty: +e.target.value }))} min={1} max={10} className="w-full" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 mb-1 block">Duration (min)</label>
+                <Input type="number" value={form.duration_minutes} onChange={e => setForm(f => ({ ...f, duration_minutes: +e.target.value }))} min={15} max={120} className="w-full" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 mb-1 block">Reset Buffer</label>
+                <Input type="number" value={form.reset_buffer_minutes} onChange={e => setForm(f => ({ ...f, reset_buffer_minutes: +e.target.value }))} min={0} max={60} className="w-full" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div>
+                <label className="text-sm text-gray-600 mb-1 block">Min Players</label>
+                <Input type="number" value={form.min_capacity} onChange={e => setForm(f => ({ ...f, min_capacity: +e.target.value }))} min={1} max={20} className="w-full" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 mb-1 block">Max Players</label>
+                <Input type="number" value={form.max_capacity} onChange={e => setForm(f => ({ ...f, max_capacity: +e.target.value }))} min={1} max={20} className="w-full" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 mb-1 block">Price/pp (R)</label>
+                <Input type="number" value={form.unit_price} onChange={e => setForm(f => ({ ...f, unit_price: +e.target.value }))} min={0} className="w-full" />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-600 mb-1 block">Color</label>
+              <div className="flex gap-2">
+                {COLORS.map(c => (
+                  <button key={c} onClick={() => setForm(f => ({ ...f, color: c }))} className={`w-8 h-8 rounded-full transition-transform ${form.color === c ? 'ring-2 ring-white ring-offset-2 ring-offset-white scale-110' : 'hover:scale-110'}`} style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <label className="text-sm text-gray-600">Active</label>
+              <button onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))} className={`relative w-12 h-6 rounded-full transition-colors ${form.is_active ? 'bg-green-500' : 'bg-gray-600'}`}>
+                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.is_active ? 'left-7' : 'left-1'}`} />
               </button>
             </div>
           </div>
-        </div>
-      )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowModal(false)}>Cancel</Button>
+            <Button onClick={handleSave} disabled={saving || !form.name || !form.slug}>
+              {saving && <Loader2 size={14} className="animate-spin" />}
+              {saving ? 'Saving...' : editingRoom ? `Update ${branding.resource_label}` : `Add ${branding.resource_label}`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!confirmDelete} onOpenChange={(open) => { if (!open) setConfirmDelete(null) }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete {branding.resource_label}?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600">
+            Delete "{confirmDelete?.name}"? This cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDelete(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={() => confirmDelete && deleteRoom(confirmDelete)}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

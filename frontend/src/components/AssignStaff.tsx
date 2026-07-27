@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import { X, UserPlus, Loader2 } from 'lucide-react'
+import { UserPlus, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 import pb, { type Booking, type Room, type TimeSlot } from '../lib/pocketbase'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 interface StaffMember {
   id: string
@@ -55,15 +57,14 @@ export default function AssignStaff({ booking, room, timeSlot, onClose, onComple
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="card w-full max-w-md" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
+    <Dialog open onOpenChange={(open) => { if (!open) onClose() }}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
             <UserPlus size={18} className="text-sb-red" />
-            <h2 className="text-lg font-bold text-white">Assign Staff</h2>
-          </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-white"><X size={18} /></button>
-        </div>
+            Assign Staff
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="bg-white/5 rounded-lg p-3 mb-4 text-sm">
           <div className="flex items-center gap-2 mb-1">
@@ -103,15 +104,13 @@ export default function AssignStaff({ booking, room, timeSlot, onClose, onComple
           </div>
         )}
 
-        <button
-          onClick={handleAssign}
-          disabled={!selectedStaff || saving}
-          className="w-full btn-sb py-3 flex items-center justify-center gap-2 disabled:opacity-50"
-        >
-          {saving ? <Loader2 size={16} className="animate-spin" /> : <UserPlus size={16} />}
-          {saving ? 'Assigning...' : 'Assign Staff'}
-        </button>
-      </div>
-    </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={handleAssign} disabled={!selectedStaff || saving}>
+            {saving ? <><Loader2 size={16} className="animate-spin" /> Assigning...</> : <><UserPlus size={16} /> Assign Staff</>}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

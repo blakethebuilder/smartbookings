@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import { X, Loader2, UserPlus } from 'lucide-react'
+import { Loader2, UserPlus } from 'lucide-react'
 import { format } from 'date-fns'
 import pb, { type Room, type TimeSlot } from '../lib/pocketbase'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from "@/components/ui/input"
 
 interface Props {
   rooms: Room[]
@@ -88,15 +91,14 @@ export default function QuickBook({ rooms, slot, onClose, onComplete }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="card w-full max-w-md" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+    <Dialog open onOpenChange={(open) => { if (!open) onClose() }}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
             <UserPlus size={18} className="text-sb-red" />
             Quick Book
-          </h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white"><X size={18} /></button>
-        </div>
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="bg-white/5 rounded-lg p-3 mb-4 text-sm">
           <p className="text-gray-400">
@@ -121,21 +123,21 @@ export default function QuickBook({ rooms, slot, onClose, onComplete }: Props) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-sm text-gray-400 mb-1 block">Name *</label>
-              <input type="text" value={customerName} onChange={e => setCustomerName(e.target.value)}
-                className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-sb-red" />
+              <Input type="text" value={customerName} onChange={e => setCustomerName(e.target.value)}
+                className="bg-white/5 border-gray-700 text-white" />
             </div>
             <div>
               <label className="text-sm text-gray-400 mb-1 block">Email *</label>
-              <input type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)}
-                className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-sb-red" />
+              <Input type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)}
+                className="bg-white/5 border-gray-700 text-white" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-sm text-gray-400 mb-1 block">Phone</label>
-              <input type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)}
-                className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-sb-red" />
+              <Input type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)}
+                className="bg-white/5 border-gray-700 text-white" />
             </div>
             <div>
               <label className="text-sm text-gray-400 mb-1 block">Players</label>
@@ -151,8 +153,8 @@ export default function QuickBook({ rooms, slot, onClose, onComplete }: Props) {
 
           <div>
             <label className="text-sm text-gray-400 mb-1 block">Notes</label>
-            <input type="text" value={notes} onChange={e => setNotes(e.target.value)} placeholder="e.g. Birthday party, walk-in"
-              className="w-full bg-white/5 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-sb-red placeholder:text-gray-600" />
+            <Input type="text" value={notes} onChange={e => setNotes(e.target.value)} placeholder="e.g. Birthday party, walk-in"
+              className="bg-white/5 border-gray-700 text-white placeholder:text-gray-600" />
           </div>
 
           {/* Price summary */}
@@ -164,15 +166,13 @@ export default function QuickBook({ rooms, slot, onClose, onComplete }: Props) {
 
         {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
 
-        <div className="flex gap-3 mt-4">
-          <button onClick={onClose} className="flex-1 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:text-white text-sm">Cancel</button>
-          <button onClick={handleSave} disabled={saving || !customerName || !customerEmail}
-            className="flex-1 btn-sb py-2 text-sm flex items-center justify-center gap-2 disabled:opacity-50">
-            {saving ? <Loader2 size={14} className="animate-spin" /> : <UserPlus size={14} />}
-            {saving ? 'Booking...' : 'Book Now'}
-          </button>
-        </div>
-      </div>
-    </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={handleSave} disabled={saving || !customerName || !customerEmail}>
+            {saving ? <><Loader2 size={14} className="animate-spin" /> Booking...</> : <><UserPlus size={14} /> Book Now</>}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

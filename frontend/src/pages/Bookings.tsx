@@ -3,6 +3,10 @@ import { UserPlus, Loader2, Copy, Check, ExternalLink, Download, CreditCard } fr
 import { format } from 'date-fns'
 import pb, { type Booking, type Room, type TimeSlot } from '../lib/pocketbase'
 import { useBranding } from '../lib/branding'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import AssignStaff from '../components/AssignStaff'
 
 interface HostInfo {
@@ -21,6 +25,7 @@ export default function Bookings() {
   const [filter, setFilter] = useState<string>('all')
   const [assignModal, setAssignModal] = useState<{ booking: Booking; room: Room; timeSlot: TimeSlot } | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [cancelConfirm, setCancelConfirm] = useState<Booking | null>(null)
 
   const copyWaiverLink = (reference: string) => {
     navigator.clipboard.writeText(`${window.location.origin}/waiver/${reference}`)
@@ -29,7 +34,6 @@ export default function Bookings() {
   }
 
   const cancelBooking = async (b: Booking) => {
-    if (!window.confirm(`Cancel booking ${b.reference} for ${b.customer_name}? This cannot be undone.`)) return
     try {
       await pb.collection('bookings').update(b.id, { status: 'cancelled' })
       if (b.time_slot) {
@@ -173,7 +177,8 @@ export default function Bookings() {
       </div>
 
       {/* Bookings table */}
-      <div className="card overflow-hidden">
+      <Card>
+        <CardContent className="p-0">
         {filtered.length === 0 ? (
           <div className="p-12 text-center">
             <p className="text-gray-500">No bookings found.</p>
@@ -221,14 +226,14 @@ export default function Bookings() {
                       {branding.show_player_count && <td className="py-3 px-4 text-gray-600 text-center hidden sm:table-cell">{b.party_size}</td>}
                       <td className="py-3 px-2 sm:px-4 text-gray-600 text-sm">R{b.total_amount}</td>
                       <td className="py-3 px-2 sm:px-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                          b.status === 'confirmed' ? 'bg-green-500/20 text-green-700' :
-                          b.status === 'pending' ? 'bg-yellow-500/20 text-yellow-700' :
-                          b.status === 'cancelled' ? 'bg-red-500/20 text-red-700' :
-                          'bg-gray-500/20 text-gray-600'
-                        }`}>
+                        <Badge variant={
+                          b.status === 'confirmed' ? 'success' :
+                          b.status === 'pending' ? 'warning' :
+                          b.status === 'cancelled' ? 'destructive' :
+                          'secondary'
+                        }>
                           {b.status}
-                        </span>
+                        </Badge>
                       </td>
                       <td className="py-3 px-4">
                         {host ? (
@@ -256,15 +261,15 @@ export default function Bookings() {
                           className="text-xs cursor-pointer hover:opacity-80 transition-opacity"
                           title="Click to toggle paid/unpaid"
                         >
-                          <span className={`px-2 py-0.5 rounded font-bold ${
-                            b.payment_status === 'paid' ? 'bg-green-500/20 text-green-700' :
-                            b.payment_status === 'refunded' ? 'bg-yellow-500/20 text-yellow-700' :
-                            'bg-gray-500/20 text-gray-600'
-                          }`}>
+                          <Badge variant={
+                            b.payment_status === 'paid' ? 'success' :
+                            b.payment_status === 'refunded' ? 'secondary' :
+                            'secondary'
+                          }>
                             {b.payment_status === 'paid' ? 'Paid' :
                              b.payment_status === 'refunded' ? 'Refunded' :
                              b.payment_type === 'deposit' ? 'Dep Unpaid' : 'Unpaid'}
-                          </span>
+                          </Badge>
                           {b.balance_due > 0 && (
                             <p className="text-gray-500 mt-1">R{b.balance_due} due</p>
                           )}
@@ -289,7 +294,7 @@ export default function Bookings() {
                       <td className="py-3 px-4">
                         {(b.status === 'pending' || b.status === 'confirmed') ? (
                           <button
-                            onClick={() => cancelBooking(b)}
+                            onClick={() => setCancelConfirm(b)}
                             className="px-2 py-1 rounded bg-red-500/20 text-red-600 text-xs font-bold hover:bg-red-500/30 transition-colors"
                           >
                             Cancel
@@ -305,7 +310,8 @@ export default function Bookings() {
             </table>
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Assign Staff Modal */}
       {assignModal && (
@@ -320,6 +326,24 @@ export default function Bookings() {
           }}
         />
       )}
+
+      {/* Cancel Confirmation Dialog */}
+      <Dialog open={!!cancelConfirm} onOpenChange={(open) => { if (!open) setCancelConfirm(null) }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Cancel Booking?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600">
+            Cancel booking {cancelConfirm?.reference} for {cancelConfirm?.customer_name}? This cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCancelConfirm(null)}>Keep Booking</Button>
+            <Button variant="destructive" onClick={() => { if (cancelConfirm) cancelBooking(cancelConfirm); setCancelConfirm(null); }}>
+              Yes, Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

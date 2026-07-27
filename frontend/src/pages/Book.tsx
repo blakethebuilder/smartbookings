@@ -4,8 +4,10 @@ import { Calendar, Users, Clock, ChevronRight, CreditCard, Loader2, CheckCircle 
 import { format, addDays, isSameDay, parseISO } from 'date-fns'
 import pb, { type Room, type TimeSlot } from '../lib/pocketbase'
 import { md5 } from '../lib/md5'
-import { useToast } from '../lib/toast'
+import { toast } from 'sonner'
 import { useBranding } from '../lib/branding'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 type Step = 'rooms' | 'date' | 'slot' | 'details' | 'payment' | 'confirm'
 
@@ -32,7 +34,6 @@ const roomEmoji = (_slug?: string): string => '\u{1F4C5}'
 
 export default function Book() {
   const { branding } = useBranding()
-  const { toast } = useToast()
   const [searchParams] = useSearchParams()
   const [step, setStep] = useState<Step>('rooms')
   const [rooms, setRooms] = useState<Room[]>([])
@@ -260,7 +261,7 @@ export default function Book() {
       }
     } catch (e) {
       console.error('Booking failed:', e)
-      toast('Something went wrong. Please try again.', 'error')
+      toast.error('Something went wrong. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -463,11 +464,11 @@ export default function Book() {
             <div className="max-w-md space-y-5">
               <div>
                 <label className="text-sm text-gray-600 mb-1 block">Full Name *</label>
-                <input
+                <Input
                   type="text"
                   value={formData.playerName}
                   onChange={e => setFormData(prev => ({ ...prev, playerName: e.target.value.trim() }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-sb-orange transition-colors"
+                  className="w-full"
                   placeholder="John Smith"
                   minLength={2}
                   maxLength={100}
@@ -476,11 +477,11 @@ export default function Book() {
               </div>
               <div>
                 <label className="text-sm text-gray-600 mb-1 block">Email *</label>
-                <input
+                <Input
                   type="email"
                   value={formData.playerEmail}
                   onChange={e => setFormData(prev => ({ ...prev, playerEmail: e.target.value.trim() }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-sb-orange transition-colors"
+                  className="w-full"
                   placeholder="john@example.com"
                   maxLength={254}
                   required
@@ -488,11 +489,11 @@ export default function Book() {
               </div>
               <div>
                 <label className="text-sm text-gray-600 mb-1 block">Phone (optional)</label>
-                <input
+                <Input
                   type="tel"
                   value={formData.playerPhone}
                   onChange={e => setFormData(prev => ({ ...prev, playerPhone: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-sb-orange transition-colors"
+                  className="w-full"
                   placeholder="076 362 0765"
                 />
               </div>
@@ -530,16 +531,17 @@ export default function Book() {
                 </div>
               </div>
 
-              <button
+              <Button
                 onClick={() => {
                   if (formData.playerName && formData.playerEmail) setStep('payment')
                 }}
                 disabled={!formData.playerName || !formData.playerEmail}
-                className="w-full btn-sb py-4 text-lg flex items-center justify-center gap-2"
+                className="w-full"
+                size="lg"
               >
                 {branding.booking_verb}
                 <ChevronRight size={20} />
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -648,19 +650,20 @@ export default function Book() {
                 </div>
               )}
 
-              <button
+              <Button
                 onClick={handleBooking}
                 disabled={submitting}
-                className="w-full btn-sb py-4 text-lg flex items-center justify-center gap-2"
+                className="w-full"
+                size="lg"
               >
                 {submitting ? (
-                  <><Loader2 size={20} className="animate-spin" /> Processing...</>
+                  <><Loader2 className="animate-spin" /> Processing...</>
                 ) : payfastConfigured ? (
                   <><CreditCard size={20} /> Pay R{amountToPay} via Payfast</>
                 ) : (
                   <><CheckCircle size={20} /> Confirm Booking (Demo)</>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         )}

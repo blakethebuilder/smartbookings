@@ -1,8 +1,11 @@
 import { useState } from 'react'
-import { X, Ban, Loader2 } from 'lucide-react'
+import { Ban, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 import pb, { type Room } from '../lib/pocketbase'
-import { useToast } from '../lib/toast'
+import { toast } from 'sonner'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from "@/components/ui/input"
 
 interface Props {
   rooms: Room[]
@@ -12,7 +15,6 @@ interface Props {
 }
 
 export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) {
-  const { toast } = useToast()
   const [selectedRoom, setSelectedRoom] = useState(rooms[0]?.id || '')
   const [reason, setReason] = useState('')
   const [saving, setSaving] = useState(false)
@@ -44,24 +46,21 @@ export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) 
       onComplete()
     } catch (e) {
       console.error('Failed to create block:', e)
-      toast('Failed to block the time slot. Please try again.', 'error')
+      toast.error('Failed to block the time slot. Please try again.')
     } finally {
       setSaving(false)
     }
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="card w-full max-w-md">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+    <Dialog open onOpenChange={(open) => { if (!open) onClose() }}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
             <Ban size={20} className="text-gray-400" />
             Block Time Slot
-          </h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white">
-            <X size={20} />
-          </button>
-        </div>
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="space-y-4">
           <div className="bg-white/5 rounded-lg p-3 text-sm">
@@ -87,33 +86,23 @@ export default function BlockModal({ rooms, slot, onClose, onComplete }: Props) 
 
           <div>
             <label className="text-sm text-gray-400 mb-1 block">Reason (optional)</label>
-            <input
+            <Input
               type="text"
               value={reason}
               onChange={e => setReason(e.target.value)}
               placeholder="e.g. Maintenance, Team event, Private function"
-              className="w-full bg-white/5 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-sb-red placeholder:text-gray-600"
+              className="bg-white/5 border-gray-700 text-white placeholder:text-gray-600"
             />
           </div>
         </div>
 
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:text-white transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex-1 px-4 py-2 rounded-lg bg-gray-600 text-white font-bold hover:bg-gray-500 transition-colors flex items-center justify-center gap-2"
-          >
-            {saving ? <Loader2 size={16} className="animate-spin" /> : <Ban size={16} />}
-            {saving ? 'Blocking...' : 'Block Slot'}
-          </button>
-        </div>
-      </div>
-    </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? <><Loader2 size={16} className="animate-spin" /> Blocking...</> : <><Ban size={16} /> Block Slot</>}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

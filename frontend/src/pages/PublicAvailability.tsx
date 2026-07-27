@@ -3,6 +3,8 @@ import { Calendar, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { format, addDays, isSameDay } from 'date-fns'
 import pb, { type Room, type TimeSlot } from '../lib/pocketbase'
 import { useBranding } from '../lib/branding'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 export default function PublicAvailability() {
   const { branding } = useBranding()
@@ -71,7 +73,9 @@ export default function PublicAvailability() {
           <a href="#" onClick={(e) => { e.preventDefault(); window.history.back(); }} className="text-xl font-bold text-gray-900 tracking-tight">
             {branding.business_name}
           </a>
-          <a href="/book" className="btn-sb text-sm px-5 py-2">{branding.booking_verb}</a>
+          <Button asChild>
+            <a href="/book">{branding.booking_verb}</a>
+          </Button>
         </div>
       </header>
 
@@ -142,12 +146,15 @@ export default function PublicAvailability() {
         {/* Slots by room */}
         <div className="space-y-6">
           {slotsByRoom.map(({ room, slots: roomSlots }) => (
-            <div key={room.id} className="card">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: room.color }} />
-                <h3 className="text-lg font-bold text-gray-900">{room.name}</h3>
-                <span className="text-xs text-gray-600">R{room.unit_price}{branding.pricing_model === 'per_person' ? '/pp' : ''} • {room.duration_minutes}min</span>
-              </div>
+            <Card key={room.id}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: room.color }} />
+                  {room.name}
+                  <span className="text-xs text-gray-600 font-normal">R{room.unit_price}{branding.pricing_model === 'per_person' ? '/pp' : ''} • {room.duration_minutes}min</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
 
               {roomSlots.length === 0 ? (
                 <p className="text-gray-600 text-sm py-4 text-center">No available slots for this date.</p>
@@ -165,15 +172,18 @@ export default function PublicAvailability() {
                   ))}
                 </div>
               )}
-            </div>
+            </CardContent>
+          </Card>
           ))}
         </div>
 
         {/* CTA */}
         <div className="text-center mt-10">
-          <a href="/book" className="btn-sb text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 inline-flex items-center gap-2">
-            <Calendar size={20} /> {branding.booking_verb}
-          </a>
+          <Button asChild size="lg">
+            <a href="/book">
+              <Calendar size={20} /> {branding.booking_verb}
+            </a>
+          </Button>
         </div>
       </div>
     </div>

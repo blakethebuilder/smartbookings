@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Lock, User, Loader2, AlertCircle } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { useBranding } from '../lib/branding'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -58,11 +60,11 @@ export default function Login() {
               <label className="text-sm text-gray-600 mb-1 block">Email</label>
               <div className="relative">
                 <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                <input
+                <Input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
+                  className="pl-10"
                   placeholder="you@example.com"
                   required
                 />
@@ -73,11 +75,11 @@ export default function Login() {
               <label className="text-sm text-gray-600 mb-1 block">Password</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                <input
+                <Input
                   type="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-sb-orange transition-colors"
+                  className="pl-10"
                   placeholder="Enter your password"
                   required
                 />
@@ -91,14 +93,15 @@ export default function Login() {
               </div>
             )}
 
-            <button
+            <Button
               type="submit"
               disabled={loading || !email || !password}
-              className="w-full btn-sb py-3 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full"
+              size="lg"
             >
-              {loading ? <Loader2 size={18} className="animate-spin" /> : null}
+              {loading && <Loader2 className="animate-spin" />}
               {loading ? 'Signing in...' : 'Sign In'}
-            </button>
+            </Button>
           </form>
 
           <div className="mt-6 pt-4 border-t border-gray-200 text-center">
