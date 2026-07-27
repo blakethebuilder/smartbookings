@@ -30,8 +30,6 @@ const steps = [
   { key: 'payment', label: 'Confirm', icon: CreditCard },
 ]
 
-const roomEmoji = (_slug?: string): string => '\u{1F4C5}'
-
 export default function Book() {
   const { branding } = useBranding()
   const [searchParams] = useSearchParams()
@@ -337,12 +335,9 @@ export default function Book() {
                   className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden text-left hover:border-sb-orange hover:shadow-md transition-all group"
                 >
                   <div
-                    className="h-24 sm:h-32 relative flex items-center justify-center"
-                    style={{ backgroundColor: room.color + '18' }}
-                  >
-                    <div className="absolute top-3 left-3 w-3 h-3 rounded-full" style={{ backgroundColor: room.color }} />
-                    <span className="text-4xl opacity-20 select-none">📅</span>
-                  </div>
+                    className="h-3 relative"
+                    style={{ backgroundColor: room.color }}
+                  />
                   <div className="p-5">
                     <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-sb-orange transition-colors">
                       {room.name}
