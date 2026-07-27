@@ -124,7 +124,7 @@ export default function Rooms() {
       {/* Room grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {rooms.map(room => (
-          <Card key={room.id} className={`group hover:border-gray-600 transition-all ${!room.is_active ? 'opacity-50' : ''}`}>
+          <Card key={room.id} className={`group hover:shadow-md transition-all ${!room.is_active ? 'opacity-60' : ''}`}>
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: room.color }} />
@@ -152,17 +152,17 @@ export default function Rooms() {
             <div className="grid grid-cols-3 gap-2 text-center mb-3">
               <div className="bg-gray-50 rounded p-2">
                 <p className="text-sb-red font-bold text-sm">{room.duration_minutes}min</p>
-                <p className="text-[10px] text-gray-500 uppercase">Duration</p>
+                <p className="text-[10px] text-gray-500 font-medium">Duration</p>
               </div>
               {branding.show_player_count && (
                 <div className="bg-gray-50 rounded p-2">
                   <p className="text-sb-orange font-bold text-sm">{room.min_capacity}-{room.max_capacity}</p>
-                  <p className="text-[10px] text-gray-500 uppercase">Players</p>
+                  <p className="text-[10px] text-gray-500 font-medium">Players</p>
                 </div>
               )}
               <div className="bg-gray-50 rounded p-2">
                 <p className="text-green-600 font-bold text-sm">R{room.unit_price}</p>
-                <p className="text-[10px] text-gray-500 uppercase">Per {branding.pricing_model === 'per_person' ? 'person' : branding.resource_label.toLowerCase()}</p>
+                <p className="text-[10px] text-gray-500 font-medium">Per {branding.pricing_model === 'per_person' ? 'person' : branding.resource_label.toLowerCase()}</p>
               </div>
             </div>
 
@@ -186,7 +186,7 @@ export default function Rooms() {
         ))}
 
         {/* Add room card */}
-        <Card onClick={openAdd} className="border-dashed border-gray-700 hover:border-sb-red/50 flex flex-col items-center justify-center min-h-[200px] text-gray-500 hover:text-sb-red transition-colors cursor-pointer">
+        <Card onClick={openAdd} className="border-2 border-dashed border-gray-200 hover:border-sb-orange/50 flex flex-col items-center justify-center min-h-[200px] text-gray-400 hover:text-sb-orange transition-colors cursor-pointer">
           <CardContent className="pt-6 flex flex-col items-center">
             <Plus size={32} className="mb-2" />
             <span className="text-sm font-medium">Add {branding.resource_label}</span>
