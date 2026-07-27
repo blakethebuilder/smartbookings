@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, CalendarDays, Calendar, BookOpen, Settings, LogOut,
-  Users, Crown, Building2, Menu, X
+  Users, Crown, Building2, Menu, X, DollarSign
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { useBranding } from '../lib/branding'
@@ -20,6 +20,7 @@ const adminNavItems = [
   { to: '/rooms', icon: Calendar, label: 'Rooms' },
   { to: '/bookings', icon: BookOpen, label: 'Bookings' },
   { to: '/staff', icon: Users, label: 'Staff' },
+  { to: '/finances', icon: DollarSign, label: 'Finances' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ]
 

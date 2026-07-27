@@ -14,6 +14,7 @@ import Book from './pages/Book'
 import BookConfirm from './pages/BookConfirm'
 import Waiver from './pages/Waiver'
 import PublicAvailability from './pages/PublicAvailability'
+import Finances from './pages/Finances'
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/clients" element={<Clients />} />
           <Route path="/staff" element={<StaffManagement />} />
+          <Route path="/finances" element={<Finances />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Route>
