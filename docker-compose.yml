@@ -8,7 +8,7 @@ services:
     container_name: smartbookings
     restart: unless-stopped
     ports:
-      - "8090:8090"
+      - "8091:8090"
     volumes:
       - pb_data:/pb/pb_data
     environment:
