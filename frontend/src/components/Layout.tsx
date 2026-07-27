@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, CalendarDays, Calendar, BookOpen, Settings, LogOut,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { useBranding } from '../lib/branding'
+import pb from '../lib/pocketbase'
 
 const gmNavItems = [
   { to: '/gm', icon: CalendarDays, label: 'My Games' },
@@ -23,12 +24,19 @@ const grandmasterNavItems = [
 ]
 
 export default function Layout() {
-  const { staff, isGrandmaster, logout } = useAuth()
+  const { staff, isGrandmaster, isSuperadmin, switchClient, currentClient, logout } = useAuth()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { branding } = useBranding()
 
   const navItems = isGrandmaster ? grandmasterNavItems : gmNavItems
+  const [allClients, setAllClients] = useState<any[]>([])
+
+  useEffect(() => {
+    if (isSuperadmin) {
+      pb.collection('clients').getFullList({ sort: 'name' }).then(setAllClients).catch(console.error)
+    }
+  }, [isSuperadmin])
 
   const handleLogout = () => {
     logout()
@@ -80,6 +88,29 @@ export default function Layout() {
                 {isGrandmaster ? <Crown size={10} style={{ color: branding.primary_color }} /> : null}
                 {isGrandmaster ? branding.staff_role_admin : branding.staff_role_worker}
               </p>
+            </div>
+          </div>
+        )}
+
+        {/* Superadmin client switcher */}
+        {isSuperadmin && allClients.length > 0 && (
+          <div className="px-4 py-3 border-b border-gray-800">
+            <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Switch Client</p>
+            <div className="space-y-1 max-h-40 overflow-y-auto">
+              {allClients.map(c => (
+                <button
+                  key={c.id}
+                  onClick={() => switchClient(c.id)}
+                  className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                    currentClient?.id === c.id
+                      ? 'text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
+                  style={currentClient?.id === c.id ? { backgroundColor: branding.primary_color + '1A' } : undefined}
+                >
+                  {c.business_name || c.name}
+                </button>
+              ))}
             </div>
           </div>
         )}

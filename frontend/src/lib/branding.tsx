@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import pb from './pocketbase'
+import { useAuth } from './auth'
 
 export type BusinessType = 'escape_room' | 'medical' | 'salon' | 'restaurant' | 'custom'
 export type PricingModel = 'per_person' | 'per_slot' | 'flat'
@@ -84,33 +85,77 @@ const DEFAULTS: Record<BusinessType, Partial<BrandingConfig>> = {
   },
 }
 
-async function loadBranding(): Promise<BrandingConfig> {
+async function loadBranding(client?: any): Promise<BrandingConfig> {
   try {
-    const settings = await pb.collection('settings').getFullList({ sort: 'key' })
-    const get = (key: string, fallback = '') =>
-      (settings as any[]).find((s: any) => s.key === key)?.value || fallback
-
-    const businessType = (get('business_type') || 'escape_room') as BusinessType
-    const defaults = DEFAULTS[businessType] || DEFAULTS.custom
-
-    return {
-      business_type: businessType,
-      business_name: get('business_name', 'My Business'),
-      resource_label: get('resource_label', defaults.resource_label!),
-      resource_label_plural: get('resource_label_plural', defaults.resource_label_plural!),
-      staff_role_admin: get('staff_role_admin', defaults.staff_role_admin!),
-      staff_role_worker: get('staff_role_worker', defaults.staff_role_worker!),
-      booking_verb: get('booking_verb', defaults.booking_verb!),
-      pricing_model: (get('pricing_model') || defaults.pricing_model) as PricingModel,
-      primary_color: get('primary_color', '#E53935'),
-      logo_url: get('logo_url', ''),
-      customer_fields: get('customer_fields', defaults.customer_fields!.join(',')).split(',').filter(Boolean),
-      duration_unit: get('duration_unit', defaults.duration_unit!),
-      show_difficulty: get('show_difficulty', '') ? get('show_difficulty') === 'true' : defaults.show_difficulty!,
-      show_player_count: get('show_player_count', '') ? get('show_player_count') === 'true' : defaults.show_player_count!,
+    // If a client object is provided (from auth context), use it directly
+    if (client) {
+      return mapClientToBranding(client)
     }
+
+    // Try to load from localStorage (stored by auth on login)
+    const storedClient = localStorage.getItem('gr8_current_client')
+    if (storedClient) {
+      try {
+        const parsed = JSON.parse(storedClient)
+        return mapClientToBranding(parsed)
+      } catch {}
+    }
+
+    // Fallback: try to detect client by subdomain from hostname
+    const hostname = window.location.hostname
+    const parts = hostname.split('.')
+    if (parts.length > 2) {
+      const subdomain = parts[0]
+      try {
+        const matching = await pb.collection('clients').getFirstListItem(
+          `subdomain = "${subdomain}"`
+        )
+        localStorage.setItem('gr8_current_client', JSON.stringify(matching))
+        return mapClientToBranding(matching)
+      } catch {
+        // No matching client for this subdomain
+      }
+    }
+
+    // No client found — use custom defaults
+    return {
+      business_type: 'custom' as BusinessType,
+      business_name: 'My Business',
+      ...DEFAULTS.custom,
+      primary_color: '#E53935',
+      logo_url: '',
+    } as BrandingConfig
   } catch {
-    return DEFAULTS.escape_room as BrandingConfig
+    return {
+      business_type: 'custom' as BusinessType,
+      business_name: 'My Business',
+      ...DEFAULTS.custom,
+      primary_color: '#E53935',
+      logo_url: '',
+    } as BrandingConfig
+  }
+}
+
+function mapClientToBranding(client: any): BrandingConfig {
+  const businessType = (client.business_type || 'custom') as BusinessType
+  const defaults = DEFAULTS[businessType] || DEFAULTS.custom
+  return {
+    business_type: businessType,
+    business_name: client.business_name || client.name || 'My Business',
+    resource_label: client.resource_label || defaults.resource_label!,
+    resource_label_plural: client.resource_label_plural || defaults.resource_label_plural!,
+    staff_role_admin: client.staff_role_admin || defaults.staff_role_admin!,
+    staff_role_worker: client.staff_role_worker || defaults.staff_role_worker!,
+    booking_verb: client.booking_verb || defaults.booking_verb!,
+    pricing_model: (client.pricing_model || defaults.pricing_model) as PricingModel,
+    primary_color: client.primary_color || '#E53935',
+    logo_url: client.logo_url || '',
+    customer_fields: client.customer_fields
+      ? (typeof client.customer_fields === 'string' ? client.customer_fields.split(',').filter(Boolean) : client.customer_fields)
+      : defaults.customer_fields!,
+    duration_unit: (client.duration_unit || defaults.duration_unit) as string,
+    show_difficulty: client.show_difficulty !== undefined ? !!client.show_difficulty : defaults.show_difficulty!,
+    show_player_count: client.show_player_count !== undefined ? !!client.show_player_count : defaults.show_player_count!,
   }
 }
 
@@ -131,11 +176,12 @@ export function useBranding() {
 }
 
 export function BrandingProvider({ children }: { children: ReactNode }) {
+  const { currentClient } = useAuth()
   const [branding, setBranding] = useState<BrandingConfig>(defaultBranding)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadBranding().then(b => {
+    loadBranding(currentClient).then(b => {
       setBranding(b)
       // Apply primary color as CSS variable (RGB components for Tailwind opacity support)
       const hex = b.primary_color
@@ -145,7 +191,7 @@ export function BrandingProvider({ children }: { children: ReactNode }) {
       document.documentElement.style.setProperty('--gr8-red', `${r} ${g} ${bVal}`)
       setLoading(false)
     })
-  }, [])
+  }, [currentClient])
 
   return (
     <BrandingContext.Provider value={{ branding, loading }}>

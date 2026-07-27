@@ -12,13 +12,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
-        <BrandingProvider>
+        <AuthProvider>
           <ToastProvider>
-            <AuthProvider>
+            <BrandingProvider>
               <App />
-            </AuthProvider>
+            </BrandingProvider>
           </ToastProvider>
-        </BrandingProvider>
+        </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>
   </React.StrictMode>,
