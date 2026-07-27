@@ -21,7 +21,10 @@ export default function AuthGate({ allowedRoles }: AuthGateProps) {
     return <Navigate to="/login" replace />
   }
 
-  if (!allowedRoles.includes(staff.role)) {
+  // Normalize old role names from pre-rebrand databases
+  const role = (staff.role as string) === 'grandmaster' ? 'admin' : (staff.role as string) === 'gamemaster' ? 'staff' : staff.role
+
+  if (!allowedRoles.includes(role)) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 text-center max-w-sm">

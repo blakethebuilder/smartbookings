@@ -25,7 +25,7 @@ export default function Login() {
       // Get staff from localStorage to route by role
       const stored = localStorage.getItem('sb_staff')
       const staff = stored ? JSON.parse(stored) : null
-      navigate(staff?.role === 'admin' ? '/admin' : '/dashboard')
+      navigate((staff?.role as string) === 'admin' || (staff?.role as string) === 'grandmaster' ? '/admin' : '/dashboard')
     } else {
       setError(result.error || 'Invalid email or PIN code')
     }

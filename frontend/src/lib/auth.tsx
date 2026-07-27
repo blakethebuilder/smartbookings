@@ -124,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       currentClient,
       login,
       logout,
-      isAdmin: staff?.role === 'admin',
+      isAdmin: (staff?.role as string) === 'admin' || (staff?.role as string) === 'grandmaster',
       isSuperadmin,
       switchClient,
       loading,
